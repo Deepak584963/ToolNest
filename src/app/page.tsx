@@ -1,65 +1,77 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import Link from "next/link";
+import AdPlaceholder from "@/components/AdPlaceholder";
+import HomeToolsSection from "@/components/HomeToolsSection";
+import { WebSiteSchema } from "@/components/JsonLd";
+import { tools } from "@/lib/tools";
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: "ToolNest",
+  description: "Fast, free online tools for JSON, SEO, text cleanup, and developer workflows.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "ToolNest",
+    description: "Use 15 browser-based tools for SEO, developer tasks, and content optimization.",
+    url: "/",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ToolNest",
+    description: "Use 15 browser-based tools for SEO, developer tasks, and content optimization.",
+  },
+};
+
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <WebSiteSchema />
+      <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/70 p-8 shadow-[0_15px_45px_rgba(79,70,229,0.12)] backdrop-blur-xl sm:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/40 via-purple-100/30 to-cyan-100/40" />
+        <div className="relative max-w-3xl">
+          <p className="mb-3 inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">
+            Fast • Free • Browser-based
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">ToolNest — Free Online Tech Tools</h1>
+          <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+            Solve daily developer, SEO, and content tasks in seconds with modern, client-side tools. No sign-up, no backend processing, and fully optimized for speed.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href={`/tools/${tools[0]?.slug}`} className="rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
+              Start with JSON Tool
+            </Link>
+            <Link href="/about" className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-indigo-50">
+              Learn More
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-10">
+        <HomeToolsSection />
+      </section>
+
+      <AdPlaceholder slot="3333333333" />
+
+      <section className="mt-12 rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+        <h2 className="text-2xl font-semibold text-slate-900">Why these online utilities help modern teams</h2>
+        <div className="mt-4 space-y-4 text-sm leading-7 text-slate-700 sm:text-base">
+          <p>
+            Fast iteration matters across development, publishing, and SEO workflows. Small tasks like formatting JSON, fixing metadata length, cleaning copied text, or generating a sitemap can repeatedly interrupt focused work. This platform is built to remove that friction with lightweight browser-based tools that open instantly and run fully client side.
+          </p>
+          <p>
+            Every utility on this website is designed around practical output: copy-ready snippets, clear validation feedback, and simple controls that work on desktop and mobile. Developers can debug payloads and generate UUIDs quickly. Bloggers can measure reading time and prepare slugs. SEO users can test canonical strategy, robots rules, and social previews before publishing live pages.
+          </p>
+          <p>
+            The site structure also supports technical SEO best practices. Each tool has a dedicated crawlable URL, focused metadata, internal links to related utilities, and long-form educational content that explains when and how to apply each tool correctly. This combination improves user trust, session depth, and discoverability for long-tail search queries.
+          </p>
+          <p>
+            Because there is no CMS and no backend dependency, the website is easy to deploy and maintain. Static generation keeps performance high and hosting costs low, while keeping the interface reliable under traffic spikes. The result is a practical utility hub for developers, students, and site owners who need clean output and straightforward guidance.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+    </>
   );
 }
