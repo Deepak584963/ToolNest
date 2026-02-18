@@ -3,6 +3,11 @@
 import { ChangeEvent, useMemo, useState } from "react";
 import CopyButton from "@/components/CopyButton";
 
+import { PercentageCalculator, CgpaToPercentageConverter, AttendanceCalculator, AgeCalculator, DateDifferenceCalculator, ExamCountdownTimer, GpaCalculator, ResumeHeadlineGenerator, StudyTimePlanner, MarksRequiredCalculator } from "@/components/tools/StudentTools";
+import { InstagramHashtagGenerator, YouTubeTitleAnalyzer, YouTubeTagGenerator, CaptionGenerator, BioGenerator, ThumbnailTextPreview, YouTubeDescriptionTemplateGenerator, VideoLengthEstimator, HookGeneratorForReels, ContentIdeaGenerator } from "@/components/tools/CreatorTools";
+import { ImageToPdfConverter, CompressImage, ResizeImage, JpgToPngConverter, PngToJpgConverter, QrCodeGenerator, BarcodeGenerator, Base64ImageEncoder, ImageMetadataViewer, FaviconGenerator } from "@/components/tools/ImageTools";
+import { EmiCalculator, LoanInterestCalculator, GstCalculator, CurrencyConverter, SipCalculator, InflationCalculator, AgeInDaysCalculator, TimeZoneConverter, UnitConverter, ScientificCalculator } from "@/components/tools/UtilityTools";
+
 type ToolUIWrapperProps = {
   slug: string;
 };
@@ -656,6 +661,90 @@ export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
       return <LoremIpsumGenerator />;
     case "text-cleaner":
       return <TextCleaner />;
+    /* ── Student Tools ── */
+    case "percentage-calculator":
+      return <PercentageCalculator />;
+    case "cgpa-to-percentage-converter":
+      return <CgpaToPercentageConverter />;
+    case "attendance-calculator":
+      return <AttendanceCalculator />;
+    case "age-calculator":
+      return <AgeCalculator />;
+    case "date-difference-calculator":
+      return <DateDifferenceCalculator />;
+    case "exam-countdown-timer":
+      return <ExamCountdownTimer />;
+    case "gpa-calculator":
+      return <GpaCalculator />;
+    case "resume-headline-generator":
+      return <ResumeHeadlineGenerator />;
+    case "study-time-planner":
+      return <StudyTimePlanner />;
+    case "marks-required-calculator":
+      return <MarksRequiredCalculator />;
+    /* ── Creator Tools ── */
+    case "instagram-hashtag-generator":
+      return <InstagramHashtagGenerator />;
+    case "youtube-title-analyzer":
+      return <YouTubeTitleAnalyzer />;
+    case "youtube-tag-generator":
+      return <YouTubeTagGenerator />;
+    case "caption-generator":
+      return <CaptionGenerator />;
+    case "bio-generator":
+      return <BioGenerator />;
+    case "thumbnail-text-preview":
+      return <ThumbnailTextPreview />;
+    case "youtube-description-template-generator":
+      return <YouTubeDescriptionTemplateGenerator />;
+    case "video-length-estimator":
+      return <VideoLengthEstimator />;
+    case "hook-generator-for-reels":
+      return <HookGeneratorForReels />;
+    case "content-idea-generator":
+      return <ContentIdeaGenerator />;
+    /* ── Image Tools ── */
+    case "image-to-pdf-converter":
+      return <ImageToPdfConverter />;
+    case "compress-image":
+      return <CompressImage />;
+    case "resize-image":
+      return <ResizeImage />;
+    case "jpg-to-png-converter":
+      return <JpgToPngConverter />;
+    case "png-to-jpg-converter":
+      return <PngToJpgConverter />;
+    case "qr-code-generator":
+      return <QrCodeGenerator />;
+    case "barcode-generator":
+      return <BarcodeGenerator />;
+    case "base64-image-encoder":
+      return <Base64ImageEncoder />;
+    case "image-metadata-viewer":
+      return <ImageMetadataViewer />;
+    case "favicon-generator":
+      return <FaviconGenerator />;
+    /* ── Utility Tools ── */
+    case "emi-calculator":
+      return <EmiCalculator />;
+    case "loan-interest-calculator":
+      return <LoanInterestCalculator />;
+    case "gst-calculator":
+      return <GstCalculator />;
+    case "currency-converter":
+      return <CurrencyConverter />;
+    case "sip-calculator":
+      return <SipCalculator />;
+    case "inflation-calculator":
+      return <InflationCalculator />;
+    case "age-in-days-calculator":
+      return <AgeInDaysCalculator />;
+    case "time-zone-converter":
+      return <TimeZoneConverter />;
+    case "unit-converter":
+      return <UnitConverter />;
+    case "scientific-calculator":
+      return <ScientificCalculator />;
     default:
       return <Panel title="Tool unavailable">This tool is not available.</Panel>;
   }

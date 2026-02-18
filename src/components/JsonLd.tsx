@@ -79,6 +79,57 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
   );
 }
 
+type HowToSchemaProps = {
+  name: string;
+  description: string;
+  steps: string[];
+};
+
+export function HowToSchema({ name, description, steps }: HowToSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How to use ${name}`,
+    description,
+    step: steps.map((text, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      text,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+type ItemListSchemaProps = {
+  items: { name: string; url: string }[];
+};
+
+export function ItemListSchema({ items }: ItemListSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: item.url,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 type SoftwareAppSchemaProps = {
   name: string;
   description: string;

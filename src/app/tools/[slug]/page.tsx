@@ -3,14 +3,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import AdPlaceholder from "@/components/AdPlaceholder";
 import FAQAccordion from "@/components/FAQAccordion";
-import { BreadcrumbSchema, FAQSchema, SoftwareAppSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, FAQSchema, HowToSchema, SoftwareAppSchema } from "@/components/JsonLd";
+import ShareTool from "@/components/ShareTool";
 import ToolUIWrapper from "@/components/ToolUIWrapper";
 import { siteConfig } from "@/lib/site";
+import { getCategoryMeta } from "@/lib/categories";
 import {
   getRelatedTools,
   getToolArticleSections,
   getToolBySlug,
   getToolFaqs,
+  getToolWorkflow,
   tools,
 } from "@/lib/tools";
 
@@ -33,8 +36,8 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     };
   }
 
-  const title = `${tool.name}`.slice(0, 58);
-  const description = tool.shortDescription.slice(0, 155);
+  const title = `${tool.name} — Free Online Tool`;
+  const description = `${tool.shortDescription} Use this free ${tool.category} tool online — no sign-up, runs in your browser.`.slice(0, 160);
 
   return {
     title,
@@ -57,6 +60,16 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
   };
 }
 
+const categoryAppMap: Record<string, string> = {
+  dev: "DeveloperApplication",
+  seo: "BrowserApplication",
+  text: "BrowserApplication",
+  student: "EducationalApplication",
+  creator: "MultimediaApplication",
+  image: "MultimediaApplication",
+  utility: "FinanceApplication",
+};
+
 export default async function ToolPage({ params }: ToolPageProps) {
   const { slug } = await params;
   const tool = getToolBySlug(slug);
@@ -68,18 +81,16 @@ export default async function ToolPage({ params }: ToolPageProps) {
   const sections = getToolArticleSections(slug);
   const faqs = getToolFaqs(slug);
   const relatedTools = getRelatedTools(slug);
-
-  const categoryMap: Record<string, string> = {
-    dev: "DeveloperApplication",
-    seo: "BrowserApplication",
-    text: "BrowserApplication",
-  };
+  const workflow = getToolWorkflow(slug);
+  const catMeta = getCategoryMeta(tool.category);
+  const categoryLabel = catMeta?.name ?? tool.category;
 
   return (
     <article className="space-y-8">
       <BreadcrumbSchema
         items={[
           { name: "Home", url: siteConfig.url },
+          { name: `${categoryLabel} Tools`, url: `${siteConfig.url}/tools/category/${tool.category}` },
           { name: tool.name, url: `${siteConfig.url}/tools/${tool.slug}` },
         ]}
       />
@@ -88,25 +99,40 @@ export default async function ToolPage({ params }: ToolPageProps) {
         name={tool.name}
         description={tool.shortDescription}
         url={`${siteConfig.url}/tools/${tool.slug}`}
-        category={categoryMap[tool.category] ?? "BrowserApplication"}
+        category={categoryAppMap[tool.category] ?? "BrowserApplication"}
       />
+      {workflow.length > 0 && (
+        <HowToSchema
+          name={tool.name}
+          description={tool.shortDescription}
+          steps={workflow}
+        />
+      )}
 
       <nav aria-label="Breadcrumb" className="text-sm text-slate-500">
-        <ol className="flex items-center gap-1.5">
+        <ol className="flex items-center gap-1.5 flex-wrap">
           <li><Link href="/" className="hover:text-indigo-700">Home</Link></li>
           <li aria-hidden>/</li>
-          <li><Link href="/#tools" className="hover:text-indigo-700">Tools</Link></li>
+          <li><Link href={`/tools/category/${tool.category}`} className="hover:text-indigo-700">{categoryLabel} Tools</Link></li>
           <li aria-hidden>/</li>
           <li className="font-medium text-slate-700">{tool.name}</li>
         </ol>
       </nav>
 
       <header className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-        <p className="mb-2 inline-flex rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-800">
-          {tool.category} tool
-        </p>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">{tool.name}</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600 sm:text-base">{tool.shortDescription}</p>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <Link
+              href={`/tools/category/${tool.category}`}
+              className="mb-2 inline-flex rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-800 hover:bg-cyan-200 transition"
+            >
+              {tool.category} tool
+            </Link>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">{tool.name}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600 sm:text-base">{tool.longDescription}</p>
+          </div>
+          <ShareTool title={tool.name} slug={tool.slug} />
+        </div>
       </header>
 
       <section aria-label={`${tool.name} interface`}>
@@ -139,18 +165,31 @@ export default async function ToolPage({ params }: ToolPageProps) {
       ) : null}
 
       <section className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-        <h2 className="text-2xl font-semibold text-slate-900">Related tools</h2>
-        <div className="mt-4 flex flex-wrap gap-3">
+        <h2 className="text-2xl font-semibold text-slate-900">Related tools you might like</h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {relatedTools.map((relatedTool) => (
             <Link
               key={relatedTool.slug}
               href={`/tools/${relatedTool.slug}`}
-              className="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100"
+              className="flex flex-col rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
             >
-              {relatedTool.name}
+              <span className="text-sm font-semibold text-indigo-700">{relatedTool.name}</span>
+              <span className="mt-1 text-xs text-slate-500 line-clamp-2">{relatedTool.shortDescription}</span>
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* Category CTA */}
+      <section className="rounded-2xl border border-white/70 bg-linear-to-r from-indigo-50 to-cyan-50 p-6 text-center sm:p-8">
+        <h2 className="text-xl font-semibold text-slate-900">Explore all {categoryLabel} tools</h2>
+        <p className="mt-2 text-sm text-slate-600">Discover more free {categoryLabel.toLowerCase()} tools on ToolNest.</p>
+        <Link
+          href={`/tools/category/${tool.category}`}
+          className="mt-4 inline-flex rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+        >
+          View all {categoryLabel} tools →
+        </Link>
       </section>
     </article>
   );
