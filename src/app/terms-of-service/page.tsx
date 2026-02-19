@@ -94,8 +94,8 @@ export default function TermsOfServicePage() {
           <h2 className="text-lg font-semibold text-slate-900">11. Contact</h2>
           <p className="mt-2">
             Questions or concerns about these Terms of Service can be directed to
-            <a href="mailto:legal@toolnest.dev" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">
-              legal@toolnest.dev
+            <a href="mailto:chaudharyjj87@gmail.com" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">
+              chaudharyjj87@gmail.com
             </a>.
           </p>
         </div>

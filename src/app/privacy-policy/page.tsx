@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
         <div>
           <h2 className="text-lg font-semibold text-slate-900">1. Introduction</h2>
           <p className="mt-2">
-            ToolNest (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the website located at toolnest.dev (the &quot;Site&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our Site. By using ToolNest, you consent to the practices described in this policy. If you do not agree with the terms of this policy, please do not access the Site.
+            ToolNest (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the website located at tool-nest.tech (the &quot;Site&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our Site. By using ToolNest, you consent to the practices described in this policy. If you do not agree with the terms of this policy, please do not access the Site.
           </p>
         </div>
 
@@ -136,8 +136,8 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-lg font-semibold text-slate-900">12. Contact Us</h2>
           <p className="mt-2">
             If you have any questions or concerns regarding this Privacy Policy, please contact us at
-            <a href="mailto:privacy@toolnest.dev" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">
-              privacy@toolnest.dev
+            <a href="mailto:chaudharyjj87@gmail.com" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">
+              chaudharyjj87@gmail.com
             </a>.
           </p>
         </div>

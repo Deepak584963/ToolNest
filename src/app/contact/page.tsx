@@ -23,15 +23,15 @@ export default function ContactPage() {
           <h2 className="text-lg font-semibold text-slate-900">Email Us</h2>
           <p className="mt-2">
             For general inquiries and feedback:
-            <a href="mailto:hello@toolnest.dev" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">chaudharyjj87@gmail.com</a>
+            <a href="mailto:chaudharyjj87@gmail.com" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">chaudharyjj87@gmail.com</a>
           </p>
           <p className="mt-1">
             For privacy-related questions:
-            <a href="mailto:privacy@toolnest.dev" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">chaudharyjj87@gmail.com</a>
+            <a href="mailto:chaudharyjj87@gmail.com" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">chaudharyjj87@gmail.com</a>
           </p>
           <p className="mt-1">
             For legal and terms inquiries:
-            <a href="mailto:legal@toolnest.dev" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">chaudharyjj87@gmail.com</a>
+            <a href="mailto:chaudharyjj87@gmail.com" className="ml-1 font-semibold text-indigo-700 hover:text-indigo-800">chaudharyjj87@gmail.com</a>
           </p>
         </div>
 

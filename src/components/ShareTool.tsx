@@ -9,7 +9,7 @@ type ShareToolProps = {
 
 export default function ShareTool({ title, slug }: ShareToolProps) {
   const [copied, setCopied] = useState(false);
-  const url = `https://tool-nest0.vercel.app/tools/${slug}`;
+  const url = `https://tool-nest.tech/tools/${slug}`;
   const text = `${title} — Free Online Tool`;
 
   const shareLinks = [
