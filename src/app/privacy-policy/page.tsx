@@ -10,19 +10,22 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <section className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900">Privacy Policy</h1>
+    <section className="relative overflow-hidden rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_12px_34px_rgba(79,70,229,0.1)] sm:p-8">
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/35 via-sky-100/20 to-cyan-100/35" />
+      <div className="relative">
+      <p className="inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">Legal</p>
+      <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">Privacy Policy</h1>
       <p className="mt-2 text-sm text-slate-500">Last updated: February 16, 2026</p>
 
       <div className="mt-6 space-y-6 text-sm leading-7 text-slate-700 sm:text-base">
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">1. Introduction</h2>
           <p className="mt-2">
             ToolNest (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the website located at tool-nest.tech (the &quot;Site&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our Site. By using ToolNest, you consent to the practices described in this policy. If you do not agree with the terms of this policy, please do not access the Site.
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">2. Information We Collect</h2>
           <p className="mt-2">
             ToolNest is designed with a client-side processing model. Most tool inputs are handled directly in your browser and are never transmitted to our servers. We do not require account creation or login.
@@ -42,7 +45,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">3. Cookies and Tracking Technologies</h2>
           <p className="mt-2">
             Cookies are small data files stored on your device. We and our partners use cookies, web beacons, and similar technologies for the following purposes:
@@ -57,7 +60,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">4. Google AdSense and Third-Party Advertising</h2>
           <p className="mt-2">
             We use Google AdSense to display advertisements on the Site. Google AdSense uses cookies to serve ads based on your prior visits to this Site and other websites. Google&apos;s use of advertising cookies enables it and its partners to serve ads based on your browsing history.
@@ -70,7 +73,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">5. How We Use Your Information</h2>
           <p className="mt-2">We use the information collected for the following purposes:</p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
@@ -82,28 +85,28 @@ export default function PrivacyPolicyPage() {
           </ul>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">6. Data Sharing and Disclosure</h2>
           <p className="mt-2">
             ToolNest does not sell, trade, or rent your personal data to third parties. We may share anonymized, aggregated data with analytics and advertising partners. We may disclose information if required by law, court order, or governmental request, or to protect the rights, safety, or property of ToolNest or its users.
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">7. Data Security</h2>
           <p className="mt-2">
             We implement reasonable technical and organizational measures to protect the information we collect. However, no method of electronic transmission or storage is completely secure. We cannot guarantee absolute security of your data.
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">8. Children&apos;s Privacy</h2>
           <p className="mt-2">
             ToolNest is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we learn that we have inadvertently collected such information, we will take steps to delete it promptly.
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">9. Your Rights</h2>
           <p className="mt-2">Depending on your jurisdiction, you may have the right to:</p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
@@ -118,21 +121,21 @@ export default function PrivacyPolicyPage() {
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">10. External Links</h2>
           <p className="mt-2">
             The Site may contain links to third-party websites or resources. We are not responsible for the privacy practices or content of these external sites. We encourage you to review the privacy policies of every site you visit.
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">11. Changes to This Policy</h2>
           <p className="mt-2">
             We may update this Privacy Policy from time to time. Changes will be posted on this page with a revised &quot;Last updated&quot; date. Your continued use of the Site after changes are posted constitutes acceptance of the revised policy.
           </p>
         </div>
 
-        <div>
+        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
           <h2 className="text-lg font-semibold text-slate-900">12. Contact Us</h2>
           <p className="mt-2">
             If you have any questions or concerns regarding this Privacy Policy, please contact us at
@@ -141,6 +144,7 @@ export default function PrivacyPolicyPage() {
             </a>.
           </p>
         </div>
+      </div>
       </div>
     </section>
   );

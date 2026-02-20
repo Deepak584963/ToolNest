@@ -5,7 +5,7 @@ import CopyButton from "@/components/CopyButton";
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(79,70,229,0.08)]">
+    <section className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-5">
       <h2 className="mb-4 text-base font-semibold text-slate-900">{title}</h2>
       {children}
     </section>
@@ -13,8 +13,8 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 }
 
 const label = "block text-sm font-medium text-slate-700 mb-1";
-const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
-const btn = "rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition";
+const input = "w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-indigo-400 focus:outline-none";
+const btn = "rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 transition";
 
 function downloadText(name: string, content: string, type = "text/plain;charset=utf-8") {
   const blob = new Blob([content], { type });
@@ -517,12 +517,22 @@ export function StudyTimePlanner() {
         <button type="button" onClick={generate} className={btn}>Generate Plan</button>
       </div>
       {schedule.length > 0 && (
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead><tr className="border-b border-slate-200"><th className="py-2 text-left font-semibold text-slate-700">Subject</th><th className="py-2 text-right font-semibold text-slate-700">Hours/Day</th></tr></thead>
-            <tbody>{schedule.map((s, i) => (<tr key={i} className="border-b border-slate-100"><td className="py-2 text-slate-800">{s.name}</td><td className="py-2 text-right font-medium text-indigo-700">{s.hrs} hrs/week</td></tr>))}</tbody>
-          </table>
-        </div>
+        <>
+          <div className="mt-4 space-y-2 sm:hidden">
+            {schedule.map((s, i) => (
+              <div key={i} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p className="text-sm font-semibold text-slate-800">{s.name}</p>
+                <p className="mt-1 text-sm font-medium text-indigo-700">{s.hrs} hrs/week</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 hidden overflow-x-auto sm:block">
+            <table className="w-full text-sm">
+              <thead><tr className="border-b border-slate-200"><th className="py-2 text-left font-semibold text-slate-700">Subject</th><th className="py-2 text-right font-semibold text-slate-700">Hours/Day</th></tr></thead>
+              <tbody>{schedule.map((s, i) => (<tr key={i} className="border-b border-slate-100"><td className="py-2 text-slate-800">{s.name}</td><td className="py-2 text-right font-medium text-indigo-700">{s.hrs} hrs/week</td></tr>))}</tbody>
+            </table>
+          </div>
+        </>
       )}
     </Panel>
   );

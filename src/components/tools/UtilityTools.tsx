@@ -5,7 +5,7 @@ import CopyButton from "@/components/CopyButton";
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(79,70,229,0.08)]">
+    <section className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-5">
       <h2 className="mb-4 text-base font-semibold text-slate-900">{title}</h2>
       {children}
     </section>
@@ -13,8 +13,8 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 }
 
 const label = "block text-sm font-medium text-slate-700 mb-1";
-const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
-const btn = "rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition";
+const input = "w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-indigo-400 focus:outline-none";
+const btn = "rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 transition";
 const stat = "flex flex-col items-center rounded-xl p-4 min-w-28";
 
 function downloadText(name: string, content: string, type = "text/plain;charset=utf-8") {
@@ -109,6 +109,7 @@ export function LoanInterestCalculator() {
   }, [principal, rate, tenure]);
 
   const fmt = (v: number) => v.toLocaleString("en-IN");
+  const displayedSchedule = result ? (summaryOnly ? result.schedule.filter((row) => row.month <= 12 || row.month > result.schedule.length - 12) : result.schedule) : [];
 
   return (
     <Panel title="Loan Interest Calculator">
@@ -127,12 +128,27 @@ export function LoanInterestCalculator() {
           <label className="mt-3 inline-flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={summaryOnly} onChange={(e) => setSummaryOnly(e.target.checked)} /> Summary only (first and last 12 months)</label>
           <button type="button" onClick={() => setShowSchedule(!showSchedule)} className="mt-3 text-sm font-semibold text-indigo-600 hover:text-indigo-800">{showSchedule ? "Hide" : "Show"} Amortization Schedule</button>
           {showSchedule && (
-            <div className="mt-3 max-h-64 overflow-auto rounded-xl border border-slate-200">
-              <table className="w-full text-xs">
-                <thead className="sticky top-0 bg-slate-50"><tr><th className="px-2 py-1.5 text-left">Month</th><th className="px-2 py-1.5 text-right">EMI</th><th className="px-2 py-1.5 text-right">Interest</th><th className="px-2 py-1.5 text-right">Principal</th><th className="px-2 py-1.5 text-right">Balance</th></tr></thead>
-                <tbody>{(summaryOnly ? result.schedule.filter((row) => row.month <= 12 || row.month > result.schedule.length - 12) : result.schedule).map((r) => (<tr key={r.month} className="border-t border-slate-100"><td className="px-2 py-1">{r.month}</td><td className="px-2 py-1 text-right">₹{fmt(r.emi)}</td><td className="px-2 py-1 text-right">₹{fmt(r.interest)}</td><td className="px-2 py-1 text-right">₹{fmt(r.principal)}</td><td className="px-2 py-1 text-right">₹{fmt(r.balance)}</td></tr>))}</tbody>
-              </table>
-            </div>
+            <>
+              <div className="mt-3 space-y-2 sm:hidden">
+                {displayedSchedule.map((r) => (
+                  <div key={r.month} className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+                    <p className="font-semibold text-slate-800">Month {r.month}</p>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <p>EMI: <strong>₹{fmt(r.emi)}</strong></p>
+                      <p>Interest: <strong>₹{fmt(r.interest)}</strong></p>
+                      <p>Principal: <strong>₹{fmt(r.principal)}</strong></p>
+                      <p>Balance: <strong>₹{fmt(r.balance)}</strong></p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 hidden max-h-64 overflow-auto rounded-xl border border-slate-200 sm:block">
+                <table className="w-full text-xs">
+                  <thead className="sticky top-0 bg-slate-50"><tr><th className="px-2 py-1.5 text-left">Month</th><th className="px-2 py-1.5 text-right">EMI</th><th className="px-2 py-1.5 text-right">Interest</th><th className="px-2 py-1.5 text-right">Principal</th><th className="px-2 py-1.5 text-right">Balance</th></tr></thead>
+                  <tbody>{displayedSchedule.map((r) => (<tr key={r.month} className="border-t border-slate-100"><td className="px-2 py-1">{r.month}</td><td className="px-2 py-1 text-right">₹{fmt(r.emi)}</td><td className="px-2 py-1 text-right">₹{fmt(r.interest)}</td><td className="px-2 py-1 text-right">₹{fmt(r.principal)}</td><td className="px-2 py-1 text-right">₹{fmt(r.balance)}</td></tr>))}</tbody>
+                </table>
+              </div>
+            </>
           )}
         </>
       )}

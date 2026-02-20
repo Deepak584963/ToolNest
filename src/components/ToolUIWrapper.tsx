@@ -14,7 +14,7 @@ type ToolUIWrapperProps = {
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(79,70,229,0.08)]">
+    <section className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-5">
       <h2 className="mb-4 text-base font-semibold text-slate-900">{title}</h2>
       {children}
     </section>
@@ -27,7 +27,7 @@ function OutputBlock({ value }: { value: string }) {
       <textarea
         value={value}
         readOnly
-        className="h-48 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-800"
+        className="h-48 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-base leading-6 text-slate-800 sm:text-sm"
       />
       <CopyButton value={value} />
     </div>

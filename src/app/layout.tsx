@@ -51,12 +51,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AdSenseScript />
-        <a href="#main-content" className="sr-only z-100 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
+        <a href="#main-content" className="sr-only z-50 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
           Skip to main content
         </a>
-        <div className="min-h-screen bg-linear-to-br from-indigo-50 via-sky-50 to-cyan-50 text-slate-900">
+        <div className="min-h-screen bg-linear-to-br from-indigo-100/55 via-sky-100/45 to-cyan-100/55 text-slate-900">
           <Header />
-          <main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">{children}</main>
+          <main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8 lg:py-12">{children}</main>
           <Footer />
           <ConsentBanner />
         </div>

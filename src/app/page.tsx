@@ -57,8 +57,8 @@ export default function HomePage() {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/70 p-8 shadow-[0_15px_45px_rgba(79,70,229,0.12)] backdrop-blur-xl sm:p-10">
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/40 via-purple-100/30 to-cyan-100/40" />
+      <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/68 p-6 shadow-[0_16px_40px_rgba(79,70,229,0.14)] backdrop-blur-xl sm:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/50 via-purple-100/35 to-cyan-100/50" />
         <div className="relative max-w-3xl">
           <p className="mb-3 inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">
             70+ Tools • Free • No Sign-up • Browser-based
@@ -69,23 +69,23 @@ export default function HomePage() {
           <p className="mt-4 text-balance text-base leading-7 text-slate-600 sm:text-lg">
             Solve daily tasks in seconds — format JSON, generate QR codes, calculate EMI, compress images, create hashtags, plan studies, and much more. All tools run 100% in your browser with zero data collection and no account required.
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             {[
               "Fast browser processing",
               "Privacy-first workflows",
               "Mobile-friendly interface",
               "No sign-up needed",
             ].map((item) => (
-              <span key={item} className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-slate-700">
+              <span key={item} className="rounded-full border border-white/60 bg-white/85 px-3 py-1 text-xs font-semibold text-slate-700">
                 {item}
               </span>
             ))}
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="#tools" className="rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
+            <Link href="#tools" className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 sm:w-auto">
               Explore All Tools ↓
             </Link>
-            <Link href="/about" className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-indigo-50">
+            <Link href="/about" className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-indigo-50 sm:w-auto">
               Learn More
             </Link>
           </div>
@@ -93,7 +93,7 @@ export default function HomePage() {
       </section>
 
       {/* Category cards */}
-      <section className="mt-10">
+      <section className="mt-10 rounded-2xl border border-white/70 bg-white/66 p-5 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-7">
         <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Browse by category</h2>
         <p className="mt-2 text-sm text-slate-600">Choose a category to find the right tool fast.</p>
         <div className="mt-5 grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
@@ -103,7 +103,7 @@ export default function HomePage() {
               <Link
                 key={cat.slug}
                 href={`/tools/category/${cat.slug}`}
-                className="group flex flex-col items-center gap-2 rounded-2xl border border-white/70 bg-white/80 p-5 text-center shadow-[0_10px_30px_rgba(79,70,229,0.06)] transition hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(6,182,212,0.15)]"
+                className="group flex min-h-32 flex-col items-center justify-center gap-2 rounded-2xl border border-white/70 bg-white/80 p-4 text-center shadow-[0_10px_30px_rgba(79,70,229,0.06)] transition hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(6,182,212,0.15)] sm:p-5"
               >
                 <span className="text-3xl">{cat.icon}</span>
                 <span className="text-sm font-semibold text-slate-800 group-hover:text-indigo-700">{cat.name} Tools</span>
@@ -115,14 +115,14 @@ export default function HomePage() {
       </section>
 
       {/* All tools grid */}
-      <section id="tools" className="mt-10 scroll-mt-24">
+      <section id="tools" className="mt-10 scroll-mt-24 rounded-2xl border border-white/70 bg-white/66 p-5 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-7">
         <HomeToolsSection />
       </section>
 
       <AdPlaceholder slot="3333333333" />
 
       {/* SEO content */}
-      <section className="mt-12 rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+      <section className="mt-12 rounded-2xl border border-white/70 bg-white/76 p-6 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Why ToolNest is the best free online tools website</h2>
         <div className="mt-4 space-y-4 text-sm leading-7 text-slate-700 sm:text-base">
           <p>
@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ for homepage */}
-      <section className="mt-8 rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+      <section className="mt-8 rounded-2xl border border-white/70 bg-white/76 p-6 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Frequently asked questions</h2>
         <div className="mt-4 space-y-3">
           {[
@@ -155,7 +155,7 @@ export default function HomePage() {
             { q: "Can I use these tools on my phone?", a: "Yes. Every tool is designed with a mobile-first approach and works smoothly on phones, tablets, and desktop computers." },
             { q: "How often are new tools added?", a: "We regularly add new tools based on user feedback and trending needs. Bookmark this page to stay updated." },
           ].map((faq) => (
-            <details key={faq.q} className="group rounded-xl border border-slate-200 bg-white/60 p-4">
+            <details key={faq.q} className="group rounded-xl border border-slate-200 bg-white/78 p-4">
               <summary className="cursor-pointer text-sm font-semibold text-slate-800 group-open:text-indigo-700">{faq.q}</summary>
               <p className="mt-2 text-sm leading-6 text-slate-600">{faq.a}</p>
             </details>

@@ -1151,7 +1151,15 @@ export function ImageMetadataViewer() {
         <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Filter metadata keys..." className={`${input} mb-3`} />
           {preview && <img src={preview} alt="Preview" className="mb-3 h-32 rounded-lg object-contain" />}
-          <table className="w-full text-sm">
+          <div className="space-y-2 sm:hidden">
+            {Object.entries(metadata).filter(([k]) => !search.trim() || k.toLowerCase().includes(search.toLowerCase())).map(([k, v]) => (
+              <div key={k} className="rounded-lg border border-slate-200 bg-white p-3 text-sm">
+                <p className="font-semibold text-slate-700">{k}</p>
+                <p className="mt-1 wrap-break-word text-slate-600">{v}</p>
+              </div>
+            ))}
+          </div>
+          <table className="hidden w-full text-sm sm:table">
             <tbody>
               {Object.entries(metadata).filter(([k]) => !search.trim() || k.toLowerCase().includes(search.toLowerCase())).map(([k, v]) => (
                 <tr key={k} className="border-b border-slate-100">

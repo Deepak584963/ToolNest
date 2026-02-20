@@ -56,7 +56,7 @@ export default function ShareTool({ title, slug }: ShareToolProps) {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2.5">
       <span className="text-xs font-semibold text-slate-500">Share:</span>
       {shareLinks.map((link) => (
         <a
@@ -65,7 +65,8 @@ export default function ShareTool({ title, slug }: ShareToolProps) {
           target="_blank"
           rel="noopener noreferrer"
           title={`Share on ${link.name}`}
-          className={`rounded-full border border-slate-200 p-2 text-slate-500 transition ${link.color}`}
+          className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 p-2 text-slate-500 transition ${link.color}`}
+          aria-label={`Share ${title} on ${link.name}`}
         >
           {link.icon}
         </a>
@@ -74,7 +75,8 @@ export default function ShareTool({ title, slug }: ShareToolProps) {
         type="button"
         onClick={handleCopy}
         title="Copy link"
-        className="rounded-full border border-slate-200 p-2 text-slate-500 transition hover:bg-indigo-50 hover:text-indigo-600"
+        className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 p-2 text-slate-500 transition hover:bg-indigo-50 hover:text-indigo-600 ${copied ? "bg-emerald-50 text-emerald-600" : ""}`}
+        aria-label={copied ? "Link copied" : "Copy tool link"}
       >
         {copied ? (
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -82,6 +84,7 @@ export default function ShareTool({ title, slug }: ShareToolProps) {
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
         )}
       </button>
+      <span className="text-xs text-slate-500" aria-live="polite">{copied ? "Link copied" : ""}</span>
     </div>
   );
 }

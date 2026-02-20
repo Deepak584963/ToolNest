@@ -2,11 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { tools } from "@/lib/tools";
 
 export default function SearchBar() {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
 
   const results = useMemo(() => {
@@ -43,6 +46,19 @@ export default function SearchBar() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
+  useEffect(() => {
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    setActiveIndex(results.length > 0 ? 0 : -1);
+  }, [query, results.length]);
+
   // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -69,7 +85,7 @@ export default function SearchBar() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-sm text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600 sm:min-w-52"
+        className="flex h-10 w-10 items-center justify-center gap-2 rounded-full border border-white/70 bg-white/78 px-0 text-sm text-slate-500 shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-xl transition hover:border-indigo-300 hover:text-indigo-600 sm:h-auto sm:w-auto sm:min-w-52 sm:justify-start sm:px-3 sm:py-1.5"
         aria-label="Search tools"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -82,8 +98,8 @@ export default function SearchBar() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/30 pt-[15vh] backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-white/70 bg-white shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/24 px-3 pt-16 sm:px-4 sm:pt-[15vh]">
+          <div className="w-full max-w-lg rounded-2xl border border-white/70 bg-white/84 shadow-[0_22px_50px_rgba(15,23,42,0.2)] backdrop-blur-md">
             <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -92,32 +108,52 @@ export default function SearchBar() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setActiveIndex((prev) => (results.length === 0 ? -1 : (prev + 1) % results.length));
+                  }
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setActiveIndex((prev) => (results.length === 0 ? -1 : (prev <= 0 ? results.length - 1 : prev - 1)));
+                  }
+                  if (e.key === "Enter" && activeIndex >= 0 && results[activeIndex]) {
+                    e.preventDefault();
+                    const slug = results[activeIndex].slug;
+                    setOpen(false);
+                    setQuery("");
+                    router.push(`/tools/${slug}`);
+                  }
+                }}
                 placeholder="Search 70+ free tools…"
-                className="flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+                className="flex-1 bg-transparent text-base text-slate-800 outline-none placeholder:text-slate-400 sm:text-sm"
                 autoFocus
               />
               <button
                 type="button"
                 onClick={() => { setOpen(false); setQuery(""); }}
-                className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-500 hover:bg-slate-200"
+                className="rounded-md bg-slate-100 px-2.5 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-200"
               >
-                ESC
+                <span className="sm:hidden">Close</span>
+                <span className="hidden sm:inline">ESC</span>
               </button>
             </div>
 
-            <div className="max-h-80 overflow-y-auto p-2">
+            <div className="max-h-[65vh] overflow-y-auto p-2 sm:max-h-80">
+              {results.length > 0 ? <p className="px-3 pb-2 text-[11px] text-slate-400">Use ↑ ↓ to navigate and Enter to open</p> : null}
               {query.length < 2 ? (
                 <p className="px-3 py-6 text-center text-sm text-slate-400">Type at least 2 characters to search…</p>
               ) : results.length === 0 ? (
                 <p className="px-3 py-6 text-center text-sm text-slate-400">No tools found for &quot;{query}&quot;</p>
               ) : (
                 <ul>
-                  {results.map((tool) => (
+                  {results.map((tool, index) => (
                     <li key={tool.slug}>
                       <Link
                         href={`/tools/${tool.slug}`}
+                        onMouseEnter={() => setActiveIndex(index)}
                         onClick={() => { setOpen(false); setQuery(""); }}
-                        className="flex items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-indigo-50"
+                        className={`flex items-start gap-3 rounded-xl px-3 py-3 transition ${activeIndex === index ? "bg-indigo-50/90" : "hover:bg-indigo-50/85"}`}
                       >
                         <div className="flex-1">
                           <p className="text-sm font-semibold text-slate-800">{tool.name}</p>
