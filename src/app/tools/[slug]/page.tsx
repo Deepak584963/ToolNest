@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
       locale: "en_US",
       type: "article",
       publishedTime: "2025-01-01T00:00:00Z",
-      modifiedTime: new Date().toISOString(),
+      modifiedTime: "2025-06-01T00:00:00Z",
       authors: ["ToolNest Team"],
     },
     twitter: {
@@ -111,7 +111,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
         category={categoryAppMap[tool.category] ?? "BrowserApplication"}
         keywords={tool.keywords}
         datePublished="2025-01-01T00:00:00Z"
-        dateModified={new Date().toISOString()}
+        dateModified="2025-06-01T00:00:00Z"
       />
       {workflow.length > 0 && (
         <HowToSchema
@@ -145,6 +145,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
             </Link>
             <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">{tool.name}</h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-500 sm:text-base sm:leading-8">{tool.longDescription}</p>
+            <time dateTime="2025-06-01T00:00:00Z" className="mt-3 inline-block text-xs text-slate-400">Last updated: June 2025</time>
           </div>
           <div className="relative">
             <ShareTool title={tool.name} slug={tool.slug} />
@@ -183,7 +184,9 @@ export default async function ToolPage({ params }: ToolPageProps) {
           <p className="mt-2 text-sm text-slate-500">Users typically discover {tool.name} through these high-intent search patterns.</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {searchIntents.map((intent) => (
-              <span key={intent} className="chip">{intent}</span>
+              <Link key={intent} href={`/tools/${tool.slug}`} className="chip" title={intent}>
+                {intent}
+              </Link>
             ))}
           </div>
         </section>

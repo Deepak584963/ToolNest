@@ -55,7 +55,7 @@ export default function Footer() {
           </div>
 
           {/* Categories */}
-          <div className="sm:col-span-1 lg:col-span-3">
+          <nav aria-label="Tool categories" className="sm:col-span-1 lg:col-span-3">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Tool Categories</p>
             <ul className="mt-4 space-y-2.5">
               {categoryLinks.map((link) => (
@@ -66,10 +66,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Popular Tools */}
-          <div className="sm:col-span-1 lg:col-span-3">
+          <nav aria-label="Popular tools" className="sm:col-span-1 lg:col-span-3">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Popular Tools</p>
             <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
               {popularTools.map((link) => (
@@ -80,10 +80,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Legal & Info */}
-          <div className="sm:col-span-2 lg:col-span-2">
+          <nav aria-label="Company links" className="sm:col-span-2 lg:col-span-2">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Company</p>
             <ul className="mt-4 space-y-2.5">
               <li><Link href="/about" className="text-sm text-slate-600 transition hover:text-indigo-600">About Us</Link></li>
@@ -92,7 +92,7 @@ export default function Footer() {
               <li><Link href="/privacy-policy" className="text-sm text-slate-600 transition hover:text-indigo-600">Privacy Policy</Link></li>
               <li><Link href="/disclaimer" className="text-sm text-slate-600 transition hover:text-indigo-600">Disclaimer</Link></li>
             </ul>
-          </div>
+          </nav>
         </div>
 
         {/* Bottom copyright */}

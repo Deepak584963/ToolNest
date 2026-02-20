@@ -58,6 +58,20 @@ const featuredImageTools = [
   { slug: "favicon-generator", label: "Favicon Generator" },
 ];
 
+const featuredTextTools = [
+  { slug: "word-counter-reading-time", label: "Word Counter" },
+  { slug: "lorem-ipsum-generator", label: "Lorem Ipsum" },
+  { slug: "text-cleaner", label: "Text Cleaner" },
+];
+
+const featuredStudentTools = [
+  { slug: "percentage-calculator", label: "Percentage Calculator" },
+  { slug: "cgpa-to-percentage-converter", label: "CGPA Converter" },
+  { slug: "attendance-calculator", label: "Attendance Tracker" },
+  { slug: "gpa-calculator", label: "GPA Calculator" },
+  { slug: "exam-countdown-timer", label: "Exam Countdown" },
+];
+
 export default function HomeToolsSection() {
   const [activeCategory, setActiveCategory] = useState<Category>("all");
 
@@ -101,7 +115,7 @@ export default function HomeToolsSection() {
         <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
           <div className="flex items-center gap-2">
             <span className="text-base">🛠️</span>
-            <p className="text-sm font-bold text-slate-800">Trending developer tools</p>
+            <h3 className="text-sm font-bold text-slate-800">Trending developer tools</h3>
           </div>
           <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             High-intent utilities for API debugging, regex testing, authentication inspection, and SQL formatting.
@@ -124,7 +138,7 @@ export default function HomeToolsSection() {
         <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
           <div className="flex items-center gap-2">
             <span className="text-base">🎬</span>
-            <p className="text-sm font-bold text-slate-800">Trending creator tools</p>
+            <h3 className="text-sm font-bold text-slate-800">Trending creator tools</h3>
           </div>
           <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             High-intent tools for YouTube growth, engagement analytics, content planning, and campaign tracking.
@@ -147,7 +161,7 @@ export default function HomeToolsSection() {
         <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
           <div className="flex items-center gap-2">
             <span className="text-base">🔍</span>
-            <p className="text-sm font-bold text-slate-800">Trending SEO tools</p>
+            <h3 className="text-sm font-bold text-slate-800">Trending SEO tools</h3>
           </div>
           <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             High-intent technical SEO tools for schema markup, international targeting, redirect migrations, robots directives, and topic clustering.
@@ -170,7 +184,7 @@ export default function HomeToolsSection() {
         <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
           <div className="flex items-center gap-2">
             <span className="text-base">🧮</span>
-            <p className="text-sm font-bold text-slate-800">Trending utility tools</p>
+            <h3 className="text-sm font-bold text-slate-800">Trending utility tools</h3>
           </div>
           <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             High-demand finance and daily calculation tools for loans, investments, conversions, and advanced math workflows.
@@ -193,7 +207,7 @@ export default function HomeToolsSection() {
         <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
           <div className="flex items-center gap-2">
             <span className="text-base">🖼️</span>
-            <p className="text-sm font-bold text-slate-800">Trending image tools</p>
+            <h3 className="text-sm font-bold text-slate-800">Trending image tools</h3>
           </div>
           <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             Most-used visual utilities for compression, conversion, asset prep, and social-ready image workflows.
@@ -204,6 +218,52 @@ export default function HomeToolsSection() {
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
                 className="pressable micro-lift rounded-full border border-orange-100 bg-orange-50/80 px-3.5 py-2 text-xs font-bold text-orange-700 transition hover:bg-orange-100 sm:py-1.5"
+              >
+                {tool.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(activeCategory === "all" || activeCategory === "text") && (
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+          <div className="flex items-center gap-2">
+            <span className="text-base">📝</span>
+            <h3 className="text-sm font-bold text-slate-800">Trending text tools</h3>
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+            Essential writing utilities for word counting, placeholder text generation, and content cleanup.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {featuredTextTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="pressable micro-lift rounded-full border border-amber-100 bg-amber-50/80 px-3.5 py-2 text-xs font-bold text-amber-700 transition hover:bg-amber-100 sm:py-1.5"
+              >
+                {tool.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(activeCategory === "all" || activeCategory === "student") && (
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🎓</span>
+            <h3 className="text-sm font-bold text-slate-800">Trending student tools</h3>
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+            Must-have academic utilities for grade tracking, attendance monitoring, exam planning, and GPA calculations.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {featuredStudentTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="pressable micro-lift rounded-full border border-violet-100 bg-violet-50/80 px-3.5 py-2 text-xs font-bold text-violet-700 transition hover:bg-violet-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>

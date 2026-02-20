@@ -90,6 +90,18 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     { slug: "favicon-generator", name: "Favicon Generator", description: "Create favicon sizes for modern browsers and platform icon requirements." },
     { slug: "image-color-palette-extractor", name: "Image Color Palette Extractor", description: "Extract dominant colors from images for branding and design consistency." },
   ];
+  const featuredTextTools = [
+    { slug: "word-counter-reading-time", name: "Word Counter & Reading Time", description: "Count words, characters, and estimate reading time with SEO content insights." },
+    { slug: "lorem-ipsum-generator", name: "Lorem Ipsum Generator", description: "Generate placeholder text by words, sentences, or paragraphs for wireframes." },
+    { slug: "text-cleaner", name: "Text Cleaner", description: "Remove extra spaces, line noise, and hidden junk characters from pasted text." },
+  ];
+  const featuredStudentTools = [
+    { slug: "percentage-calculator", name: "Percentage Calculator", description: "Find percentages, percentage change, and part-of-total values instantly." },
+    { slug: "cgpa-to-percentage-converter", name: "CGPA to Percentage Converter", description: "Convert CGPA to percentage using common university grading formulas." },
+    { slug: "attendance-calculator", name: "Attendance Calculator", description: "Track attendance percentage and find how many classes you can skip safely." },
+    { slug: "gpa-calculator", name: "GPA Calculator", description: "Calculate semester and cumulative GPA with custom credit hours and grading scales." },
+    { slug: "exam-countdown-timer", name: "Exam Countdown Timer", description: "Set target exam dates and see a live countdown in days, hours, and minutes." },
+  ];
 
   // Generate FAQ items for this category
   const faqs = [
@@ -187,7 +199,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 href={`/tools/${tool.slug}`}
                 className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
@@ -212,7 +224,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 href={`/tools/${tool.slug}`}
                 className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
@@ -237,7 +249,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 href={`/tools/${tool.slug}`}
                 className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
@@ -262,7 +274,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 href={`/tools/${tool.slug}`}
                 className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
@@ -287,7 +299,57 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 href={`/tools/${tool.slug}`}
                 className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {meta.slug === "text" && (
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-lg">📝</div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Top text tools</h2>
+          </div>
+          <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
+            Explore essential writing utilities for word counting, placeholder text generation, and content cleanup before publishing.
+          </p>
+          <div className="gradient-divider mt-4" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {featuredTextTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+              >
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {meta.slug === "student" && (
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-lg">🎓</div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Top student tools</h2>
+          </div>
+          <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
+            Explore high-demand academic utilities for grade tracking, attendance monitoring, GPA calculations, and exam countdowns.
+          </p>
+          <div className="gradient-divider mt-4" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {featuredStudentTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+              >
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}

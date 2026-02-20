@@ -26,6 +26,9 @@ export const metadata: Metadata = {
   description: "70+ free online tools for developers, SEO, students, creators, image processing, and everyday utilities. No sign-up, runs in your browser.",
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
   },
   openGraph: {
     title: "ToolNest — 70+ Free Online Tools",
