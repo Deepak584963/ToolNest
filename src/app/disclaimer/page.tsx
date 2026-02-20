@@ -1,11 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Disclaimer",
   description: "Disclaimer for ToolNest regarding tool accuracy, third-party content, and liability limitations.",
   alternates: {
     canonical: "/disclaimer",
+  },
+  openGraph: {
+    title: "ToolNest Disclaimer",
+    description: "Read the ToolNest disclaimer for tool output accuracy, liability limits, and third-party content notices.",
+    url: "/disclaimer",
+    siteName: siteConfig.name,
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ToolNest Disclaimer",
+    description: "Read the ToolNest disclaimer for tool output accuracy, liability limits, and third-party content notices.",
   },
 };
 

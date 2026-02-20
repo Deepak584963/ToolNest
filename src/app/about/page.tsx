@@ -1,11 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
   description: "Learn about ToolNest, our mission, the team behind the tools, and why we built this platform.",
   alternates: {
     canonical: "/about",
+  },
+  openGraph: {
+    title: "About ToolNest",
+    description: "Learn how ToolNest builds fast, privacy-first tools for developers, SEO, students, creators, and daily workflows.",
+    url: "/about",
+    siteName: siteConfig.name,
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About ToolNest",
+    description: "Learn how ToolNest builds fast, privacy-first tools for developers, SEO, students, creators, and daily workflows.",
   },
 };
 

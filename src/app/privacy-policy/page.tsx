@@ -1,10 +1,23 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy policy for ToolNest covering data collection, cookies, advertising, and user rights.",
   alternates: {
     canonical: "/privacy-policy",
+  },
+  openGraph: {
+    title: "ToolNest Privacy Policy",
+    description: "Read how ToolNest handles privacy, cookies, analytics, and advertising disclosures.",
+    url: "/privacy-policy",
+    siteName: siteConfig.name,
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ToolNest Privacy Policy",
+    description: "Read how ToolNest handles privacy, cookies, analytics, and advertising disclosures.",
   },
 };
 

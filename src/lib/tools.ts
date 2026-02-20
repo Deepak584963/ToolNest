@@ -2227,6 +2227,64 @@ export function getRelatedTools(slug: string, limit = 6): Tool[] {
   return selected;
 }
 
+export function getToolSearchIntents(slug: string, limit = 12): string[] {
+  const tool = getToolBySlug(slug);
+  if (!tool) return [];
+
+  const categoryTemplates: Record<Tool["category"], string[]> = {
+    dev: [
+      `free ${tool.name.toLowerCase()} for developers`,
+      `${tool.name.toLowerCase()} for api debugging`,
+      `${tool.name.toLowerCase()} without signup`,
+    ],
+    seo: [
+      `${tool.name.toLowerCase()} for technical seo`,
+      `best ${tool.name.toLowerCase()} online`,
+      `${tool.name.toLowerCase()} for rankings and ctr`,
+    ],
+    text: [
+      `${tool.name.toLowerCase()} for content writers`,
+      `free ${tool.name.toLowerCase()} online`,
+      `${tool.name.toLowerCase()} for editing workflow`,
+    ],
+    student: [
+      `${tool.name.toLowerCase()} for students`,
+      `${tool.name.toLowerCase()} exam use cases`,
+      `quick ${tool.name.toLowerCase()} online`,
+    ],
+    creator: [
+      `${tool.name.toLowerCase()} for creators`,
+      `${tool.name.toLowerCase()} for youtube and reels`,
+      `${tool.name.toLowerCase()} growth workflow`,
+    ],
+    image: [
+      `${tool.name.toLowerCase()} without upload`,
+      `${tool.name.toLowerCase()} in browser`,
+      `${tool.name.toLowerCase()} for web assets`,
+    ],
+    utility: [
+      `${tool.name.toLowerCase()} daily calculator`,
+      `${tool.name.toLowerCase()} free online`,
+      `${tool.name.toLowerCase()} instant results`,
+    ],
+  };
+
+  const keywordIntents = tool.keywords.flatMap((keyword) => [
+    `free ${keyword} online`,
+    `best ${keyword} tool`,
+  ]);
+
+  const baseIntents = [
+    `${tool.name.toLowerCase()} online`,
+    `${tool.name.toLowerCase()} free tool`,
+    `${tool.name.toLowerCase()} no signup`,
+    ...categoryTemplates[tool.category],
+    ...keywordIntents,
+  ];
+
+  return Array.from(new Set(baseIntents)).slice(0, Math.max(6, limit));
+}
+
 export function getToolFaqs(slug: string): { question: string; answer: string }[] {
   return toolProfiles[slug]?.faqs ?? [];
 }

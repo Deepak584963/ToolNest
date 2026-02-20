@@ -1,11 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
   description: "Contact the ToolNest team for feedback, bug reports, feature requests, or collaboration inquiries.",
   alternates: {
     canonical: "/contact",
+  },
+  openGraph: {
+    title: "Contact ToolNest",
+    description: "Reach ToolNest for feedback, bug reports, feature requests, partnerships, or support.",
+    url: "/contact",
+    siteName: siteConfig.name,
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact ToolNest",
+    description: "Reach ToolNest for feedback, bug reports, feature requests, partnerships, or support.",
   },
 };
 

@@ -10,6 +10,7 @@ import { siteConfig } from "@/lib/site";
 import { getCategoryMeta } from "@/lib/categories";
 import {
   getRelatedTools,
+  getToolSearchIntents,
   getToolArticleSections,
   getToolBySlug,
   getToolFaqs,
@@ -81,6 +82,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   const sections = getToolArticleSections(slug);
   const faqs = getToolFaqs(slug);
   const relatedTools = getRelatedTools(slug, 6);
+  const searchIntents = getToolSearchIntents(slug, 12);
   const categoryTools = tools.filter((entry) => entry.category === tool.category && entry.slug !== tool.slug).slice(0, 6);
   const workflow = getToolWorkflow(slug);
   const catMeta = getCategoryMeta(tool.category);
@@ -157,6 +159,23 @@ export default async function ToolPage({ params }: ToolPageProps) {
         </div>
       </section>
 
+      {searchIntents.length > 0 ? (
+        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+          <h2 className="text-2xl font-semibold text-slate-900">Popular use-case searches for this tool</h2>
+          <p className="mt-2 text-sm text-slate-600">Users typically discover {tool.name} through these high-intent search patterns.</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {searchIntents.map((intent) => (
+              <span
+                key={intent}
+                className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700"
+              >
+                {intent}
+              </span>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <AdPlaceholder label="After content section" slot="2222222222" />
 
       {faqs.length > 0 ? (
@@ -170,7 +189,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
       <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Related tools you might like</h2>
-        <p className="mt-2 text-sm text-slate-600">Continue your workflow with tools matched by category and task intent.</p>
+        <p className="mt-2 text-sm text-slate-600">Continue your workflow with tools matched by category, intent, and practical next steps.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {relatedTools.map((relatedTool) => (
             <Link

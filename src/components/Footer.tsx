@@ -29,6 +29,10 @@ const popularTools = [
   { href: "/tools/regex-tester-replacer", label: "Regex Tester" },
   { href: "/tools/jwt-decoder-inspector", label: "JWT Decoder" },
   { href: "/tools/http-status-code-lookup", label: "HTTP Status Lookup" },
+  { href: "/tools/compress-image", label: "Compress Image" },
+  { href: "/tools/image-to-pdf-converter", label: "Image to PDF" },
+  { href: "/tools/image-cropper", label: "Image Cropper" },
+  { href: "/tools/favicon-generator", label: "Favicon Generator" },
 ];
 
 export default function Footer() {

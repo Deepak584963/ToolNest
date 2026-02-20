@@ -1,10 +1,23 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Terms of Service governing your use of ToolNest online tools and website content.",
   alternates: {
     canonical: "/terms-of-service",
+  },
+  openGraph: {
+    title: "ToolNest Terms of Service",
+    description: "Review the terms governing use of ToolNest tools, website content, and service limitations.",
+    url: "/terms-of-service",
+    siteName: siteConfig.name,
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ToolNest Terms of Service",
+    description: "Review the terms governing use of ToolNest tools, website content, and service limitations.",
   },
 };
 

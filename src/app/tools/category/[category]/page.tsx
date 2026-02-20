@@ -80,6 +80,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     { slug: "currency-converter", name: "Currency Converter", description: "Convert major currencies quickly with practical reference exchange rates." },
     { slug: "scientific-calculator", name: "Scientific Calculator", description: "Perform advanced math with trigonometric and scientific operations." },
   ];
+  const featuredImageTools = [
+    { slug: "compress-image", name: "Compress Image", description: "Reduce image file size while preserving visual quality for faster page loads." },
+    { slug: "image-to-pdf-converter", name: "Image to PDF Converter", description: "Convert one or more images into shareable PDF documents in your browser." },
+    { slug: "image-cropper", name: "Image Cropper", description: "Crop photos to exact dimensions for social posts, banners, and thumbnails." },
+    { slug: "favicon-generator", name: "Favicon Generator", description: "Create favicon sizes for modern browsers and platform icon requirements." },
+    { slug: "image-color-palette-extractor", name: "Image Color Palette Extractor", description: "Extract dominant colors from images for branding and design consistency." },
+  ];
 
   // Generate FAQ items for this category
   const faqs = [
@@ -220,6 +227,27 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {featuredUtilityTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="rounded-xl border border-slate-200 bg-white/80 p-4 transition hover:-translate-y-0.5 hover:border-indigo-100 hover:shadow-md"
+              >
+                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
+                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {meta.slug === "image" && (
+        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+          <h2 className="text-2xl font-semibold text-slate-900">Top image tools for web assets and social workflows</h2>
+          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+            Explore high-demand image utilities for compression, conversion, cropping, favicon creation, and fast visual asset preparation.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {featuredImageTools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
