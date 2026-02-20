@@ -80,7 +80,8 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   const sections = getToolArticleSections(slug);
   const faqs = getToolFaqs(slug);
-  const relatedTools = getRelatedTools(slug);
+  const relatedTools = getRelatedTools(slug, 6);
+  const categoryTools = tools.filter((entry) => entry.category === tool.category && entry.slug !== tool.slug).slice(0, 6);
   const workflow = getToolWorkflow(slug);
   const catMeta = getCategoryMeta(tool.category);
   const categoryLabel = catMeta?.name ?? tool.category;
@@ -169,18 +170,36 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
       <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Related tools you might like</h2>
+        <p className="mt-2 text-sm text-slate-600">Continue your workflow with tools matched by category and task intent.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {relatedTools.map((relatedTool) => (
             <Link
               key={relatedTool.slug}
               href={`/tools/${relatedTool.slug}`}
-              className="flex flex-col rounded-xl border border-indigo-100 bg-indigo-50/60 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
+              className="pressable micro-lift flex flex-col rounded-xl border border-indigo-100 bg-indigo-50/60 p-4 transition hover:border-indigo-200 hover:shadow-md"
             >
+              <span className="mb-1 inline-flex w-fit rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-700">{relatedTool.category}</span>
               <span className="text-sm font-semibold text-indigo-700">{relatedTool.name}</span>
               <span className="mt-1 text-xs text-slate-500 line-clamp-2">{relatedTool.shortDescription}</span>
             </Link>
           ))}
         </div>
+        {categoryTools.length > 0 ? (
+          <div className="mt-5 rounded-xl border border-slate-200 bg-white/70 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">More in {categoryLabel}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {categoryTools.map((entry) => (
+                <Link
+                  key={entry.slug}
+                  href={`/tools/${entry.slug}`}
+                  className="pressable micro-lift rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200"
+                >
+                  {entry.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </section>
 
       {/* Category CTA */}

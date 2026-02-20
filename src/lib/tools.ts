@@ -2182,10 +2182,49 @@ export function getToolBySlug(slug: string): Tool | undefined {
   return tools.find((tool) => tool.slug === slug);
 }
 
-export function getRelatedTools(slug: string): Tool[] {
+export function getRelatedTools(slug: string, limit = 6): Tool[] {
+  const current = getToolBySlug(slug);
+  if (!current) return tools.slice(0, Math.max(3, limit));
+
   const profile = toolProfiles[slug];
-  if (!profile) return tools.filter((tool) => tool.slug !== slug).slice(0, 3);
-  return profile.related.map((relatedSlug) => getToolBySlug(relatedSlug)).filter((tool): tool is Tool => Boolean(tool));
+  const explicitRelated = new Set(profile?.related ?? []);
+  const sourceKeywords = new Set(current.keywords.map((k) => k.toLowerCase()));
+
+  const scored = tools
+    .filter((tool) => tool.slug !== slug)
+    .map((tool) => {
+      let score = 0;
+
+      if (explicitRelated.has(tool.slug)) score += 120;
+      if (tool.category === current.category) score += 45;
+
+      const overlap = tool.keywords.reduce((acc, keyword) => {
+        return sourceKeywords.has(keyword.toLowerCase()) ? acc + 1 : acc;
+      }, 0);
+      score += overlap * 12;
+
+      if (tool.slug.includes(current.category) || current.slug.includes(tool.category)) score += 4;
+
+      return { tool, score };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  const categoryCap = current.category === "image" ? 4 : 3;
+  const selected: Tool[] = [];
+  let sameCategoryCount = 0;
+
+  for (const item of scored) {
+    if (selected.length >= limit) break;
+
+    if (item.tool.category === current.category && sameCategoryCount >= categoryCap) {
+      continue;
+    }
+
+    selected.push(item.tool);
+    if (item.tool.category === current.category) sameCategoryCount += 1;
+  }
+
+  return selected;
 }
 
 export function getToolFaqs(slug: string): { question: string; answer: string }[] {

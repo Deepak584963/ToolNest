@@ -50,6 +50,14 @@ const featuredUtilityTools = [
   { slug: "scientific-calculator", label: "Scientific Calculator" },
 ];
 
+const featuredImageTools = [
+  { slug: "compress-image", label: "Compress Image" },
+  { slug: "image-to-pdf-converter", label: "Image to PDF" },
+  { slug: "qr-code-generator", label: "QR Code Generator" },
+  { slug: "image-cropper", label: "Image Cropper" },
+  { slug: "favicon-generator", label: "Favicon Generator" },
+];
+
 export default function HomeToolsSection() {
   const [activeCategory, setActiveCategory] = useState<Category>("all");
 
@@ -158,6 +166,26 @@ export default function HomeToolsSection() {
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
                 className="pressable micro-lift rounded-full bg-cyan-50 px-3 py-2 text-xs font-semibold text-cyan-700 transition hover:bg-cyan-100 sm:py-1.5"
+              >
+                {tool.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(activeCategory === "all" || activeCategory === "image") && (
+        <div className="rounded-2xl border border-white/70 bg-white/78 p-4 shadow-[0_10px_26px_rgba(79,70,229,0.08)] sm:p-5">
+          <p className="text-sm font-semibold text-slate-800">Trending image tools</p>
+          <p className="mt-1 text-xs text-slate-600 sm:text-sm">
+            Most-used visual utilities for compression, conversion, asset prep, and social-ready image workflows.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {featuredImageTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="pressable micro-lift rounded-full bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-700 transition hover:bg-orange-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>
