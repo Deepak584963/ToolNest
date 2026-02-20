@@ -68,25 +68,28 @@ export default function HomeToolsSection() {
 
   return (
     <section className="space-y-6" aria-labelledby="tools-grid-title">
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 id="tools-grid-title" className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-          All free online tools
-        </h2>
-        <span className="rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-lg">⚡</div>
+          <h2 id="tools-grid-title" className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+            All free online tools
+          </h2>
+        </div>
+        <span className="rounded-full border border-indigo-200/50 bg-indigo-50 px-3.5 py-1 text-xs font-bold text-indigo-600">
           {filteredTools.length} tools
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-2 rounded-2xl border border-white/70 bg-white/70 p-2">
+      <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200/60 bg-white/75 p-2.5">
         {categories.map((cat) => (
           <button
             key={cat.key}
             type="button"
             onClick={() => setActiveCategory(cat.key)}
-            className={`pressable micro-lift min-h-10 rounded-full px-4 py-2 text-sm font-semibold transition ${
+            className={`pressable micro-lift min-h-10 rounded-full px-4 py-2 text-sm font-bold transition ${
               activeCategory === cat.key
-                ? "bg-indigo-600 text-white shadow-[0_10px_24px_rgba(79,70,229,0.34)]"
-                : "bg-white/85 text-slate-700 hover:bg-white hover:text-indigo-700"
+                ? "btn-primary shadow-[0_4px_16px_rgba(99,102,241,0.3)]"
+                : "bg-white/85 text-slate-600 hover:bg-indigo-50/80 hover:text-indigo-600"
             }`}
           >
             {cat.label}
@@ -95,9 +98,12 @@ export default function HomeToolsSection() {
       </div>
 
       {(activeCategory === "all" || activeCategory === "dev") && (
-        <div className="rounded-2xl border border-white/70 bg-white/78 p-4 shadow-[0_10px_26px_rgba(79,70,229,0.08)] sm:p-5">
-          <p className="text-sm font-semibold text-slate-800">Trending developer tools</p>
-          <p className="mt-1 text-xs text-slate-600 sm:text-sm">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🛠️</span>
+            <p className="text-sm font-bold text-slate-800">Trending developer tools</p>
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             High-intent utilities for API debugging, regex testing, authentication inspection, and SQL formatting.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -105,7 +111,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>
@@ -115,9 +121,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "creator") && (
-        <div className="rounded-2xl border border-white/70 bg-white/78 p-4 shadow-[0_10px_26px_rgba(79,70,229,0.08)] sm:p-5">
-          <p className="text-sm font-semibold text-slate-800">Trending creator tools</p>
-          <p className="mt-1 text-xs text-slate-600 sm:text-sm">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🎬</span>
+            <p className="text-sm font-bold text-slate-800">Trending creator tools</p>
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             High-intent tools for YouTube growth, engagement analytics, content planning, and campaign tracking.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -125,7 +134,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full bg-pink-50 px-3 py-2 text-xs font-semibold text-pink-700 transition hover:bg-pink-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-pink-100 bg-pink-50/80 px-3.5 py-2 text-xs font-bold text-pink-700 transition hover:bg-pink-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>
@@ -135,9 +144,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "seo") && (
-        <div className="rounded-2xl border border-white/70 bg-white/78 p-4 shadow-[0_10px_26px_rgba(79,70,229,0.08)] sm:p-5">
-          <p className="text-sm font-semibold text-slate-800">Trending SEO tools</p>
-          <p className="mt-1 text-xs text-slate-600 sm:text-sm">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🔍</span>
+            <p className="text-sm font-bold text-slate-800">Trending SEO tools</p>
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             High-intent technical SEO tools for schema markup, international targeting, redirect migrations, robots directives, and topic clustering.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -145,7 +157,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-emerald-100 bg-emerald-50/80 px-3.5 py-2 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>
@@ -155,9 +167,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "utility") && (
-        <div className="rounded-2xl border border-white/70 bg-white/78 p-4 shadow-[0_10px_26px_rgba(79,70,229,0.08)] sm:p-5">
-          <p className="text-sm font-semibold text-slate-800">Trending utility tools</p>
-          <p className="mt-1 text-xs text-slate-600 sm:text-sm">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🧮</span>
+            <p className="text-sm font-bold text-slate-800">Trending utility tools</p>
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             High-demand finance and daily calculation tools for loans, investments, conversions, and advanced math workflows.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -165,7 +180,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full bg-cyan-50 px-3 py-2 text-xs font-semibold text-cyan-700 transition hover:bg-cyan-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-cyan-100 bg-cyan-50/80 px-3.5 py-2 text-xs font-bold text-cyan-700 transition hover:bg-cyan-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>
@@ -175,9 +190,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "image") && (
-        <div className="rounded-2xl border border-white/70 bg-white/78 p-4 shadow-[0_10px_26px_rgba(79,70,229,0.08)] sm:p-5">
-          <p className="text-sm font-semibold text-slate-800">Trending image tools</p>
-          <p className="mt-1 text-xs text-slate-600 sm:text-sm">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🖼️</span>
+            <p className="text-sm font-bold text-slate-800">Trending image tools</p>
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
             Most-used visual utilities for compression, conversion, asset prep, and social-ready image workflows.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -185,7 +203,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-700 transition hover:bg-orange-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-orange-100 bg-orange-50/80 px-3.5 py-2 text-xs font-bold text-orange-700 transition hover:bg-orange-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>

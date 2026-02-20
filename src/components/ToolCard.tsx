@@ -11,25 +11,40 @@ const categoryColors: Record<Tool["category"], string> = {
   utility: "bg-teal-50 text-teal-700",
 };
 
+const categoryIcons: Record<Tool["category"], string> = {
+  dev: "🛠️",
+  seo: "🔍",
+  text: "📝",
+  student: "🎓",
+  creator: "🎬",
+  image: "🖼️",
+  utility: "🧮",
+};
+
 type ToolCardProps = {
   tool: Tool;
 };
 
 export default function ToolCard({ tool }: ToolCardProps) {
   return (
-    <article className="group micro-lift reveal-up flex h-full flex-col rounded-2xl border border-white/70 bg-white/80 p-4 shadow-[0_12px_28px_rgba(79,70,229,0.1)] transition hover:shadow-[0_18px_34px_rgba(6,182,212,0.18)] sm:p-5">
-      <div className={`mb-3 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${categoryColors[tool.category]}`}>
-        {tool.category}
+    <article className="group micro-lift reveal-up flex h-full flex-col rounded-2xl border border-slate-200/60 bg-white/82 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_8px_24px_rgba(99,102,241,0.06)] transition hover:border-indigo-200/60 hover:shadow-[0_4px_12px_rgba(99,102,241,0.08),0_16px_32px_rgba(99,102,241,0.1)]">
+      <div className="mb-3 flex items-center gap-2">
+        <span className="text-lg">{categoryIcons[tool.category]}</span>
+        <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${categoryColors[tool.category]}`}>
+          {tool.category}
+        </span>
       </div>
-      <h3 className="text-lg font-semibold text-slate-900 text-balance">{tool.name}</h3>
-      <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{tool.shortDescription}</p>
-      <Link
-        href={`/tools/${tool.slug}`}
-        className="pressable mt-4 inline-flex min-h-10 w-fit items-center gap-2 rounded-full border border-cyan-100 bg-cyan-50/85 px-4 py-2 text-sm font-semibold text-cyan-700 transition group-hover:border-indigo-100 group-hover:bg-indigo-50 group-hover:text-indigo-700"
-      >
-        Open tool
-        <span aria-hidden>→</span>
-      </Link>
+      <h3 className="text-base font-bold text-slate-900 leading-snug sm:text-lg">{tool.name}</h3>
+      <p className="mt-2 flex-1 line-clamp-3 text-sm leading-relaxed text-slate-500">{tool.shortDescription}</p>
+      <div className="mt-4 pt-3 border-t border-slate-100">
+        <Link
+          href={`/tools/${tool.slug}`}
+          className="pressable inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl btn-primary px-4 py-2 text-sm shadow-[0_4px_12px_rgba(99,102,241,0.2)] sm:w-auto sm:justify-start"
+        >
+          Open tool
+          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
+        </Link>
+      </div>
     </article>
   );
 }

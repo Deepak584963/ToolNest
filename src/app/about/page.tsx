@@ -24,22 +24,27 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_12px_34px_rgba(79,70,229,0.1)] sm:p-8">
-      <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/35 via-sky-100/20 to-cyan-100/35" />
+    <section className="relative overflow-hidden rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_34px_rgba(99,102,241,0.08)] sm:p-8 lg:p-10">
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-indigo-100/30 via-purple-50/20 to-cyan-100/30" />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-linear-to-br from-indigo-200/15 to-violet-200/15 blur-3xl" />
       <div className="relative">
-      <p className="inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">About ToolNest</p>
-      <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">Built for speed, privacy, and usability</h1>
+      <p className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200/50 bg-indigo-50/80 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-indigo-600">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-500" />
+        About ToolNest
+      </p>
+      <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">Built for <span className="gradient-text">speed, privacy, and usability</span></h1>
 
-      <div className="mt-6 space-y-6 text-sm leading-7 text-slate-700 sm:text-base">
-        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold text-slate-900">Our Mission</h2>
+      <div className="gradient-divider mt-6" />
+      <div className="mt-6 space-y-5 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
+        <div className="section-accent rounded-2xl border border-slate-100/80 bg-white/70 p-5 pl-6 sm:p-6 sm:pl-7">
+          <h2 className="text-base font-bold text-slate-800 sm:text-lg">Our Mission</h2>
           <p className="mt-2">
             ToolNest was created with a clear mission: provide fast, reliable, and free online utilities that solve small but frequent technical problems. Whether you are a developer debugging an API response, a blogger optimizing an article for search engines, a student learning about web technologies, or a website owner preparing metadata, our tools are designed to save you time and effort every day.
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold text-slate-900">What We Offer</h2>
+        <div className="section-accent rounded-2xl border border-slate-100/80 bg-white/70 p-5 pl-6 sm:p-6 sm:pl-7">
+          <h2 className="text-base font-bold text-slate-800 sm:text-lg">What We Offer</h2>
           <p className="mt-2">
             We provide a curated collection of 15+ browser-based tools spanning three categories:
           </p>
@@ -53,8 +58,8 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold text-slate-900">Why ToolNest?</h2>
+        <div className="section-accent rounded-2xl border border-slate-100/80 bg-white/70 p-5 pl-6 sm:p-6 sm:pl-7">
+          <h2 className="text-base font-bold text-slate-800 sm:text-lg">Why ToolNest?</h2>
           <p className="mt-2">
             Most online tool websites are cluttered with intrusive ads, require sign-ups, or are slow to load. ToolNest takes a different approach. We built everything with performance-first principles using Next.js static generation, ensuring pages load instantly. The interface follows modern design patterns with clean typography, intuitive controls, and mobile-responsive layouts.
           </p>
@@ -63,28 +68,28 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold text-slate-900">Our Approach to Quality</h2>
+        <div className="section-accent rounded-2xl border border-slate-100/80 bg-white/70 p-5 pl-6 sm:p-6 sm:pl-7">
+          <h2 className="text-base font-bold text-slate-800 sm:text-lg">Our Approach to Quality</h2>
           <p className="mt-2">
             We believe utility tools should be trustworthy and transparent. Our tools use well-established algorithms and follow documented web standards. All SEO guidance aligns with current search engine documentation and industry best practices. Tool outputs are deterministic and reproducible, meaning you get the same result every time for the same input.
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold text-slate-900">Technology Stack</h2>
+        <div className="section-accent rounded-2xl border border-slate-100/80 bg-white/70 p-5 pl-6 sm:p-6 sm:pl-7">
+          <h2 className="text-base font-bold text-slate-800 sm:text-lg">Technology Stack</h2>
           <p className="mt-2">
             ToolNest is built with Next.js (App Router) and TypeScript for type safety and maintainability. The UI uses Tailwind CSS for consistent styling across all pages. The entire site is statically generated for optimal performance and deployed on Vercel&apos;s edge network for fast global access.
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-100 bg-white/75 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold text-slate-900">Get in Touch</h2>
+        <div className="section-accent rounded-2xl border border-slate-100/80 bg-white/70 p-5 pl-6 sm:p-6 sm:pl-7">
+          <h2 className="text-base font-bold text-slate-800 sm:text-lg">Get in Touch</h2>
           <p className="mt-2">
             We are always working to improve existing tools and add new ones based on user feedback. If you have suggestions, found an issue, or want to collaborate, visit our{" "}
-            <Link href="/contact" className="font-semibold text-indigo-700 hover:text-indigo-800">Contact page</Link> to reach out. You can also review our{" "}
-            <Link href="/privacy-policy" className="font-semibold text-indigo-700 hover:text-indigo-800">Privacy Policy</Link>,{" "}
-            <Link href="/terms-of-service" className="font-semibold text-indigo-700 hover:text-indigo-800">Terms of Service</Link>, and{" "}
-            <Link href="/disclaimer" className="font-semibold text-indigo-700 hover:text-indigo-800">Disclaimer</Link> for full transparency about how the site operates.
+            <Link href="/contact" className="font-semibold text-indigo-600 hover:text-indigo-700">Contact page</Link> to reach out. You can also review our{" "}
+            <Link href="/privacy-policy" className="font-semibold text-indigo-600 hover:text-indigo-700">Privacy Policy</Link>,{" "}
+            <Link href="/terms-of-service" className="font-semibold text-indigo-600 hover:text-indigo-700">Terms of Service</Link>, and{" "}
+            <Link href="/disclaimer" className="font-semibold text-indigo-600 hover:text-indigo-700">Disclaimer</Link> for full transparency about how the site operates.
           </p>
         </div>
       </div>

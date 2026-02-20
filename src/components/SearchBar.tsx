@@ -85,7 +85,7 @@ export default function SearchBar() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="pressable micro-lift flex h-10 w-10 items-center justify-center gap-2 rounded-full border border-white/70 bg-white/78 px-0 text-sm text-slate-500 shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-xl transition hover:border-indigo-300 hover:text-indigo-600 sm:h-auto sm:w-auto sm:min-w-52 sm:justify-start sm:px-3 sm:py-1.5"
+        className="pressable micro-lift flex h-10 w-10 items-center justify-center gap-2 rounded-full border border-slate-200/60 bg-white/80 px-0 text-sm text-slate-400 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_4px_12px_rgba(99,102,241,0.06)] backdrop-blur-xl transition hover:border-indigo-200/60 hover:text-indigo-600 sm:h-auto sm:w-auto sm:min-w-52 sm:justify-start sm:px-3 sm:py-1.5"
         aria-label="Search tools"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -98,8 +98,8 @@ export default function SearchBar() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/24 px-3 pt-16 sm:px-4 sm:pt-[15vh]">
-          <div className="w-full max-w-lg rounded-2xl border border-white/70 bg-white/84 shadow-[0_22px_50px_rgba(15,23,42,0.2)] backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/30 px-3 pt-16 sm:px-4 sm:pt-[15vh]">
+          <div className="fade-scale-in w-full max-w-lg rounded-2xl border border-white/60 bg-white/92 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_22px_50px_rgba(15,23,42,0.16)] backdrop-blur-xl">
             <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -132,7 +132,7 @@ export default function SearchBar() {
               <button
                 type="button"
                 onClick={() => { setOpen(false); setQuery(""); }}
-                className="pressable rounded-md bg-slate-100 px-2.5 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-200"
+                className="pressable rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-400 hover:bg-slate-200 hover:text-slate-600"
               >
                 <span className="sm:hidden">Close</span>
                 <span className="hidden sm:inline">ESC</span>
@@ -153,13 +153,13 @@ export default function SearchBar() {
                         href={`/tools/${tool.slug}`}
                         onMouseEnter={() => setActiveIndex(index)}
                         onClick={() => { setOpen(false); setQuery(""); }}
-                        className={`pressable micro-lift flex items-start gap-3 rounded-xl px-3 py-3 transition ${activeIndex === index ? "bg-indigo-50/90" : "hover:bg-indigo-50/85"}`}
+                        className={`pressable micro-lift flex items-start gap-3 rounded-xl px-3 py-3 transition ${activeIndex === index ? "bg-indigo-50/90 border border-indigo-100" : "border border-transparent hover:bg-indigo-50/70"}`}
                       >
                         <div className="flex-1">
                           <p className="text-sm font-semibold text-slate-800">{tool.name}</p>
                           <p className="mt-0.5 text-xs text-slate-500 line-clamp-1">{tool.shortDescription}</p>
                         </div>
-                        <span className={`mt-0.5 inline-flex shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${categoryColors[tool.category] ?? "bg-slate-100 text-slate-600"}`}>
+                        <span className={`mt-0.5 inline-flex shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${categoryColors[tool.category] ?? "bg-slate-100 text-slate-600"}`}>
                           {tool.category}
                         </span>
                       </Link>

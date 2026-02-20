@@ -120,35 +120,37 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <FAQSchema items={faqs} />
 
       {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="reveal-up text-sm text-slate-500">
+      <nav aria-label="Breadcrumb" className="reveal-up text-sm text-slate-400">
         <ol className="flex flex-wrap items-center gap-1.5">
-          <li><Link href="/" className="hover:text-indigo-700">Home</Link></li>
-          <li aria-hidden>/</li>
-          <li><Link href="/#tools" className="hover:text-indigo-700">Tools</Link></li>
-          <li aria-hidden>/</li>
-          <li className="font-medium text-slate-700">{meta.name} Tools</li>
+          <li><Link href="/" className="font-medium text-slate-500 hover:text-indigo-600 transition">Home</Link></li>
+          <li aria-hidden className="text-slate-300">/</li>
+          <li><Link href="/#tools" className="font-medium text-slate-500 hover:text-indigo-600 transition">Tools</Link></li>
+          <li aria-hidden className="text-slate-300">/</li>
+          <li className="font-semibold text-indigo-600">{meta.name} Tools</li>
         </ol>
       </nav>
 
       {/* Hero */}
-      <header className="reveal-up reveal-delay-1 relative overflow-hidden rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_12px_34px_rgba(79,70,229,0.1)] sm:p-8">
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/35 via-sky-100/20 to-cyan-100/35" />
+      <header className="reveal-up reveal-delay-1 relative overflow-hidden rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_34px_rgba(99,102,241,0.08)] sm:p-8 lg:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-indigo-100/30 via-purple-50/20 to-cyan-100/30" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-linear-to-br from-indigo-200/15 to-violet-200/15 blur-3xl" />
         <div className="relative">
-        <p className="mb-2 text-4xl">{meta.icon}</p>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          Free Online {meta.name} Tools
+        <p className="mb-3 text-4xl">{meta.icon}</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+          Free Online <span className="gradient-text">{meta.name} Tools</span>
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600 sm:text-base">
+        <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-500 sm:text-base sm:leading-8">
           {meta.description}
         </p>
-        <p className="mt-2 inline-flex rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-indigo-200/50 bg-indigo-50/80 px-3.5 py-1.5 text-xs font-bold text-indigo-600">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-500" />
           {categoryTools.length} free tools available
         </p>
         </div>
       </header>
 
       {/* Tools Grid */}
-      <section aria-label={`${meta.name} tools list`} className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/75 p-4 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-6">
+      <section aria-label={`${meta.name} tools list`} className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/70 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-7">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {categoryTools.map((tool) => (
             <ToolCard key={tool.slug} tool={tool} />
@@ -157,20 +159,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {meta.slug === "dev" && (
-        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-          <h2 className="text-2xl font-semibold text-slate-900">Top developer tools for API and backend workflows</h2>
-          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-lg">🛠️</div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Top developer tools</h2>
+          </div>
+          <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
             Explore high-demand developer utilities for regex debugging, JWT token inspection, cron schedule creation, SQL query formatting, and HTTP status code references.
           </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="gradient-divider mt-4" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {featuredDevTools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-xl border border-slate-200 bg-white/80 p-4 transition hover:-translate-y-0.5 hover:border-indigo-100 hover:shadow-md"
+                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
-                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
           </div>
@@ -178,20 +184,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "creator" && (
-        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-          <h2 className="text-2xl font-semibold text-slate-900">Top creator tools for growth and analytics workflows</h2>
-          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pink-50 text-lg">🎬</div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Top creator tools</h2>
+          </div>
+          <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
             Explore high-demand creator utilities for YouTube chapters, engagement analysis, monthly content planning, posting-time optimization, and campaign link tracking.
           </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="gradient-divider mt-4" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {featuredCreatorTools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-xl border border-slate-200 bg-white/80 p-4 transition hover:-translate-y-0.5 hover:border-indigo-100 hover:shadow-md"
+                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
-                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
           </div>
@@ -199,20 +209,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "seo" && (
-        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-          <h2 className="text-2xl font-semibold text-slate-900">Top SEO tools for technical audits and content planning</h2>
-          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-lg">🔍</div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Top SEO tools</h2>
+          </div>
+          <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
             Explore high-demand SEO utilities for structured data, hreflang deployment, redirect migrations, robots directives, and keyword clustering workflows.
           </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="gradient-divider mt-4" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {featuredSeoTools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-xl border border-slate-200 bg-white/80 p-4 transition hover:-translate-y-0.5 hover:border-indigo-100 hover:shadow-md"
+                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
-                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
           </div>
@@ -220,20 +234,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "utility" && (
-        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-          <h2 className="text-2xl font-semibold text-slate-900">Top utility tools for finance and daily calculations</h2>
-          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-lg">🧮</div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Top utility tools</h2>
+          </div>
+          <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
             Explore high-demand utility tools for EMI planning, loan analysis, SIP growth estimation, currency conversion, and scientific calculations.
           </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="gradient-divider mt-4" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {featuredUtilityTools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-xl border border-slate-200 bg-white/80 p-4 transition hover:-translate-y-0.5 hover:border-indigo-100 hover:shadow-md"
+                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
-                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
           </div>
@@ -241,20 +259,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "image" && (
-        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-          <h2 className="text-2xl font-semibold text-slate-900">Top image tools for web assets and social workflows</h2>
-          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-lg">🖼️</div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Top image tools</h2>
+          </div>
+          <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
             Explore high-demand image utilities for compression, conversion, cropping, favicon creation, and fast visual asset preparation.
           </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="gradient-divider mt-4" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {featuredImageTools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-xl border border-slate-200 bg-white/80 p-4 transition hover:-translate-y-0.5 hover:border-indigo-100 hover:shadow-md"
+                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
               >
-                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
-                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
               </Link>
             ))}
           </div>
@@ -262,9 +284,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {/* Long description / SEO content */}
-      <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-        <h2 className="text-2xl font-semibold text-slate-900">About our {meta.name.toLowerCase()} tools</h2>
-        <div className="mt-4 space-y-4 text-sm leading-7 text-slate-700 sm:text-base">
+      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <h2 className="text-2xl font-extrabold text-slate-900">About our {meta.name.toLowerCase()} tools</h2>
+        <div className="gradient-divider mt-4" />
+        <div className="mt-5 space-y-4 text-sm leading-7 text-slate-500 sm:text-base sm:leading-8">
           <p>{meta.longDescription}</p>
           <p>
             Every tool in this category runs entirely in your browser — your data never leaves your device. There is no account to create, no download to install, and no usage limit. Just open the tool, enter your data, and get instant results. This privacy-first approach makes ToolNest trusted by thousands of professionals, students, and hobbyists worldwide.
@@ -276,33 +299,42 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {/* FAQs */}
-      <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-        <h2 className="text-2xl font-semibold text-slate-900">Frequently asked questions</h2>
-        <div className="mt-4 space-y-4">
+      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-lg">❓</div>
+          <h2 className="text-2xl font-extrabold text-slate-900">Frequently asked questions</h2>
+        </div>
+        <div className="gradient-divider mt-4" />
+        <div className="mt-5 space-y-3">
           {faqs.map((faq) => (
-            <details key={faq.question} className="group rounded-xl border border-slate-200 bg-white/70 p-4">
-              <summary className="cursor-pointer text-sm font-semibold text-slate-800 group-open:text-indigo-700">
+            <details key={faq.question} className="group rounded-2xl border border-slate-200/60 bg-white/80 p-4 transition hover:border-indigo-200/60">
+              <summary className="flex cursor-pointer items-center justify-between gap-2 text-sm font-bold text-slate-800 group-open:text-indigo-600">
                 {faq.question}
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0 text-slate-400 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
               </summary>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{faq.answer}</p>
+              <p className="mt-3 text-sm leading-relaxed text-slate-500">{faq.answer}</p>
             </details>
           ))}
         </div>
       </section>
 
       {/* Explore other categories */}
-      <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
-        <h2 className="text-2xl font-semibold text-slate-900">Explore other tool categories</h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-lg">📂</div>
+          <h2 className="text-2xl font-extrabold text-slate-900">Explore other categories</h2>
+        </div>
+        <div className="gradient-divider mt-4" />
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {otherCategories.map((cat) => (
             <Link
               key={cat.slug}
               href={`/tools/category/${cat.slug}`}
-              className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white/75 p-4 transition hover:-translate-y-0.5 hover:border-indigo-100 hover:shadow-md"
+              className="group gradient-border flex items-center gap-3 rounded-2xl bg-white/85 p-4 transition hover:shadow-[0_4px_12px_rgba(99,102,241,0.08),0_12px_24px_rgba(99,102,241,0.08)]"
             >
-              <span className="text-2xl">{cat.icon}</span>
+              <span className="text-2xl transition-transform group-hover:scale-110">{cat.icon}</span>
               <div>
-                <p className="text-sm font-semibold text-slate-800">{cat.name} Tools</p>
+                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{cat.name} Tools</p>
                 <p className="text-xs text-slate-500">{tools.filter((t) => t.category === cat.slug).length} tools</p>
               </div>
             </Link>
