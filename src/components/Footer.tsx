@@ -11,14 +11,24 @@ const categoryLinks = [
 ];
 
 const popularTools = [
-  { href: "/tools/json-formatter-validator", label: "JSON Formatter" },
-  { href: "/tools/qr-code-generator", label: "QR Code Generator" },
   { href: "/tools/emi-calculator", label: "EMI Calculator" },
-  { href: "/tools/percentage-calculator", label: "Percentage Calculator" },
-  { href: "/tools/instagram-hashtag-generator", label: "Hashtag Generator" },
-  { href: "/tools/compress-image", label: "Compress Image" },
-  { href: "/tools/word-counter-reading-time", label: "Word Counter" },
-  { href: "/tools/meta-title-description-preview", label: "Meta Tag Preview" },
+  { href: "/tools/loan-interest-calculator", label: "Loan Interest" },
+  { href: "/tools/sip-calculator", label: "SIP Calculator" },
+  { href: "/tools/currency-converter", label: "Currency Converter" },
+  { href: "/tools/scientific-calculator", label: "Scientific Calculator" },
+  { href: "/tools/schema-markup-generator", label: "Schema Markup" },
+  { href: "/tools/hreflang-tag-generator", label: "Hreflang Tags" },
+  { href: "/tools/redirect-rule-generator", label: "Redirect Rules" },
+  { href: "/tools/robots-meta-tag-generator", label: "Robots Meta Tag" },
+  { href: "/tools/keyword-cluster-generator", label: "Keyword Clusters" },
+  { href: "/tools/youtube-chapter-timestamp-generator", label: "YouTube Chapters" },
+  { href: "/tools/engagement-rate-calculator", label: "Engagement Calculator" },
+  { href: "/tools/viral-content-calendar-generator", label: "Content Calendar" },
+  { href: "/tools/best-time-to-post-planner", label: "Best Time to Post" },
+  { href: "/tools/utm-link-builder-for-creators", label: "UTM Link Builder" },
+  { href: "/tools/regex-tester-replacer", label: "Regex Tester" },
+  { href: "/tools/jwt-decoder-inspector", label: "JWT Decoder" },
+  { href: "/tools/http-status-code-lookup", label: "HTTP Status Lookup" },
 ];
 
 export default function Footer() {
@@ -31,7 +41,7 @@ export default function Footer() {
           <div>
             <p className="text-base font-semibold text-slate-800">ToolNest</p>
             <p className="mt-2 max-w-xs text-sm leading-6 text-slate-500">
-              55+ free, browser-based tools for developers, SEO, students, creators, and everyday tasks. No sign-up required.
+              70+ free, browser-based tools for developers, SEO, students, creators, and everyday tasks. No sign-up required.
             </p>
           </div>
 

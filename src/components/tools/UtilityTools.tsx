@@ -17,22 +17,45 @@ const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus
 const btn = "rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition";
 const stat = "flex flex-col items-center rounded-xl p-4 min-w-28";
 
+function downloadText(name: string, content: string, type = "text/plain;charset=utf-8") {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 /* ───── 1. EMI Calculator ───── */
 export function EmiCalculator() {
   const [principal, setPrincipal] = useState("1000000");
   const [rate, setRate] = useState("8.5");
   const [tenure, setTenure] = useState("240");
+  const [downPayment, setDownPayment] = useState("0");
+  const [extraMonthly, setExtraMonthly] = useState("0");
 
   const result = useMemo(() => {
-    const p = parseFloat(principal);
+    const p = Math.max(0, parseFloat(principal) - parseFloat(downPayment || "0"));
     const r = parseFloat(rate) / 12 / 100;
     const n = parseInt(tenure);
     if (isNaN(p) || isNaN(r) || isNaN(n) || r === 0 || n === 0) return null;
     const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
     const totalPayment = emi * n;
     const totalInterest = totalPayment - p;
-    return { emi: emi.toFixed(0), totalPayment: totalPayment.toFixed(0), totalInterest: totalInterest.toFixed(0) };
-  }, [principal, rate, tenure]);
+    const withExtra = Math.max(emi + parseFloat(extraMonthly || "0"), emi);
+    let balance = p;
+    let months = 0;
+    while (balance > 0 && months < n * 2) {
+      const interest = balance * r;
+      const principalPart = withExtra - interest;
+      if (principalPart <= 0) break;
+      balance -= principalPart;
+      months += 1;
+    }
+    const savedMonths = Math.max(0, n - months);
+    return { emi: emi.toFixed(0), totalPayment: totalPayment.toFixed(0), totalInterest: totalInterest.toFixed(0), savedMonths };
+  }, [principal, downPayment, rate, tenure, extraMonthly]);
 
   const fmt = (v: string) => Number(v).toLocaleString("en-IN");
 
@@ -43,11 +66,16 @@ export function EmiCalculator() {
         <div><label className={label}>Annual Interest Rate (%)</label><input type="number" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} className={input} /></div>
         <div><label className={label}>Tenure (months)</label><input type="number" value={tenure} onChange={(e) => setTenure(e.target.value)} className={input} /></div>
       </div>
+      <div className="mt-3 grid gap-4 sm:grid-cols-2">
+        <div><label className={label}>Down Payment (₹)</label><input type="number" value={downPayment} onChange={(e) => setDownPayment(e.target.value)} className={input} /></div>
+        <div><label className={label}>Extra EMI / month (₹)</label><input type="number" value={extraMonthly} onChange={(e) => setExtraMonthly(e.target.value)} className={input} /></div>
+      </div>
       {result && (
         <div className="mt-4 flex flex-wrap justify-center gap-4">
           <div className={`${stat} bg-indigo-50`}><p className="text-xl font-bold text-indigo-700">₹{fmt(result.emi)}</p><p className="text-xs text-indigo-500">Monthly EMI</p></div>
           <div className={`${stat} bg-emerald-50`}><p className="text-xl font-bold text-emerald-700">₹{fmt(result.totalPayment)}</p><p className="text-xs text-emerald-500">Total Payment</p></div>
           <div className={`${stat} bg-rose-50`}><p className="text-xl font-bold text-rose-700">₹{fmt(result.totalInterest)}</p><p className="text-xs text-rose-500">Total Interest</p></div>
+          <div className={`${stat} bg-amber-50`}><p className="text-xl font-bold text-amber-700">{result.savedMonths}</p><p className="text-xs text-amber-500">Months saved</p></div>
         </div>
       )}
     </Panel>
@@ -60,6 +88,7 @@ export function LoanInterestCalculator() {
   const [rate, setRate] = useState("9");
   const [tenure, setTenure] = useState("60");
   const [showSchedule, setShowSchedule] = useState(false);
+  const [summaryOnly, setSummaryOnly] = useState(false);
 
   const result = useMemo(() => {
     const p = parseFloat(principal);
@@ -95,12 +124,13 @@ export function LoanInterestCalculator() {
             <div className={`${stat} bg-rose-50`}><p className="text-lg font-bold text-rose-700">₹{fmt(result.totalInterest)}</p><p className="text-xs text-rose-500">Total Interest</p></div>
             <div className={`${stat} bg-emerald-50`}><p className="text-lg font-bold text-emerald-700">₹{fmt(result.totalPayment)}</p><p className="text-xs text-emerald-500">Total Payment</p></div>
           </div>
+          <label className="mt-3 inline-flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={summaryOnly} onChange={(e) => setSummaryOnly(e.target.checked)} /> Summary only (first and last 12 months)</label>
           <button type="button" onClick={() => setShowSchedule(!showSchedule)} className="mt-3 text-sm font-semibold text-indigo-600 hover:text-indigo-800">{showSchedule ? "Hide" : "Show"} Amortization Schedule</button>
           {showSchedule && (
             <div className="mt-3 max-h-64 overflow-auto rounded-xl border border-slate-200">
               <table className="w-full text-xs">
                 <thead className="sticky top-0 bg-slate-50"><tr><th className="px-2 py-1.5 text-left">Month</th><th className="px-2 py-1.5 text-right">EMI</th><th className="px-2 py-1.5 text-right">Interest</th><th className="px-2 py-1.5 text-right">Principal</th><th className="px-2 py-1.5 text-right">Balance</th></tr></thead>
-                <tbody>{result.schedule.map((r) => (<tr key={r.month} className="border-t border-slate-100"><td className="px-2 py-1">{r.month}</td><td className="px-2 py-1 text-right">₹{fmt(r.emi)}</td><td className="px-2 py-1 text-right">₹{fmt(r.interest)}</td><td className="px-2 py-1 text-right">₹{fmt(r.principal)}</td><td className="px-2 py-1 text-right">₹{fmt(r.balance)}</td></tr>))}</tbody>
+                <tbody>{(summaryOnly ? result.schedule.filter((row) => row.month <= 12 || row.month > result.schedule.length - 12) : result.schedule).map((r) => (<tr key={r.month} className="border-t border-slate-100"><td className="px-2 py-1">{r.month}</td><td className="px-2 py-1 text-right">₹{fmt(r.emi)}</td><td className="px-2 py-1 text-right">₹{fmt(r.interest)}</td><td className="px-2 py-1 text-right">₹{fmt(r.principal)}</td><td className="px-2 py-1 text-right">₹{fmt(r.balance)}</td></tr>))}</tbody>
               </table>
             </div>
           )}
@@ -115,6 +145,7 @@ export function GstCalculator() {
   const [amount, setAmount] = useState("10000");
   const [gstRate, setGstRate] = useState("18");
   const [mode, setMode] = useState<"exclusive" | "inclusive">("exclusive");
+  const [interState, setInterState] = useState(false);
 
   const result = useMemo(() => {
     const a = parseFloat(amount);
@@ -122,12 +153,12 @@ export function GstCalculator() {
     if (isNaN(a) || isNaN(r)) return null;
     if (mode === "exclusive") {
       const gst = a * (r / 100);
-      return { net: a, gst, total: a + gst, cgst: gst / 2, sgst: gst / 2 };
+      return { net: a, gst, total: a + gst, cgst: interState ? 0 : gst / 2, sgst: interState ? 0 : gst / 2, igst: interState ? gst : 0 };
     }
     const net = a / (1 + r / 100);
     const gst = a - net;
-    return { net, gst, total: a, cgst: gst / 2, sgst: gst / 2 };
-  }, [amount, gstRate, mode]);
+    return { net, gst, total: a, cgst: interState ? 0 : gst / 2, sgst: interState ? 0 : gst / 2, igst: interState ? gst : 0 };
+  }, [amount, gstRate, mode, interState]);
 
   const fmt = (v: number) => `₹${v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -147,13 +178,13 @@ export function GstCalculator() {
           </select>
         </div>
       </div>
+      <label className="mt-3 inline-flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={interState} onChange={(e) => setInterState(e.target.checked)} /> Inter-state (IGST)</label>
       {result && (
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <tbody>
               <tr className="border-b border-slate-100"><td className="py-2 font-medium text-slate-700">Net Amount</td><td className="py-2 text-right font-semibold text-slate-800">{fmt(result.net)}</td></tr>
-              <tr className="border-b border-slate-100"><td className="py-2 font-medium text-slate-700">CGST ({parseFloat(gstRate) / 2}%)</td><td className="py-2 text-right text-slate-800">{fmt(result.cgst)}</td></tr>
-              <tr className="border-b border-slate-100"><td className="py-2 font-medium text-slate-700">SGST ({parseFloat(gstRate) / 2}%)</td><td className="py-2 text-right text-slate-800">{fmt(result.sgst)}</td></tr>
+              {interState ? <tr className="border-b border-slate-100"><td className="py-2 font-medium text-slate-700">IGST ({parseFloat(gstRate)}%)</td><td className="py-2 text-right text-slate-800">{fmt(result.igst)}</td></tr> : <><tr className="border-b border-slate-100"><td className="py-2 font-medium text-slate-700">CGST ({parseFloat(gstRate) / 2}%)</td><td className="py-2 text-right text-slate-800">{fmt(result.cgst)}</td></tr><tr className="border-b border-slate-100"><td className="py-2 font-medium text-slate-700">SGST ({parseFloat(gstRate) / 2}%)</td><td className="py-2 text-right text-slate-800">{fmt(result.sgst)}</td></tr></>}
               <tr className="border-b border-slate-100"><td className="py-2 font-medium text-slate-700">Total GST</td><td className="py-2 text-right font-semibold text-indigo-700">{fmt(result.gst)}</td></tr>
               <tr><td className="py-2 font-medium text-slate-700">Total Amount</td><td className="py-2 text-right font-bold text-emerald-700">{fmt(result.total)}</td></tr>
             </tbody>
@@ -173,6 +204,7 @@ export function CurrencyConverter() {
   const [amount, setAmount] = useState("100");
   const [from, setFrom] = useState("USD");
   const [to, setTo] = useState("INR");
+  const [decimals, setDecimals] = useState(2);
 
   const result = useMemo(() => {
     const a = parseFloat(amount);
@@ -180,8 +212,8 @@ export function CurrencyConverter() {
     const inUsd = a / currencies[from];
     const converted = inUsd * currencies[to];
     const rate = currencies[to] / currencies[from];
-    return { converted: converted.toFixed(2), rate: rate.toFixed(4) };
-  }, [amount, from, to]);
+    return { converted: converted.toFixed(decimals), rate: rate.toFixed(4) };
+  }, [amount, from, to, decimals]);
 
   return (
     <Panel title="Currency Converter">
@@ -201,6 +233,10 @@ export function CurrencyConverter() {
           {result && <p className="w-full rounded-xl bg-emerald-50 p-2.5 text-center text-lg font-bold text-emerald-700">{result.converted} {to}</p>}
         </div>
       </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button type="button" onClick={() => { const prev = from; setFrom(to); setTo(prev); }} className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200">Swap</button>
+        <input type="number" min={0} max={6} value={decimals} onChange={(e) => setDecimals(Number(e.target.value) || 2)} className="w-24 rounded-xl border border-slate-200 px-3 py-1.5 text-xs" placeholder="Decimals" />
+      </div>
       {result && <p className="mt-2 text-xs text-slate-500">Rate: 1 {from} = {result.rate} {to} (approximate reference rate)</p>}
     </Panel>
   );
@@ -211,16 +247,24 @@ export function SipCalculator() {
   const [monthly, setMonthly] = useState("10000");
   const [returnRate, setReturnRate] = useState("12");
   const [years, setYears] = useState("15");
+  const [stepUp, setStepUp] = useState("0");
 
   const result = useMemo(() => {
     const m = parseFloat(monthly);
     const r = parseFloat(returnRate) / 12 / 100;
     const n = parseInt(years) * 12;
     if (isNaN(m) || isNaN(r) || isNaN(n) || r === 0) return null;
-    const maturity = m * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
-    const totalInvested = m * n;
-    return { maturity: Math.round(maturity), totalInvested, wealth: Math.round(maturity - totalInvested) };
-  }, [monthly, returnRate, years]);
+    const annualStep = parseFloat(stepUp) / 100;
+    let corpus = 0;
+    let invested = 0;
+    let currentMonthly = m;
+    for (let month = 1; month <= n; month++) {
+      if (month > 1 && month % 12 === 1) currentMonthly *= 1 + (isNaN(annualStep) ? 0 : annualStep);
+      corpus = (corpus + currentMonthly) * (1 + r);
+      invested += currentMonthly;
+    }
+    return { maturity: Math.round(corpus), totalInvested: Math.round(invested), wealth: Math.round(corpus - invested) };
+  }, [monthly, returnRate, years, stepUp]);
 
   const fmt = (v: number) => `₹${v.toLocaleString("en-IN")}`;
 
@@ -230,6 +274,9 @@ export function SipCalculator() {
         <div><label className={label}>Monthly Investment (₹)</label><input type="number" value={monthly} onChange={(e) => setMonthly(e.target.value)} className={input} /></div>
         <div><label className={label}>Expected Return (% p.a.)</label><input type="number" step="0.5" value={returnRate} onChange={(e) => setReturnRate(e.target.value)} className={input} /></div>
         <div><label className={label}>Duration (years)</label><input type="number" value={years} onChange={(e) => setYears(e.target.value)} className={input} /></div>
+      </div>
+      <div className="mt-3 grid gap-4 sm:grid-cols-2">
+        <div><label className={label}>Annual Step-up (%)</label><input type="number" step="0.5" value={stepUp} onChange={(e) => setStepUp(e.target.value)} className={input} /></div>
       </div>
       {result && (
         <div className="mt-4 flex flex-wrap justify-center gap-4">
@@ -247,15 +294,18 @@ export function InflationCalculator() {
   const [currentPrice, setCurrentPrice] = useState("1000");
   const [inflationRate, setInflationRate] = useState("6");
   const [years, setYears] = useState("10");
+  const [periodicAddition, setPeriodicAddition] = useState("0");
 
   const result = useMemo(() => {
     const p = parseFloat(currentPrice);
     const r = parseFloat(inflationRate) / 100;
     const y = parseInt(years);
     if (isNaN(p) || isNaN(r) || isNaN(y)) return null;
+    const periodic = parseFloat(periodicAddition);
     const futureValue = p * Math.pow(1 + r, y);
-    return { futureValue: futureValue.toFixed(2), increase: (futureValue - p).toFixed(2), multiplier: (futureValue / p).toFixed(2) };
-  }, [currentPrice, inflationRate, years]);
+    const additions = isNaN(periodic) ? 0 : periodic * y;
+    return { futureValue: futureValue.toFixed(2), increase: (futureValue - p).toFixed(2), multiplier: (futureValue / p).toFixed(2), withAdditions: (futureValue + additions).toFixed(2) };
+  }, [currentPrice, inflationRate, years, periodicAddition]);
 
   return (
     <Panel title="Inflation Calculator">
@@ -264,11 +314,13 @@ export function InflationCalculator() {
         <div><label className={label}>Inflation Rate (% p.a.)</label><input type="number" step="0.5" value={inflationRate} onChange={(e) => setInflationRate(e.target.value)} className={input} /></div>
         <div><label className={label}>Years</label><input type="number" value={years} onChange={(e) => setYears(e.target.value)} className={input} /></div>
       </div>
+      <div className="mt-3"><label className={label}>Yearly Additional Spend (₹)</label><input type="number" value={periodicAddition} onChange={(e) => setPeriodicAddition(e.target.value)} className={`${input} max-w-sm`} /></div>
       {result && (
         <div className="mt-4 flex flex-wrap justify-center gap-4">
           <div className={`${stat} bg-rose-50`}><p className="text-lg font-bold text-rose-700">₹{Number(result.futureValue).toLocaleString("en-IN")}</p><p className="text-xs text-rose-500">Future Cost</p></div>
           <div className={`${stat} bg-amber-50`}><p className="text-lg font-bold text-amber-700">₹{Number(result.increase).toLocaleString("en-IN")}</p><p className="text-xs text-amber-500">Price Increase</p></div>
           <div className={`${stat} bg-slate-100`}><p className="text-lg font-bold text-slate-700">{result.multiplier}×</p><p className="text-xs text-slate-500">Cost Multiplier</p></div>
+          <div className={`${stat} bg-indigo-50`}><p className="text-lg font-bold text-indigo-700">₹{Number(result.withAdditions).toLocaleString("en-IN")}</p><p className="text-xs text-indigo-500">With yearly additions</p></div>
         </div>
       )}
     </Panel>
@@ -278,10 +330,11 @@ export function InflationCalculator() {
 /* ───── 7. Age in Days Calculator ───── */
 export function AgeInDaysCalculator() {
   const [dob, setDob] = useState("");
+  const [target, setTarget] = useState("");
   const result = useMemo(() => {
     if (!dob) return null;
     const birth = new Date(dob);
-    const now = new Date();
+    const now = target ? new Date(target) : new Date();
     const ms = now.getTime() - birth.getTime();
     if (ms < 0) return null;
     const days = Math.floor(ms / 86400000);
@@ -289,11 +342,11 @@ export function AgeInDaysCalculator() {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor(ms / 1000);
     return { days, hours, minutes, seconds };
-  }, [dob]);
+  }, [dob, target]);
 
   return (
     <Panel title="Age in Days Calculator">
-      <div><label className={label}>Date of Birth</label><input type="date" value={dob} onChange={(e) => setDob(e.target.value)} className={`${input} max-w-sm`} /></div>
+      <div className="grid gap-4 sm:grid-cols-2"><div><label className={label}>Date of Birth</label><input type="date" value={dob} onChange={(e) => setDob(e.target.value)} className={`${input} max-w-sm`} /></div><div><label className={label}>As of date (optional)</label><input type="date" value={target} onChange={(e) => setTarget(e.target.value)} className={`${input} max-w-sm`} /></div></div>
       {result && (
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className={`${stat} bg-indigo-50`}><p className="text-xl font-bold text-indigo-700">{result.days.toLocaleString()}</p><p className="text-xs text-indigo-500">Days</p></div>
@@ -315,6 +368,7 @@ export function TimeZoneConverter() {
   const [time, setTime] = useState("12:00");
   const [fromZone, setFromZone] = useState("IST (UTC+5:30)");
   const [toZone, setToZone] = useState("EST (UTC-5)");
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
 
   const result = useMemo(() => {
     if (!time) return "";
@@ -328,12 +382,13 @@ export function TimeZoneConverter() {
     if (targetMinutes >= 1440) { targetMinutes -= 1440; dayShift = " (next day)"; }
     const th = Math.floor(targetMinutes / 60);
     const tm = Math.round(targetMinutes % 60);
-    return `${String(th).padStart(2, "0")}:${String(tm).padStart(2, "0")}${dayShift}`;
-  }, [time, fromZone, toZone]);
+    return `${date} ${String(th).padStart(2, "0")}:${String(tm).padStart(2, "0")}${dayShift}`;
+  }, [time, fromZone, toZone, date]);
 
   return (
     <Panel title="Time Zone Converter">
       <div className="grid gap-4 sm:grid-cols-4">
+        <div><label className={label}>Date</label><input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={input} /></div>
         <div><label className={label}>Time</label><input type="time" value={time} onChange={(e) => setTime(e.target.value)} className={input} /></div>
         <div><label className={label}>From</label>
           <select value={fromZone} onChange={(e) => setFromZone(e.target.value)} className={input}>
@@ -348,6 +403,10 @@ export function TimeZoneConverter() {
         <div className="flex items-end">
           {result && <p className="w-full rounded-xl bg-teal-50 p-2.5 text-center text-lg font-bold text-teal-700">{result}</p>}
         </div>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button type="button" onClick={() => { const prev = fromZone; setFromZone(toZone); setToZone(prev); }} className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200">Swap zones</button>
+        <CopyButton value={result} />
       </div>
     </Panel>
   );
@@ -379,17 +438,18 @@ export function UnitConverter() {
   const [value, setValue] = useState("1");
   const [fromIdx, setFromIdx] = useState(0);
   const [toIdx, setToIdx] = useState(1);
+  const [precision, setPrecision] = useState(6);
 
   const cat = unitCategories[catIdx];
   const result = useMemo(() => {
     const v = parseFloat(value);
     if (isNaN(v)) return "";
     if (cat.name === "Temperature") {
-      return convertTemp(v, cat.units[fromIdx].name, cat.units[toIdx].name).toFixed(4);
+      return convertTemp(v, cat.units[fromIdx].name, cat.units[toIdx].name).toFixed(Math.min(8, Math.max(0, precision)));
     }
     const baseValue = v / cat.units[fromIdx].factor;
-    return (baseValue * cat.units[toIdx].factor).toFixed(6).replace(/\.?0+$/, "");
-  }, [value, catIdx, fromIdx, toIdx, cat]);
+    return (baseValue * cat.units[toIdx].factor).toFixed(Math.min(8, Math.max(0, precision))).replace(/\.?0+$/, "");
+  }, [value, catIdx, fromIdx, toIdx, cat, precision]);
 
   return (
     <Panel title="Unit Converter">
@@ -412,6 +472,10 @@ export function UnitConverter() {
         </div>
         <div className="flex items-end"><p className="w-full rounded-xl bg-teal-50 p-2.5 text-center text-lg font-bold text-teal-700">{result || "—"}</p></div>
       </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button type="button" onClick={() => { const prev = fromIdx; setFromIdx(toIdx); setToIdx(prev); }} className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200">Swap units</button>
+        <input type="number" min={0} max={8} value={precision} onChange={(e) => setPrecision(Number(e.target.value) || 6)} className="w-24 rounded-xl border border-slate-200 px-3 py-1.5 text-xs" placeholder="Precision" />
+      </div>
     </Panel>
   );
 }
@@ -422,6 +486,7 @@ export function ScientificCalculator() {
   const [expression, setExpression] = useState("");
   const [isDeg, setIsDeg] = useState(true);
   const [history, setHistory] = useState<string[]>([]);
+  const [ans, setAns] = useState("0");
 
   const append = (v: string) => {
     if (display === "0" && v !== ".") setDisplay(v);
@@ -430,10 +495,15 @@ export function ScientificCalculator() {
   };
 
   const clear = () => { setDisplay("0"); setExpression(""); };
+  const backspace = () => {
+    setExpression((prev) => prev.slice(0, -1));
+    setDisplay((prev) => (prev.length <= 1 ? "0" : prev.slice(0, -1)));
+  };
 
   const calculate = () => {
     try {
       let expr = expression
+        .replace(/Ans/g, ans)
         .replace(/π/g, String(Math.PI))
         .replace(/e(?![x])/g, String(Math.E))
         .replace(/×/g, "*")
@@ -458,6 +528,7 @@ export function ScientificCalculator() {
       setHistory([`${expression} = ${r}`, ...history.slice(0, 4)]);
       setDisplay(r);
       setExpression(r);
+      setAns(r);
     } catch {
       setDisplay("Error");
       setExpression("");
@@ -491,6 +562,7 @@ export function ScientificCalculator() {
           <button type="button" onClick={() => append("^")} className={fnClass}>x^y</button>
           <button type="button" onClick={() => append("π")} className={fnClass}>π</button>
           <button type="button" onClick={() => append("e")} className={fnClass}>e</button>
+          <button type="button" onClick={() => append("Ans")} className={fnClass}>Ans</button>
           <button type="button" onClick={() => append("!")} className={fnClass}>n!</button>
           {/* Row 3 */}
           <button type="button" onClick={() => append("7")} className={btnClass}>7</button>
@@ -515,6 +587,11 @@ export function ScientificCalculator() {
           <button type="button" onClick={() => append(".")} className={btnClass}>.</button>
           <button type="button" onClick={() => append("+")} className={opClass}>+</button>
           <button type="button" onClick={calculate} className="rounded-lg bg-indigo-600 px-3 py-2.5 text-sm font-bold text-white hover:bg-indigo-700">=</button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={backspace} className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200">Backspace</button>
+          <button type="button" onClick={() => navigator.clipboard?.writeText(display)} className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200">Copy result</button>
+          <button type="button" onClick={() => downloadText("calculator-history.txt", history.join("\n"))} className="rounded-full bg-slate-900 px-4 py-1.5 text-xs font-semibold text-white hover:bg-slate-700" disabled={history.length === 0}>Download history</button>
         </div>
         {history.length > 0 && (
           <div className="space-y-1">

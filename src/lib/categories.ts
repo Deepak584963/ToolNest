@@ -17,12 +17,12 @@ export const categoryMeta: CategoryMeta[] = [
   {
     slug: "dev",
     name: "Developer",
-    title: "Free Online Developer Tools — JSON, UUID, Base64 & More",
-    description: "Format JSON, generate UUIDs, encode Base64, minify CSS, and check password strength — all free, fast, and browser-based developer utilities.",
-    longDescription: "Streamline your development workflow with free browser-based utilities. Format and validate JSON payloads, generate unique identifiers, encode and decode Base64, minify or beautify CSS, and check password entropy — all without leaving your browser or sending data to a server. Built for front-end and back-end developers who value speed and privacy.",
+    title: "Free Online Developer Tools — JSON, Regex, JWT, SQL, Cron & More",
+    description: "Format JSON, test regex, decode JWTs, build cron expressions, format SQL, and check HTTP status codes — free browser-based developer utilities.",
+    longDescription: "Streamline your development workflow with free browser-based utilities. Format and validate JSON payloads, test regular expressions, decode JWT tokens, build cron schedules, format SQL queries, look up HTTP status codes, generate unique identifiers, encode and decode Base64, minify or beautify CSS, and check password entropy — all without leaving your browser or sending data to a server. Built for front-end and back-end developers who value speed and privacy.",
     icon: "🛠️",
     color: "blue",
-    keywords: ["developer tools", "json formatter", "uuid generator", "base64 encoder", "css minifier", "online dev tools", "free developer utilities"],
+    keywords: ["developer tools", "json formatter", "regex tester", "jwt decoder", "cron expression builder", "sql formatter", "http status codes", "uuid generator", "base64 encoder", "css minifier", "online dev tools", "free developer utilities"],
   },
   {
     slug: "seo",
@@ -57,12 +57,12 @@ export const categoryMeta: CategoryMeta[] = [
   {
     slug: "creator",
     name: "Creator",
-    title: "Free Online Creator Tools — Hashtags, Titles, Captions & Bio Generator",
-    description: "Generate Instagram hashtags, analyze YouTube titles, create captions and bios, preview thumbnails — free tools for content creators.",
-    longDescription: "Grow your audience with smart content creation tools. Generate trending Instagram hashtags, analyze YouTube title effectiveness, create engaging captions in multiple tones, build professional bios, preview thumbnail text, generate YouTube descriptions and tags, estimate video length, create viral hooks for Reels, and brainstorm content ideas. Built for YouTubers, Instagram creators, and social media marketers.",
+    title: "Free Online Creator Tools — Hashtags, YouTube Chapters, Engagement, Captions & More",
+    description: "Generate hashtags, YouTube chapters, engagement metrics, content calendars, posting-time plans, captions, and bios — free creator growth tools.",
+    longDescription: "Grow your audience with smart content creation tools. Generate trending hashtags, analyze YouTube title effectiveness, build chapter timestamps, calculate engagement rates, create monthly content calendars, plan best posting times by audience region, generate campaign UTM links, write captions in multiple tones, build professional bios, preview thumbnail text, generate YouTube descriptions and tags, estimate video length, create viral hooks for Reels, and brainstorm content ideas. Built for YouTubers, Instagram creators, and social media marketers.",
     icon: "🎬",
     color: "pink",
-    keywords: ["creator tools", "hashtag generator", "youtube title analyzer", "caption generator", "bio generator", "content creator tools", "social media tools free"],
+    keywords: ["creator tools", "hashtag generator", "youtube chapter generator", "engagement rate calculator", "content calendar generator", "best time to post", "utm link builder", "youtube title analyzer", "caption generator", "bio generator", "content creator tools", "social media tools free"],
   },
   {
     slug: "image",

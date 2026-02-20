@@ -20,15 +20,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "ToolNest — 55+ Free Online Tools",
+    default: "ToolNest — 70+ Free Online Tools",
     template: "%s | ToolNest",
   },
-  description: "55+ free online tools for developers, SEO, students, creators, image processing, and everyday utilities. No sign-up, runs in your browser.",
+  description: "70+ free online tools for developers, SEO, students, creators, image processing, and everyday utilities. No sign-up, runs in your browser.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "ToolNest — 55+ Free Online Tools",
+    title: "ToolNest — 70+ Free Online Tools",
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ToolNest — 55+ Free Online Tools",
+    title: "ToolNest — 70+ Free Online Tools",
     description: siteConfig.description,
     creator: siteConfig.twitterHandle,
   },
@@ -51,9 +51,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AdSenseScript />
+        <a href="#main-content" className="sr-only z-100 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
+          Skip to main content
+        </a>
         <div className="min-h-screen bg-linear-to-br from-indigo-50 via-sky-50 to-cyan-50 text-slate-900">
           <Header />
-          <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">{children}</main>
+          <main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">{children}</main>
           <Footer />
           <ConsentBanner />
         </div>

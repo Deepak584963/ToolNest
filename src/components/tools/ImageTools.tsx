@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CopyButton from "@/components/CopyButton";
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
@@ -16,86 +16,431 @@ const label = "block text-sm font-medium text-slate-700 mb-1";
 const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
 const btn = "rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition";
 
+function UploadDropzone({
+  accept,
+  multiple,
+  onFiles,
+  hint,
+}: {
+  accept: string;
+  multiple?: boolean;
+  onFiles: (files: File[]) => void;
+  hint: string;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const pushFiles = (list: FileList | null) => {
+    if (!list || list.length === 0) return;
+    onFiles(Array.from(list));
+  };
+
+  return (
+    <div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        multiple={multiple}
+        className="hidden"
+        onChange={(event) => pushFiles(event.target.files)}
+      />
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        onDragOver={(event) => {
+          event.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={(event) => {
+          event.preventDefault();
+          setIsDragging(false);
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          setIsDragging(false);
+          pushFiles(event.dataTransfer.files);
+        }}
+        className={`w-full rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${
+          isDragging
+            ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+            : "border-slate-300 bg-slate-50 text-slate-600 hover:border-indigo-300 hover:bg-indigo-50/60"
+        }`}
+      >
+        <p className="text-sm font-semibold">Drop images here or click to browse</p>
+        <p className="mt-1 text-xs">{hint}</p>
+      </button>
+    </div>
+  );
+}
+
+function formatKB(bytes: number) {
+  return `${(bytes / 1024).toFixed(1)} KB`;
+}
+
+async function loadImageFromFile(file: File) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      if (img.decode) {
+        img.decode().then(() => resolve(img)).catch(() => resolve(img));
+      } else {
+        resolve(img);
+      }
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+async function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality?: number) {
+  return new Promise<Blob | null>((resolve) => {
+    canvas.toBlob((blob) => resolve(blob), type, quality);
+  });
+}
+
+function ComparePreview({
+  beforeSrc,
+  afterSrc,
+  beforeLabel = "Before",
+  afterLabel = "After",
+}: {
+  beforeSrc: string;
+  afterSrc: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+}) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <div>
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">{beforeLabel}</p>
+        <img src={beforeSrc} alt={beforeLabel} className="max-h-48 w-full rounded-lg border border-slate-200 bg-white object-contain" />
+      </div>
+      <div>
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">{afterLabel}</p>
+        <img src={afterSrc} alt={afterLabel} className="max-h-48 w-full rounded-lg border border-slate-200 bg-white object-contain" />
+      </div>
+    </div>
+  );
+}
+
 function useFileInput(accept: string) {
   const ref = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
+  const setFromFile = useCallback((f: File) => {
+    setFile(f);
+    setPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(f);
+    });
+  }, []);
+
   const onSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
+    setFromFile(f);
+  }, [setFromFile]);
+
+  const clear = useCallback(() => {
+    setFile(null);
+    setPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return "";
+    });
+    if (ref.current) ref.current.value = "";
   }, []);
-  return { ref, file, preview, onSelect, accept };
+
+  return { ref, file, preview, onSelect, accept, setFromFile, clear };
 }
 
 /* ───── 1. Image to PDF Converter ───── */
 export function ImageToPdfConverter() {
   const [files, setFiles] = useState<File[]>([]);
   const [status, setStatus] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [quality, setQuality] = useState(92);
+  const [pageFormat, setPageFormat] = useState<"a4" | "letter">("a4");
+  const [pageOrientation, setPageOrientation] = useState<"portrait" | "landscape">("portrait");
+  const [margin, setMargin] = useState(8);
+  const [fitMode, setFitMode] = useState<"contain" | "cover">("contain");
+  const [grayscale, setGrayscale] = useState(false);
+  const [autoOrientation, setAutoOrientation] = useState(true);
+  const [includePageNumbers, setIncludePageNumbers] = useState(false);
+  const [pdfName, setPdfName] = useState("toolnest-images");
 
-  const onFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) setFiles(Array.from(e.target.files));
+  const onFiles = (selected: File[]) => {
+    setFiles(selected);
+    setStatus("");
   };
 
-  const convert = async () => {
-    if (files.length === 0) return;
-    setStatus("Generating PDF...");
-    try {
-      // Load and fully decode each image before drawing to canvas
-      const images: HTMLImageElement[] = await Promise.all(
-        files.map(
-          (f) =>
-            new Promise<HTMLImageElement>((res, rej) => {
-              const img = new Image();
-              img.onload = () => {
-                // Ensure image is fully decoded before resolving
-                if (img.decode) {
-                  img.decode().then(() => res(img)).catch(() => res(img));
-                } else {
-                  res(img);
-                }
-              };
-              img.onerror = rej;
-              img.src = URL.createObjectURL(f);
-            })
-        )
-      );
+  const moveFile = (index: number, direction: -1 | 1) => {
+    setFiles((current) => {
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= current.length) return current;
+      const copy = [...current];
+      const [picked] = copy.splice(index, 1);
+      copy.splice(nextIndex, 0, picked);
+      return copy;
+    });
+    setStatus("");
+  };
 
-      // Convert each image to a data URL via canvas before opening the window
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d")!;
-      const dataUrls: string[] = [];
-      for (const img of images) {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
-        dataUrls.push(canvas.toDataURL("image/jpeg", 0.9));
-        // Revoke the blob URL after drawing
-        URL.revokeObjectURL(img.src);
+  const removeFile = (index: number) => {
+    setFiles((current) => current.filter((_, i) => i !== index));
+    setStatus("");
+  };
+
+  const buildImageDataUrls = async () => {
+    const images: HTMLImageElement[] = await Promise.all(
+      files.map(
+        (f) =>
+          new Promise<HTMLImageElement>((res, rej) => {
+            const img = new Image();
+            img.onload = () => {
+              if (img.decode) {
+                img.decode().then(() => res(img)).catch(() => res(img));
+              } else {
+                res(img);
+              }
+            };
+            img.onerror = rej;
+            img.src = URL.createObjectURL(f);
+          })
+      )
+    );
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d")!;
+    const prepared = images.map((img, index) => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      if (grayscale) {
+        const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = frame.data;
+        for (let i = 0; i < pixels.length; i += 4) {
+          const gray = 0.2126 * pixels[i] + 0.7152 * pixels[i + 1] + 0.0722 * pixels[i + 2];
+          pixels[i] = gray;
+          pixels[i + 1] = gray;
+          pixels[i + 2] = gray;
+        }
+        ctx.putImageData(frame, 0, 0);
       }
+      const dataUrl = canvas.toDataURL("image/jpeg", quality / 100);
+      URL.revokeObjectURL(img.src);
+      return {
+        dataUrl,
+        width: img.width,
+        height: img.height,
+        name: files[index]?.name ?? `image-${index + 1}`,
+      };
+    });
 
-      const printWin = window.open("", "_blank");
-      if (!printWin) { setStatus("Please allow pop-ups to download PDF"); return; }
-      const html = dataUrls.map((src) =>
-        `<img src="${src}" style="max-width:100%;page-break-after:always;" />`
+    return prepared;
+  };
+
+  const downloadPdf = async () => {
+    if (files.length === 0) return;
+    setIsProcessing(true);
+    setStatus("Generating downloadable PDF...");
+
+    try {
+      const prepared = await buildImageDataUrls();
+      const { jsPDF } = await import("jspdf");
+      const initialOrientation = autoOrientation
+        ? (prepared[0]?.width ?? 1) >= (prepared[0]?.height ?? 1)
+          ? "landscape"
+          : "portrait"
+        : pageOrientation;
+      const pdf = new jsPDF({
+        orientation: initialOrientation,
+        unit: "mm",
+        format: pageFormat,
+        compress: true,
+      });
+
+      prepared.forEach((item, index) => {
+        const activeOrientation = autoOrientation
+          ? item.width >= item.height
+            ? "landscape"
+            : "portrait"
+          : pageOrientation;
+        if (index > 0) pdf.addPage(pageFormat, activeOrientation);
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const scale = fitMode === "contain"
+          ? Math.min((pageWidth - margin * 2) / item.width, (pageHeight - margin * 2) / item.height)
+          : Math.max((pageWidth - margin * 2) / item.width, (pageHeight - margin * 2) / item.height);
+        const renderWidth = item.width * scale;
+        const renderHeight = item.height * scale;
+        const x = (pageWidth - renderWidth) / 2;
+        const y = (pageHeight - renderHeight) / 2;
+        pdf.addImage(item.dataUrl, "JPEG", x, y, renderWidth, renderHeight, `${item.name}-${index}`, "FAST");
+        if (includePageNumbers) {
+          pdf.setFontSize(10);
+          pdf.setTextColor(120);
+          pdf.text(`${index + 1}/${prepared.length}`, pageWidth - margin, pageHeight - 3, { align: "right" });
+        }
+      });
+
+      const sanitizedName = (pdfName || "toolnest-images").trim().replace(/[^a-z0-9-_]+/gi, "-");
+      pdf.save(`${sanitizedName || "toolnest-images"}.pdf`);
+      setStatus(`Downloaded ${prepared.length} page PDF successfully.`);
+    } catch {
+      setStatus("Error generating PDF.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const openPrintDialog = async () => {
+    if (files.length === 0) return;
+    setIsProcessing(true);
+    setStatus("Preparing print view...");
+
+    const printWin = window.open("", "_blank");
+    if (!printWin) {
+      setStatus("Please allow pop-ups to download PDF");
+      setIsProcessing(false);
+      return;
+    }
+    printWin.document.open();
+    printWin.document.write("<html><head><title>Preparing PDF...</title></head><body style='font-family:sans-serif;padding:24px'>Preparing images...</body></html>");
+    printWin.document.close();
+
+    try {
+      const prepared = await buildImageDataUrls();
+
+      const html = prepared.map((item) =>
+        `<img src="${item.dataUrl}" style="max-width:100%;page-break-after:always;" />`
       ).join("");
-      printWin.document.write(`<html><head><title>Images PDF</title></head><body style="margin:0;padding:0">${html}</body></html>`);
+
+      printWin.document.open();
+      printWin.document.write(`
+        <html>
+          <head>
+            <title>Images PDF</title>
+            <style>
+              html, body { margin: 0; padding: 0; }
+              img { display: block; width: 100%; page-break-after: always; }
+              img:last-child { page-break-after: auto; }
+            </style>
+          </head>
+          <body>
+            ${html}
+            <script>
+              (function () {
+                const images = Array.from(document.images);
+                Promise.all(images.map((image) => {
+                  if (image.complete) return Promise.resolve();
+                  return new Promise((resolve) => {
+                    image.addEventListener('load', () => resolve(), { once: true });
+                    image.addEventListener('error', () => resolve(), { once: true });
+                  });
+                })).then(() => {
+                  setTimeout(() => {
+                    window.focus();
+                    window.print();
+                  }, 150);
+                });
+              })();
+            </script>
+          </body>
+        </html>
+      `);
       printWin.document.close();
       printWin.focus();
-      printWin.print();
       setStatus("Print dialog opened — choose 'Save as PDF'");
     } catch {
+      printWin.close();
       setStatus("Error processing images.");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   return (
     <Panel title="Image to PDF Converter">
-      <input type="file" accept="image/*" multiple onChange={onFiles} className={input} />
-      {files.length > 0 && <p className="mt-2 text-sm text-slate-600">{files.length} image(s) selected</p>}
-      <button type="button" onClick={convert} className={`mt-4 ${btn}`} disabled={files.length === 0}>Convert to PDF</button>
+      <UploadDropzone accept="image/*" multiple onFiles={onFiles} hint="Supports JPG, PNG, WEBP and more" />
+      {files.length > 0 && (
+        <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+          <p>{files.length} image(s) selected</p>
+          <p className="truncate">{files.slice(0, 3).map((file) => file.name).join(", ")}{files.length > 3 ? "..." : ""}</p>
+          <p className="mt-1">Total size: {formatKB(files.reduce((sum, file) => sum + file.size, 0))}</p>
+        </div>
+      )}
+      {files.length > 0 && (
+        <div className="mt-3 rounded-xl border border-slate-200 bg-white p-3">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">PDF Page Order</p>
+          <div className="space-y-2">
+            {files.map((file, index) => (
+              <div key={`${file.name}-${index}`} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-sm">
+                <span className="w-6 text-center font-semibold text-slate-500">{index + 1}</span>
+                <span className="flex-1 truncate text-slate-700">{file.name}</span>
+                <button type="button" onClick={() => moveFile(index, -1)} className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-100" disabled={index === 0}>↑</button>
+                <button type="button" onClick={() => moveFile(index, 1)} className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-100" disabled={index === files.length - 1}>↓</button>
+                <button type="button" onClick={() => removeFile(index)} className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-rose-600 hover:bg-rose-50">Remove</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div>
+          <label className={label}>Quality: {quality}%</label>
+          <input type="range" min={70} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" />
+        </div>
+        <div>
+          <label className={label}>Page Size</label>
+          <select value={pageFormat} onChange={(e) => setPageFormat(e.target.value as "a4" | "letter")} className={input}>
+            <option value="a4">A4</option>
+            <option value="letter">Letter</option>
+          </select>
+        </div>
+        <div>
+          <label className={label}>Orientation</label>
+          <select value={pageOrientation} onChange={(e) => setPageOrientation(e.target.value as "portrait" | "landscape")} className={input}>
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+          </select>
+        </div>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div>
+          <label className={label}>Margin: {margin}mm</label>
+          <input type="range" min={0} max={30} value={margin} onChange={(e) => setMargin(parseInt(e.target.value))} className="w-full" />
+        </div>
+        <div>
+          <label className={label}>Fit Mode</label>
+          <select value={fitMode} onChange={(e) => setFitMode(e.target.value as "contain" | "cover")} className={input}>
+            <option value="contain">Contain (whole image)</option>
+            <option value="cover">Cover (fill page)</option>
+          </select>
+        </div>
+        <div>
+          <label className={label}>PDF File Name</label>
+          <input value={pdfName} onChange={(e) => setPdfName(e.target.value)} className={input} placeholder="toolnest-images" />
+        </div>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-4 text-sm text-slate-700">
+        <label className="flex items-center gap-2"><input type="checkbox" checked={autoOrientation} onChange={(e) => setAutoOrientation(e.target.checked)} /> Auto orientation per page</label>
+        <label className="flex items-center gap-2"><input type="checkbox" checked={includePageNumbers} onChange={(e) => setIncludePageNumbers(e.target.checked)} /> Add page numbers</label>
+        <label className="flex items-center gap-2"><input type="checkbox" checked={grayscale} onChange={(e) => setGrayscale(e.target.checked)} /> Grayscale output</label>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={downloadPdf} className={btn} disabled={files.length === 0 || isProcessing}>Download PDF</button>
+        <button type="button" onClick={openPrintDialog} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={files.length === 0 || isProcessing}>Open Print Dialog</button>
+        <button type="button" onClick={() => { setFiles([]); setStatus(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={files.length === 0 || isProcessing}>Clear</button>
+      </div>
       {status && <p className="mt-2 text-sm text-indigo-600">{status}</p>}
     </Panel>
   );
@@ -103,40 +448,98 @@ export function ImageToPdfConverter() {
 
 /* ───── 2. Compress Image ───── */
 export function CompressImage() {
-  const { ref, file, preview, onSelect, accept } = useFileInput("image/*");
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
   const [quality, setQuality] = useState(70);
-  const [result, setResult] = useState<{ url: string; size: number } | null>(null);
+  const [outputFormat, setOutputFormat] = useState<"jpeg" | "webp" | "png">("jpeg");
+  const [maxWidth, setMaxWidth] = useState("0");
+  const [maxHeight, setMaxHeight] = useState("0");
+  const [targetKb, setTargetKb] = useState("300");
+  const [downloadName, setDownloadName] = useState("compressed-image");
+  const [result, setResult] = useState<{ url: string; size: number; width: number; height: number; ext: string } | null>(null);
+  const [timeMs, setTimeMs] = useState(0);
 
-  const compress = () => {
-    if (!file) return;
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0);
-      canvas.toBlob(
-        (blob) => {
-          if (blob) setResult({ url: URL.createObjectURL(blob), size: blob.size });
-        },
-        "image/jpeg",
-        quality / 100
-      );
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
     };
-    img.src = URL.createObjectURL(file);
+  }, [result]);
+
+  const compress = async (autoTarget = false) => {
+    if (!file) return;
+    const start = performance.now();
+    const img = await loadImageFromFile(file);
+    const canvas = document.createElement("canvas");
+    const widthLimit = parseInt(maxWidth) || img.width;
+    const heightLimit = parseInt(maxHeight) || img.height;
+    const scale = Math.min(1, widthLimit / img.width, heightLimit / img.height);
+    canvas.width = Math.max(1, Math.round(img.width * scale));
+    canvas.height = Math.max(1, Math.round(img.height * scale));
+    const ctx = canvas.getContext("2d")!;
+    if (outputFormat === "jpeg") {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    let blob: Blob | null = null;
+    const mimeType = outputFormat === "png" ? "image/png" : outputFormat === "webp" ? "image/webp" : "image/jpeg";
+    if (autoTarget && outputFormat !== "png") {
+      const targetBytes = (parseInt(targetKb) || 300) * 1024;
+      let q = 92;
+      while (q >= 20) {
+        blob = await canvasToBlob(canvas, mimeType, q / 100);
+        if (blob && blob.size <= targetBytes) break;
+        q -= 6;
+      }
+    } else {
+      blob = await canvasToBlob(canvas, mimeType, outputFormat === "png" ? undefined : quality / 100);
+    }
+
+    URL.revokeObjectURL(img.src);
+    if (!blob) return;
+    setResult({ url: URL.createObjectURL(blob), size: blob.size, width: canvas.width, height: canvas.height, ext: outputFormat === "jpeg" ? "jpg" : outputFormat });
+    setTimeMs(Math.round(performance.now() - start));
   };
 
   return (
     <Panel title="Compress Image">
-      <input ref={ref} type="file" accept={accept} onChange={onSelect} className={input} />
-      <div className="mt-3"><label className={label}>Quality: {quality}%</label><input type="range" min={10} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" /></div>
-      <button type="button" onClick={compress} className={`mt-4 ${btn}`} disabled={!file}>Compress</button>
+      <UploadDropzone
+        accept="image/*"
+        onFiles={(selected) => {
+          if (!selected[0]) return;
+          setFromFile(selected[0]);
+          setResult(null);
+        }}
+        hint="One image at a time for highest quality compression"
+      />
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div>
+          <label className={label}>Output Format</label>
+          <select value={outputFormat} onChange={(e) => setOutputFormat(e.target.value as "jpeg" | "webp" | "png")} className={input}>
+            <option value="jpeg">JPG</option>
+            <option value="webp">WebP</option>
+            <option value="png">PNG</option>
+          </select>
+        </div>
+        <div><label className={label}>Max Width (px)</label><input type="number" value={maxWidth} onChange={(e) => setMaxWidth(e.target.value)} className={input} placeholder="0 = original" /></div>
+        <div><label className={label}>Max Height (px)</label><input type="number" value={maxHeight} onChange={(e) => setMaxHeight(e.target.value)} className={input} placeholder="0 = original" /></div>
+      </div>
+      {outputFormat !== "png" && <div className="mt-3"><label className={label}>Quality: {quality}%</label><input type="range" min={10} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" /></div>}
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Target Size (KB) for Auto Mode</label><input type="number" value={targetKb} onChange={(e) => setTargetKb(e.target.value)} className={input} /></div>
+        <div><label className={label}>Download File Name</label><input value={downloadName} onChange={(e) => setDownloadName(e.target.value)} className={input} /></div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={() => compress(false)} className={btn} disabled={!file}>Compress</button>
+        <button type="button" onClick={() => compress(true)} className="rounded-full bg-emerald-100 px-5 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-200 transition" disabled={!file || outputFormat === "png"}>Auto Compress</button>
+        <button type="button" onClick={() => { clear(); setResult(null); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
       {file && result && (
-        <div className="mt-4 space-y-2">
-          <p className="text-sm text-slate-600">Original: {(file.size / 1024).toFixed(1)} KB → Compressed: {(result.size / 1024).toFixed(1)} KB ({Math.round((1 - result.size / file.size) * 100)}% smaller)</p>
-          {preview && <img src={preview} alt="Original" className="h-32 rounded-lg object-contain" />}
-          <a href={result.url} download="compressed.jpg" className={btn}>Download Compressed</a>
+        <div className="mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <p className="text-sm text-slate-600">Original: {formatKB(file.size)} → Compressed: {formatKB(result.size)} ({Math.round((1 - result.size / file.size) * 100)}% smaller) in {timeMs}ms</p>
+          <p className="text-sm text-slate-600">Output: {result.width} × {result.height}px • Format: {result.ext.toUpperCase()}</p>
+          {preview && <ComparePreview beforeSrc={preview} afterSrc={result.url} beforeLabel="Original" afterLabel="Compressed" />}
+          <a href={result.url} download={`${(downloadName || "compressed-image").trim().replace(/[^a-z0-9-_]+/gi, "-") || "compressed-image"}.${result.ext}`} className={btn}>Download Compressed</a>
         </div>
       )}
     </Panel>
@@ -145,12 +548,24 @@ export function CompressImage() {
 
 /* ───── 3. Resize Image ───── */
 export function ResizeImage() {
-  const { ref, file, preview, onSelect, accept } = useFileInput("image/*");
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
   const [width, setWidth] = useState("800");
   const [height, setHeight] = useState("600");
+  const [unitMode, setUnitMode] = useState<"px" | "%">("px");
   const [lock, setLock] = useState(true);
+  const [fitMode, setFitMode] = useState<"stretch" | "contain" | "cover">("stretch");
+  const [outputFormat, setOutputFormat] = useState<"png" | "jpeg" | "webp">("png");
+  const [quality, setQuality] = useState(90);
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [downloadName, setDownloadName] = useState("resized-image");
   const [origDim, setOrigDim] = useState({ w: 0, h: 0 });
-  const [resultUrl, setResultUrl] = useState("");
+  const [result, setResult] = useState<{ url: string; width: number; height: number; ext: string; size: number } | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
+    };
+  }, [result]);
 
   const loadDim = (f: File) => {
     const img = new Image();
@@ -158,10 +573,10 @@ export function ResizeImage() {
     img.src = URL.createObjectURL(f);
   };
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSelect(e);
-    const f = e.target.files?.[0];
-    if (f) loadDim(f);
+  const handleFile = (f: File) => {
+    setFromFile(f);
+    setResult(null);
+    loadDim(f);
   };
 
   const onWidthChange = (v: string) => {
@@ -169,32 +584,92 @@ export function ResizeImage() {
     if (lock && origDim.w > 0) setHeight(String(Math.round((parseInt(v) / origDim.w) * origDim.h)));
   };
 
-  const resize = () => {
+  const applyPreset = (preset: "instagram" | "youtube" | "story" | "square") => {
+    if (preset === "instagram") { setWidth("1080"); setHeight("1080"); setUnitMode("px"); }
+    if (preset === "youtube") { setWidth("1280"); setHeight("720"); setUnitMode("px"); }
+    if (preset === "story") { setWidth("1080"); setHeight("1920"); setUnitMode("px"); }
+    if (preset === "square") { setWidth("800"); setHeight("800"); setUnitMode("px"); }
+  };
+
+  const swapDimensions = () => {
+    setWidth(height);
+    setHeight(width);
+  };
+
+  const resize = async () => {
     if (!file) return;
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = parseInt(width) || img.width;
-      canvas.height = parseInt(height) || img.height;
-      canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
-      setResultUrl(canvas.toDataURL("image/png"));
-    };
-    img.src = URL.createObjectURL(file);
+    const img = await loadImageFromFile(file);
+    const rawW = parseInt(width) || (unitMode === "%" ? 100 : img.width);
+    const rawH = parseInt(height) || (unitMode === "%" ? 100 : img.height);
+    const targetW = unitMode === "%" ? Math.max(1, Math.round((img.width * rawW) / 100)) : Math.max(1, rawW);
+    const targetH = unitMode === "%" ? Math.max(1, Math.round((img.height * rawH) / 100)) : Math.max(1, rawH);
+    const canvas = document.createElement("canvas");
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext("2d")!;
+    if (outputFormat === "jpeg") {
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, targetW, targetH);
+    }
+    if (fitMode === "stretch") {
+      ctx.drawImage(img, 0, 0, targetW, targetH);
+    } else {
+      const scale = fitMode === "contain" ? Math.min(targetW / img.width, targetH / img.height) : Math.max(targetW / img.width, targetH / img.height);
+      const drawW = img.width * scale;
+      const drawH = img.height * scale;
+      const dx = (targetW - drawW) / 2;
+      const dy = (targetH - drawH) / 2;
+      ctx.drawImage(img, dx, dy, drawW, drawH);
+    }
+    const type = outputFormat === "png" ? "image/png" : outputFormat === "webp" ? "image/webp" : "image/jpeg";
+    const blob = await canvasToBlob(canvas, type, outputFormat === "png" ? undefined : quality / 100);
+    URL.revokeObjectURL(img.src);
+    if (!blob) return;
+    setResult({ url: URL.createObjectURL(blob), width: targetW, height: targetH, ext: outputFormat === "jpeg" ? "jpg" : outputFormat, size: blob.size });
   };
 
   return (
     <Panel title="Resize Image">
-      <input ref={ref} type="file" accept={accept} onChange={handleFile} className={input} />
+      <UploadDropzone
+        accept="image/*"
+        onFiles={(selected) => {
+          if (!selected[0]) return;
+          handleFile(selected[0]);
+        }}
+        hint="Drop one image to resize instantly"
+      />
+      {preview && <img src={preview} alt="Source" className="mt-3 max-h-40 rounded-lg border border-slate-200 bg-white object-contain" />}
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button type="button" onClick={() => applyPreset("instagram")} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200">Instagram 1080×1080</button>
+        <button type="button" onClick={() => applyPreset("youtube")} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200">YouTube 1280×720</button>
+        <button type="button" onClick={() => applyPreset("story")} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200">Story 1080×1920</button>
+        <button type="button" onClick={() => applyPreset("square")} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200">Square 800×800</button>
+      </div>
       <div className="mt-3 grid gap-3 sm:grid-cols-3">
-        <div><label className={label}>Width (px)</label><input type="number" value={width} onChange={(e) => onWidthChange(e.target.value)} className={input} /></div>
-        <div><label className={label}>Height (px)</label><input type="number" value={height} onChange={(e) => setHeight(e.target.value)} className={input} /></div>
+        <div><label className={label}>Width ({unitMode})</label><input type="number" value={width} onChange={(e) => onWidthChange(e.target.value)} className={input} /></div>
+        <div><label className={label}>Height ({unitMode})</label><input type="number" value={height} onChange={(e) => setHeight(e.target.value)} className={input} /></div>
+        <div className="flex items-end gap-2">
+          <select value={unitMode} onChange={(e) => setUnitMode(e.target.value as "px" | "%")} className={input}><option value="px">Pixels</option><option value="%">Percent</option></select>
+        </div>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Fit Mode</label><select value={fitMode} onChange={(e) => setFitMode(e.target.value as "stretch" | "contain" | "cover")} className={input}><option value="stretch">Stretch</option><option value="contain">Contain</option><option value="cover">Cover</option></select></div>
+        <div><label className={label}>Output Format</label><select value={outputFormat} onChange={(e) => setOutputFormat(e.target.value as "png" | "jpeg" | "webp")} className={input}><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WebP</option></select></div>
         <div className="flex items-end"><label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={lock} onChange={(e) => setLock(e.target.checked)} /> Lock ratio</label></div>
       </div>
-      <button type="button" onClick={resize} className={`mt-4 ${btn}`} disabled={!file}>Resize</button>
-      {resultUrl && (
-        <div className="mt-4 space-y-2">
-          <img src={resultUrl} alt="Resized" className="max-h-48 rounded-lg object-contain" />
-          <a href={resultUrl} download="resized.png" className={btn}>Download Resized</a>
+      {outputFormat !== "png" && <div className="mt-3"><label className={label}>Quality: {quality}%</label><input type="range" min={10} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" /></div>}
+      {outputFormat === "jpeg" && <div className="mt-3"><label className={label}>Background Color</label><input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>}
+      <div className="mt-3"><label className={label}>Download File Name</label><input value={downloadName} onChange={(e) => setDownloadName(e.target.value)} className={input} /></div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={resize} className={btn} disabled={!file}>Resize</button>
+        <button type="button" onClick={swapDimensions} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Swap W/H</button>
+        <button type="button" onClick={() => { clear(); setResult(null); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {result && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <p className="text-sm text-slate-600">Output size: {result.width} × {result.height}px • {result.ext.toUpperCase()} • {formatKB(result.size)}</p>
+          {preview && <ComparePreview beforeSrc={preview} afterSrc={result.url} beforeLabel="Original" afterLabel="Resized" />}
+          <a href={result.url} download={`${(downloadName || "resized-image").trim().replace(/[^a-z0-9-_]+/gi, "-") || "resized-image"}.${result.ext}`} className={btn}>Download Resized</a>
         </div>
       )}
     </Panel>
@@ -203,30 +678,110 @@ export function ResizeImage() {
 
 /* ───── 4. JPG to PNG Converter ───── */
 export function JpgToPngConverter() {
-  const { ref, file, onSelect, accept } = useFileInput("image/jpeg,.jpg");
-  const [resultUrl, setResultUrl] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
+  const [results, setResults] = useState<{ name: string; url: string; size: number }[]>([]);
+  const [isConverting, setIsConverting] = useState(false);
+  const [maxWidth, setMaxWidth] = useState("0");
+  const [maxHeight, setMaxHeight] = useState("0");
+  const [grayscale, setGrayscale] = useState(false);
+  const [filenamePrefix, setFilenamePrefix] = useState("converted");
 
-  const convert = () => {
-    if (!file) return;
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      canvas.getContext("2d")!.drawImage(img, 0, 0);
-      setResultUrl(canvas.toDataURL("image/png"));
+  useEffect(() => {
+    return () => {
+      results.forEach((result) => URL.revokeObjectURL(result.url));
     };
-    img.src = URL.createObjectURL(file);
+  }, [results]);
+
+  const convert = async () => {
+    if (files.length === 0) return;
+    setIsConverting(true);
+    const next: { name: string; url: string; size: number }[] = [];
+    for (const file of files) {
+      const img = await loadImageFromFile(file);
+      const canvas = document.createElement("canvas");
+      const limitW = parseInt(maxWidth) || img.width;
+      const limitH = parseInt(maxHeight) || img.height;
+      const scale = Math.min(1, limitW / img.width, limitH / img.height);
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      if (grayscale) {
+        const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = frame.data;
+        for (let i = 0; i < pixels.length; i += 4) {
+          const gray = 0.2126 * pixels[i] + 0.7152 * pixels[i + 1] + 0.0722 * pixels[i + 2];
+          pixels[i] = gray;
+          pixels[i + 1] = gray;
+          pixels[i + 2] = gray;
+        }
+        ctx.putImageData(frame, 0, 0);
+      }
+      const blob = await canvasToBlob(canvas, "image/png");
+      URL.revokeObjectURL(img.src);
+      if (!blob) continue;
+      const fileName = file.name.replace(/\.(jpe?g)$/i, "") || "converted";
+      next.push({ name: `${(filenamePrefix || fileName).trim().replace(/[^a-z0-9-_]+/gi, "-")}-${next.length + 1}.png`, url: URL.createObjectURL(blob), size: blob.size });
+    }
+    setResults((prev) => {
+      prev.forEach((item) => URL.revokeObjectURL(item.url));
+      return next;
+    });
+    setIsConverting(false);
+  };
+
+  const downloadAll = () => {
+    results.forEach((result) => {
+      const link = document.createElement("a");
+      link.href = result.url;
+      link.download = result.name;
+      link.click();
+    });
   };
 
   return (
     <Panel title="JPG to PNG Converter">
-      <input ref={ref} type="file" accept={accept} onChange={onSelect} className={input} />
-      <button type="button" onClick={convert} className={`mt-4 ${btn}`} disabled={!file}>Convert to PNG</button>
-      {resultUrl && (
-        <div className="mt-4 space-y-2">
-          <img src={resultUrl} alt="Converted" className="max-h-48 rounded-lg object-contain" />
-          <a href={resultUrl} download="converted.png" className={btn}>Download PNG</a>
+      <UploadDropzone
+        accept="image/jpeg,.jpg"
+        multiple
+        onFiles={(selected) => {
+          setFiles(selected);
+          setResults((prev) => {
+            prev.forEach((item) => URL.revokeObjectURL(item.url));
+            return [];
+          });
+        }}
+        hint="JPG or JPEG files, supports batch conversion"
+      />
+      {files.length > 0 && <p className="mt-3 text-sm text-slate-600">{files.length} image(s) queued for conversion</p>}
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Max Width (px)</label><input type="number" value={maxWidth} onChange={(e) => setMaxWidth(e.target.value)} className={input} placeholder="0 = original" /></div>
+        <div><label className={label}>Max Height (px)</label><input type="number" value={maxHeight} onChange={(e) => setMaxHeight(e.target.value)} className={input} placeholder="0 = original" /></div>
+        <div><label className={label}>Filename Prefix</label><input value={filenamePrefix} onChange={(e) => setFilenamePrefix(e.target.value)} className={input} /></div>
+      </div>
+      <div className="mt-2 text-sm text-slate-700">
+        <label className="flex items-center gap-2"><input type="checkbox" checked={grayscale} onChange={(e) => setGrayscale(e.target.checked)} /> Convert to grayscale</label>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={convert} className={btn} disabled={files.length === 0 || isConverting}>{isConverting ? "Converting..." : "Convert to PNG"}</button>
+        <button type="button" onClick={downloadAll} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={results.length === 0}>Download All</button>
+        <button type="button" onClick={() => { setFiles([]); setResults((prev) => { prev.forEach((item) => URL.revokeObjectURL(item.url)); return []; }); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={files.length === 0 && results.length === 0}>Reset</button>
+      </div>
+      {results.length > 0 && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <p className="text-sm text-slate-600">Converted {results.length} file(s) • Total output {formatKB(results.reduce((sum, item) => sum + item.size, 0))}</p>
+          <div className="space-y-2">
+            {results.map((result, index) => (
+              <div key={result.name + index} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
+                <img src={result.url} alt={result.name} className="h-12 w-12 rounded border border-slate-200 object-contain" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-slate-700">{result.name}</p>
+                  <p className="text-xs text-slate-500">{formatKB(result.size)}</p>
+                </div>
+                <a href={result.url} download={result.name} className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-200">Download</a>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </Panel>
@@ -235,35 +790,106 @@ export function JpgToPngConverter() {
 
 /* ───── 5. PNG to JPG Converter ───── */
 export function PngToJpgConverter() {
-  const { ref, file, onSelect, accept } = useFileInput("image/png,.png");
+  const [files, setFiles] = useState<File[]>([]);
+  const [results, setResults] = useState<{ name: string; url: string; size: number }[]>([]);
+  const [isConverting, setIsConverting] = useState(false);
   const [quality, setQuality] = useState(85);
-  const [resultUrl, setResultUrl] = useState("");
+  const [background, setBackground] = useState("#ffffff");
+  const [targetKb, setTargetKb] = useState("300");
+  const [filenamePrefix, setFilenamePrefix] = useState("converted");
 
-  const convert = () => {
-    if (!file) return;
-    const img = new Image();
-    img.onload = () => {
+  useEffect(() => {
+    return () => {
+      results.forEach((result) => URL.revokeObjectURL(result.url));
+    };
+  }, [results]);
+
+  const convert = async () => {
+    if (files.length === 0) return;
+    setIsConverting(true);
+    const next: { name: string; url: string; size: number }[] = [];
+    for (const file of files) {
+      const img = await loadImageFromFile(file);
       const canvas = document.createElement("canvas");
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext("2d")!;
-      ctx.fillStyle = "#FFFFFF";
+      ctx.fillStyle = background;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
-      setResultUrl(canvas.toDataURL("image/jpeg", quality / 100));
-    };
-    img.src = URL.createObjectURL(file);
+      let blob = await canvasToBlob(canvas, "image/jpeg", quality / 100);
+      const targetBytes = (parseInt(targetKb) || 300) * 1024;
+      if (blob && blob.size > targetBytes) {
+        let q = quality;
+        while (q > 20 && blob.size > targetBytes) {
+          q -= 5;
+          const nextBlob = await canvasToBlob(canvas, "image/jpeg", q / 100);
+          if (!nextBlob) break;
+          blob = nextBlob;
+        }
+      }
+      URL.revokeObjectURL(img.src);
+      if (!blob) continue;
+      const fileName = file.name.replace(/\.png$/i, "") || "converted";
+      next.push({ name: `${(filenamePrefix || fileName).trim().replace(/[^a-z0-9-_]+/gi, "-")}-${next.length + 1}.jpg`, url: URL.createObjectURL(blob), size: blob.size });
+    }
+    setResults((prev) => {
+      prev.forEach((item) => URL.revokeObjectURL(item.url));
+      return next;
+    });
+    setIsConverting(false);
+  };
+
+  const downloadAll = () => {
+    results.forEach((result) => {
+      const link = document.createElement("a");
+      link.href = result.url;
+      link.download = result.name;
+      link.click();
+    });
   };
 
   return (
     <Panel title="PNG to JPG Converter">
-      <input ref={ref} type="file" accept={accept} onChange={onSelect} className={input} />
+      <UploadDropzone
+        accept="image/png,.png"
+        multiple
+        onFiles={(selected) => {
+          setFiles(selected);
+          setResults((prev) => {
+            prev.forEach((item) => URL.revokeObjectURL(item.url));
+            return [];
+          });
+        }}
+        hint="PNG files only, supports batch conversion"
+      />
+      {files.length > 0 && <p className="mt-3 text-sm text-slate-600">{files.length} image(s) queued for conversion</p>}
       <div className="mt-3"><label className={label}>Quality: {quality}%</label><input type="range" min={10} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" /></div>
-      <button type="button" onClick={convert} className={`mt-4 ${btn}`} disabled={!file}>Convert to JPG</button>
-      {resultUrl && (
-        <div className="mt-4 space-y-2">
-          <img src={resultUrl} alt="Converted" className="max-h-48 rounded-lg object-contain" />
-          <a href={resultUrl} download="converted.jpg" className={btn}>Download JPG</a>
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Background</label><input type="color" value={background} onChange={(e) => setBackground(e.target.value)} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>
+        <div><label className={label}>Target Size (KB)</label><input type="number" value={targetKb} onChange={(e) => setTargetKb(e.target.value)} className={input} /></div>
+        <div><label className={label}>Filename Prefix</label><input value={filenamePrefix} onChange={(e) => setFilenamePrefix(e.target.value)} className={input} /></div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={convert} className={btn} disabled={files.length === 0 || isConverting}>{isConverting ? "Converting..." : "Convert to JPG"}</button>
+        <button type="button" onClick={downloadAll} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={results.length === 0}>Download All</button>
+        <button type="button" onClick={() => { setFiles([]); setResults((prev) => { prev.forEach((item) => URL.revokeObjectURL(item.url)); return []; }); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={files.length === 0 && results.length === 0}>Reset</button>
+      </div>
+      {results.length > 0 && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <p className="text-sm text-slate-600">Converted {results.length} file(s) • Total output {formatKB(results.reduce((sum, item) => sum + item.size, 0))}</p>
+          <div className="space-y-2">
+            {results.map((result, index) => (
+              <div key={result.name + index} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
+                <img src={result.url} alt={result.name} className="h-12 w-12 rounded border border-slate-200 object-contain" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-slate-700">{result.name}</p>
+                  <p className="text-xs text-slate-500">{formatKB(result.size)}</p>
+                </div>
+                <a href={result.url} download={result.name} className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-200">Download</a>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </Panel>
@@ -272,12 +898,17 @@ export function PngToJpgConverter() {
 
 /* ───── 6. QR Code Generator ───── */
 export function QrCodeGenerator() {
-  const [text, setText] = useState("https://toolnest.vercel.app");
+  const [text, setText] = useState("https://tool-nest.tech");
   const [size, setSize] = useState(200);
+  const [margin, setMargin] = useState(2);
+  const [fgColor, setFgColor] = useState("000000");
+  const [bgColor, setBgColor] = useState("ffffff");
+  const [ecc, setEcc] = useState("M");
+  const [format, setFormat] = useState<"png" | "svg">("png");
   const qrUrl = useMemo(() => {
     if (!text.trim()) return "";
-    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}`;
-  }, [text, size]);
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&margin=${margin}&color=${fgColor}&bgcolor=${bgColor}&ecc=${ecc}&format=${format}`;
+  }, [text, size, margin, fgColor, bgColor, ecc, format]);
 
   return (
     <Panel title="QR Code Generator">
@@ -285,10 +916,17 @@ export function QrCodeGenerator() {
         <div><label className={label}>Text or URL</label><textarea value={text} onChange={(e) => setText(e.target.value)} className={`${input} h-24`} placeholder="https://example.com" /></div>
         <div><label className={label}>Size: {size}px</label><input type="range" min={100} max={500} step={50} value={size} onChange={(e) => setSize(parseInt(e.target.value))} className="w-full" /></div>
       </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-5">
+        <div><label className={label}>Margin</label><input type="number" min={0} max={20} value={margin} onChange={(e) => setMargin(parseInt(e.target.value) || 0)} className={input} /></div>
+        <div><label className={label}>FG Color</label><input type="color" value={`#${fgColor}`} onChange={(e) => setFgColor(e.target.value.slice(1))} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>
+        <div><label className={label}>BG Color</label><input type="color" value={`#${bgColor}`} onChange={(e) => setBgColor(e.target.value.slice(1))} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>
+        <div><label className={label}>ECC</label><select value={ecc} onChange={(e) => setEcc(e.target.value)} className={input}><option value="L">L</option><option value="M">M</option><option value="Q">Q</option><option value="H">H</option></select></div>
+        <div><label className={label}>Format</label><select value={format} onChange={(e) => setFormat(e.target.value as "png" | "svg")} className={input}><option value="png">PNG</option><option value="svg">SVG</option></select></div>
+      </div>
       {qrUrl && (
         <div className="mt-4 flex flex-col items-center gap-3">
           <img src={qrUrl} alt="QR Code" width={size} height={size} className="rounded-lg border border-slate-200" />
-          <a href={qrUrl} download="qrcode.png" className={btn}>Download QR Code</a>
+          <a href={qrUrl} download={`qrcode.${format}`} className={btn}>Download QR Code</a>
         </div>
       )}
     </Panel>
@@ -301,6 +939,11 @@ export function BarcodeGenerator() {
   const [format, setFormat] = useState("code128");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState("");
+  const [barWidth, setBarWidth] = useState(2);
+  const [barHeight, setBarHeight] = useState(80);
+  const [showValue, setShowValue] = useState(true);
+  const [foreground, setForeground] = useState("#000000");
+  const [background, setBackground] = useState("#ffffff");
 
   const generate = () => {
     setError("");
@@ -308,11 +951,10 @@ export function BarcodeGenerator() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d")!;
     // Simple Code128-style barcode rendering (visual representation)
-    const barWidth = 2;
-    const height = 80;
+    const height = barHeight;
     canvas.width = value.length * barWidth * 11 + 40;
-    canvas.height = height + 30;
-    ctx.fillStyle = "#fff";
+    canvas.height = height + (showValue ? 30 : 10);
+    ctx.fillStyle = background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     let x = 20;
@@ -320,20 +962,22 @@ export function BarcodeGenerator() {
       const code = char.charCodeAt(0);
       const binary = code.toString(2).padStart(8, "0");
       for (const bit of binary) {
-        ctx.fillStyle = bit === "1" ? "#000" : "#fff";
+        ctx.fillStyle = bit === "1" ? foreground : background;
         ctx.fillRect(x, 5, barWidth, height);
         x += barWidth;
       }
       // gap
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = background;
       ctx.fillRect(x, 5, barWidth, height);
       x += barWidth * 3;
     }
 
-    ctx.fillStyle = "#000";
-    ctx.font = "12px monospace";
-    ctx.textAlign = "center";
-    ctx.fillText(value, canvas.width / 2, height + 22);
+    if (showValue) {
+      ctx.fillStyle = foreground;
+      ctx.font = "12px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(value, canvas.width / 2, height + 22);
+    }
   };
 
   const download = () => {
@@ -356,6 +1000,15 @@ export function BarcodeGenerator() {
           </select>
         </div>
       </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Bar Width: {barWidth}px</label><input type="range" min={1} max={4} value={barWidth} onChange={(e) => setBarWidth(parseInt(e.target.value))} className="w-full" /></div>
+        <div><label className={label}>Bar Height: {barHeight}px</label><input type="range" min={40} max={140} value={barHeight} onChange={(e) => setBarHeight(parseInt(e.target.value))} className="w-full" /></div>
+        <div className="flex items-end"><label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={showValue} onChange={(e) => setShowValue(e.target.checked)} /> Show value text</label></div>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Foreground</label><input type="color" value={foreground} onChange={(e) => setForeground(e.target.value)} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>
+        <div><label className={label}>Background</label><input type="color" value={background} onChange={(e) => setBackground(e.target.value)} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>
+      </div>
       <button type="button" onClick={generate} className={`mt-4 ${btn}`}>Generate Barcode</button>
       {error && <p className="mt-2 text-sm text-rose-600">{error}</p>}
       <div className="mt-4 flex flex-col items-center gap-3">
@@ -368,24 +1021,45 @@ export function BarcodeGenerator() {
 
 /* ───── 8. Base64 Image Encoder ───── */
 export function Base64ImageEncoder() {
-  const { ref, file, preview, onSelect, accept } = useFileInput("image/*");
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
   const [dataUri, setDataUri] = useState("");
+  const [mode, setMode] = useState<"data-uri" | "raw-base64">("data-uri");
 
   const encode = () => {
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => setDataUri(reader.result as string);
+    reader.onload = () => {
+      const value = reader.result as string;
+      if (mode === "raw-base64") {
+        setDataUri(value.split(",")[1] || "");
+      } else {
+        setDataUri(value);
+      }
+    };
     reader.readAsDataURL(file);
   };
 
-  const htmlSnippet = dataUri ? `<img src="${dataUri.slice(0, 60)}..." alt="image" />` : "";
-
   return (
     <Panel title="Base64 Image Encoder">
-      <input ref={ref} type="file" accept={accept} onChange={onSelect} className={input} />
-      <button type="button" onClick={encode} className={`mt-4 ${btn}`} disabled={!file}>Encode to Base64</button>
+      <UploadDropzone
+        accept="image/*"
+        onFiles={(selected) => {
+          if (!selected[0]) return;
+          setFromFile(selected[0]);
+          setDataUri("");
+        }}
+        hint="Convert any image into embeddable Base64 data"
+      />
+      <div className="mt-4 flex flex-wrap gap-2">
+        <select value={mode} onChange={(e) => setMode(e.target.value as "data-uri" | "raw-base64")} className={input}>
+          <option value="data-uri">Data URI</option>
+          <option value="raw-base64">Raw Base64</option>
+        </select>
+        <button type="button" onClick={encode} className={btn} disabled={!file}>Encode to Base64</button>
+        <button type="button" onClick={() => { clear(); setDataUri(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
       {dataUri && (
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
           {preview && <img src={preview} alt="Preview" className="h-24 rounded-lg object-contain" />}
           <div>
             <label className={label}>Data URI ({(dataUri.length / 1024).toFixed(1)} KB)</label>
@@ -394,7 +1068,11 @@ export function Base64ImageEncoder() {
           </div>
           <div>
             <label className={label}>HTML Snippet</label>
-            <CopyButton value={`<img src="${dataUri}" alt="image" />`} />
+            <CopyButton value={mode === "data-uri" ? `<img src="${dataUri}" alt="image" />` : `<img src="data:${file?.type || "image/png"};base64,${dataUri}" alt="image" />`} />
+          </div>
+          <div>
+            <label className={label}>CSS Snippet</label>
+            <CopyButton value={mode === "data-uri" ? `background-image: url('${dataUri}');` : `background-image: url('data:${file?.type || "image/png"};base64,${dataUri}');`} />
           </div>
         </div>
       )}
@@ -404,8 +1082,9 @@ export function Base64ImageEncoder() {
 
 /* ───── 9. Image Metadata Viewer ───── */
 export function ImageMetadataViewer() {
-  const { ref, file, preview, onSelect, accept } = useFileInput("image/*");
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
   const [metadata, setMetadata] = useState<Record<string, string>>({});
+  const [search, setSearch] = useState("");
 
   const extract = () => {
     if (!file) return;
@@ -454,14 +1133,27 @@ export function ImageMetadataViewer() {
 
   return (
     <Panel title="Image Metadata Viewer">
-      <input ref={ref} type="file" accept={accept} onChange={onSelect} className={input} />
-      <button type="button" onClick={extract} className={`mt-4 ${btn}`} disabled={!file}>Extract Metadata</button>
+      <UploadDropzone
+        accept="image/*"
+        onFiles={(selected) => {
+          if (!selected[0]) return;
+          setFromFile(selected[0]);
+          setMetadata({});
+        }}
+        hint="Read dimensions, type, format, and basic EXIF presence"
+      />
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={extract} className={btn} disabled={!file}>Extract Metadata</button>
+        <button type="button" onClick={() => navigator.clipboard?.writeText(JSON.stringify(metadata, null, 2))} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={Object.keys(metadata).length === 0}>Copy JSON</button>
+        <button type="button" onClick={() => { clear(); setMetadata({}); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
       {Object.keys(metadata).length > 0 && (
-        <div className="mt-4">
+        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Filter metadata keys..." className={`${input} mb-3`} />
           {preview && <img src={preview} alt="Preview" className="mb-3 h-32 rounded-lg object-contain" />}
           <table className="w-full text-sm">
             <tbody>
-              {Object.entries(metadata).map(([k, v]) => (
+              {Object.entries(metadata).filter(([k]) => !search.trim() || k.toLowerCase().includes(search.toLowerCase())).map(([k, v]) => (
                 <tr key={k} className="border-b border-slate-100">
                   <td className="py-2 pr-4 font-medium text-slate-700">{k}</td>
                   <td className="py-2 text-slate-600">{v}</td>
@@ -477,14 +1169,15 @@ export function ImageMetadataViewer() {
 
 /* ───── 10. Favicon Generator ───── */
 export function FaviconGenerator() {
-  const { ref, file, preview, onSelect, accept } = useFileInput("image/*");
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
   const [favicons, setFavicons] = useState<{ size: number; url: string }[]>([]);
+  const [sizesInput, setSizesInput] = useState("16,32,48,64,128,256");
 
   const generate = () => {
     if (!file) return;
     const img = new Image();
     img.onload = () => {
-      const sizes = [16, 32, 48];
+      const sizes = Array.from(new Set(sizesInput.split(",").map((value) => parseInt(value.trim())).filter((value) => value >= 16 && value <= 512))).slice(0, 12);
       const results = sizes.map((size) => {
         const canvas = document.createElement("canvas");
         canvas.width = size;
@@ -497,10 +1190,32 @@ export function FaviconGenerator() {
     img.src = URL.createObjectURL(file);
   };
 
+  const downloadAll = () => {
+    favicons.forEach(({ size, url }) => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `favicon-${size}x${size}.png`;
+      link.click();
+    });
+  };
+
   return (
     <Panel title="Favicon Generator">
-      <input ref={ref} type="file" accept={accept} onChange={onSelect} className={input} />
-      <button type="button" onClick={generate} className={`mt-4 ${btn}`} disabled={!file}>Generate Favicons</button>
+      <UploadDropzone
+        accept="image/*"
+        onFiles={(selected) => {
+          if (!selected[0]) return;
+          setFromFile(selected[0]);
+          setFavicons([]);
+        }}
+        hint="Upload a square logo for best favicon results"
+      />
+      <div className="mt-3"><label className={label}>Sizes (comma separated)</label><input value={sizesInput} onChange={(e) => setSizesInput(e.target.value)} className={input} placeholder="16,32,48,64,128,256" /></div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={generate} className={btn} disabled={!file}>Generate Favicons</button>
+        <button type="button" onClick={downloadAll} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={favicons.length === 0}>Download All</button>
+        <button type="button" onClick={() => { clear(); setFavicons([]); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
       {preview && <img src={preview} alt="Source" className="mt-3 h-24 rounded-lg object-contain" />}
       {favicons.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-4">
@@ -511,6 +1226,583 @@ export function FaviconGenerator() {
               <a href={url} download={`favicon-${size}x${size}.png`} className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-200">Download</a>
             </div>
           ))}
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 11. WebP to PNG Converter ───── */
+export function WebpToPngConverter() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/webp,.webp");
+  const [resultUrl, setResultUrl] = useState("");
+  const [maxWidth, setMaxWidth] = useState("0");
+  const [maxHeight, setMaxHeight] = useState("0");
+  const [grayscale, setGrayscale] = useState(false);
+
+  const convert = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const canvas = document.createElement("canvas");
+    const widthLimit = parseInt(maxWidth) || img.width;
+    const heightLimit = parseInt(maxHeight) || img.height;
+    const scale = Math.min(1, widthLimit / img.width, heightLimit / img.height);
+    canvas.width = Math.max(1, Math.round(img.width * scale));
+    canvas.height = Math.max(1, Math.round(img.height * scale));
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    if (grayscale) {
+      const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = frame.data;
+      for (let i = 0; i < pixels.length; i += 4) {
+        const gray = 0.2126 * pixels[i] + 0.7152 * pixels[i + 1] + 0.0722 * pixels[i + 2];
+        pixels[i] = gray;
+        pixels[i + 1] = gray;
+        pixels[i + 2] = gray;
+      }
+      ctx.putImageData(frame, 0, 0);
+    }
+    setResultUrl(canvas.toDataURL("image/png"));
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="WebP to PNG Converter">
+      <UploadDropzone accept="image/webp,.webp" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setResultUrl(""); } }} hint="Convert WebP images into lossless PNG" />
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Max Width</label><input type="number" value={maxWidth} onChange={(e) => setMaxWidth(e.target.value)} className={input} placeholder="0 = original" /></div>
+        <div><label className={label}>Max Height</label><input type="number" value={maxHeight} onChange={(e) => setMaxHeight(e.target.value)} className={input} placeholder="0 = original" /></div>
+        <div className="flex items-end"><label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={grayscale} onChange={(e) => setGrayscale(e.target.checked)} /> Grayscale</label></div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={convert} className={btn} disabled={!file}>Convert to PNG</button>
+        <button type="button" onClick={() => { clear(); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {resultUrl && preview && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <ComparePreview beforeSrc={preview} afterSrc={resultUrl} beforeLabel="WebP" afterLabel="PNG" />
+          <a href={resultUrl} download="converted.png" className={btn}>Download PNG</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 12. PNG to WebP Converter ───── */
+export function PngToWebpConverter() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/png,.png");
+  const [quality, setQuality] = useState(85);
+  const [resultUrl, setResultUrl] = useState("");
+  const [lossless, setLossless] = useState(false);
+  const [filename, setFilename] = useState("converted-webp");
+
+  const convert = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext("2d")!.drawImage(img, 0, 0);
+    const blob = await canvasToBlob(canvas, "image/webp", lossless ? 1 : quality / 100);
+    URL.revokeObjectURL(img.src);
+    if (!blob) return;
+    setResultUrl(URL.createObjectURL(blob));
+  };
+
+  return (
+    <Panel title="PNG to WebP Converter">
+      <UploadDropzone accept="image/png,.png" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setResultUrl(""); } }} hint="Convert PNG to modern WebP format" />
+      <div className="mt-3"><label className={label}>Quality: {quality}%</label><input type="range" min={10} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" /></div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Download Name</label><input value={filename} onChange={(e) => setFilename(e.target.value)} className={input} /></div>
+        <div className="flex items-end"><label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={lossless} onChange={(e) => setLossless(e.target.checked)} /> Lossless mode</label></div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={convert} className={btn} disabled={!file}>Convert to WebP</button>
+        <button type="button" onClick={() => { clear(); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {resultUrl && preview && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <ComparePreview beforeSrc={preview} afterSrc={resultUrl} beforeLabel="PNG" afterLabel="WebP" />
+          <a href={resultUrl} download={`${(filename || "converted-webp").trim().replace(/[^a-z0-9-_]+/gi, "-") || "converted-webp"}.webp`} className={btn}>Download WebP</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 13. Image Cropper ───── */
+export function ImageCropper() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [x, setX] = useState("0");
+  const [y, setY] = useState("0");
+  const [width, setWidth] = useState("300");
+  const [height, setHeight] = useState("300");
+  const [resultUrl, setResultUrl] = useState("");
+  const [outputFormat, setOutputFormat] = useState<"png" | "jpeg" | "webp">("png");
+  const [quality, setQuality] = useState(90);
+
+  const crop = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const cropX = Math.max(0, parseInt(x) || 0);
+    const cropY = Math.max(0, parseInt(y) || 0);
+    const cropW = Math.max(1, parseInt(width) || img.width);
+    const cropH = Math.max(1, parseInt(height) || img.height);
+    const canvas = document.createElement("canvas");
+    canvas.width = cropW;
+    canvas.height = cropH;
+    canvas.getContext("2d")!.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+    const mime = outputFormat === "png" ? "image/png" : outputFormat === "webp" ? "image/webp" : "image/jpeg";
+    setResultUrl(canvas.toDataURL(mime, outputFormat === "png" ? undefined : quality / 100));
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="Image Cropper">
+      <UploadDropzone accept="image/*" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setResultUrl(""); } }} hint="Crop images using exact pixel coordinates" />
+      <div className="mt-3 grid gap-3 sm:grid-cols-4">
+        <div><label className={label}>X</label><input type="number" value={x} onChange={(e) => setX(e.target.value)} className={input} /></div>
+        <div><label className={label}>Y</label><input type="number" value={y} onChange={(e) => setY(e.target.value)} className={input} /></div>
+        <div><label className={label}>Width</label><input type="number" value={width} onChange={(e) => setWidth(e.target.value)} className={input} /></div>
+        <div><label className={label}>Height</label><input type="number" value={height} onChange={(e) => setHeight(e.target.value)} className={input} /></div>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Output Format</label><select value={outputFormat} onChange={(e) => setOutputFormat(e.target.value as "png" | "jpeg" | "webp")} className={input}><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WebP</option></select></div>
+        {outputFormat !== "png" ? <div><label className={label}>Quality: {quality}%</label><input type="range" min={10} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" /></div> : <div />}
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={crop} className={btn} disabled={!file}>Crop</button>
+        <button type="button" onClick={() => { clear(); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {resultUrl && preview && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <ComparePreview beforeSrc={preview} afterSrc={resultUrl} beforeLabel="Original" afterLabel="Cropped" />
+          <a href={resultUrl} download={`cropped.${outputFormat === "jpeg" ? "jpg" : outputFormat}`} className={btn}>Download Cropped</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 14. Rotate & Flip Tool ───── */
+export function ImageRotateFlipTool() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [rotation, setRotation] = useState(90);
+  const [flipX, setFlipX] = useState(false);
+  const [flipY, setFlipY] = useState(false);
+  const [resultUrl, setResultUrl] = useState("");
+  const [outputFormat, setOutputFormat] = useState<"png" | "jpeg" | "webp">("png");
+  const [quality, setQuality] = useState(90);
+
+  const transform = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const rad = (rotation * Math.PI) / 180;
+    const swap = rotation % 180 !== 0;
+    const canvas = document.createElement("canvas");
+    canvas.width = swap ? img.height : img.width;
+    canvas.height = swap ? img.width : img.height;
+    const ctx = canvas.getContext("2d")!;
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.scale(flipX ? -1 : 1, flipY ? -1 : 1);
+    ctx.rotate(rad);
+    ctx.drawImage(img, -img.width / 2, -img.height / 2);
+    const mime = outputFormat === "png" ? "image/png" : outputFormat === "webp" ? "image/webp" : "image/jpeg";
+    setResultUrl(canvas.toDataURL(mime, outputFormat === "png" ? undefined : quality / 100));
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="Image Rotate & Flip Tool">
+      <UploadDropzone accept="image/*" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setResultUrl(""); } }} hint="Rotate by 90° and flip horizontally/vertically" />
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Rotation</label><select value={rotation} onChange={(e) => setRotation(parseInt(e.target.value))} className={input}><option value={90}>90°</option><option value={180}>180°</option><option value={270}>270°</option></select></div>
+        <div className="flex items-end"><label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={flipX} onChange={(e) => setFlipX(e.target.checked)} /> Flip Horizontal</label></div>
+        <div className="flex items-end"><label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={flipY} onChange={(e) => setFlipY(e.target.checked)} /> Flip Vertical</label></div>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Output Format</label><select value={outputFormat} onChange={(e) => setOutputFormat(e.target.value as "png" | "jpeg" | "webp")} className={input}><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WebP</option></select></div>
+        {outputFormat !== "png" ? <div><label className={label}>Quality: {quality}%</label><input type="range" min={10} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" /></div> : <div />}
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={transform} className={btn} disabled={!file}>Apply</button>
+        <button type="button" onClick={() => { clear(); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {resultUrl && preview && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <ComparePreview beforeSrc={preview} afterSrc={resultUrl} beforeLabel="Original" afterLabel="Transformed" />
+          <a href={resultUrl} download={`transformed.${outputFormat === "jpeg" ? "jpg" : outputFormat}`} className={btn}>Download</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 15. Image Watermark Tool ───── */
+export function ImageWatermarkTool() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [text, setText] = useState("tool-nest.tech");
+  const [opacity, setOpacity] = useState(0.5);
+  const [fontSize, setFontSize] = useState(36);
+  const [color, setColor] = useState("#ffffff");
+  const [stroke, setStroke] = useState("#000000");
+  const [angle, setAngle] = useState(0);
+  const [position, setPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right" | "center">("bottom-right");
+  const [resultUrl, setResultUrl] = useState("");
+
+  const watermark = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0);
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = color;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = Math.max(1, fontSize / 12);
+    ctx.font = `bold ${fontSize}px sans-serif`;
+    const metrics = ctx.measureText(text);
+    const textW = metrics.width;
+    const margin = 20;
+    let px = margin;
+    let py = margin + fontSize;
+    if (position === "top-right") { px = canvas.width - textW - margin; py = margin + fontSize; }
+    if (position === "bottom-left") { px = margin; py = canvas.height - margin; }
+    if (position === "bottom-right") { px = canvas.width - textW - margin; py = canvas.height - margin; }
+    if (position === "center") { px = (canvas.width - textW) / 2; py = canvas.height / 2; }
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.rotate((angle * Math.PI) / 180);
+    ctx.strokeText(text, 0, 0);
+    ctx.fillText(text, 0, 0);
+    ctx.restore();
+    setResultUrl(canvas.toDataURL("image/png"));
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="Image Watermark Tool">
+      <UploadDropzone accept="image/*" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setResultUrl(""); } }} hint="Add text watermark with opacity and position controls" />
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Watermark Text</label><input value={text} onChange={(e) => setText(e.target.value)} className={input} /></div>
+        <div><label className={label}>Position</label><select value={position} onChange={(e) => setPosition(e.target.value as typeof position)} className={input}><option value="top-left">Top Left</option><option value="top-right">Top Right</option><option value="center">Center</option><option value="bottom-left">Bottom Left</option><option value="bottom-right">Bottom Right</option></select></div>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Opacity: {Math.round(opacity * 100)}%</label><input type="range" min={10} max={100} value={Math.round(opacity * 100)} onChange={(e) => setOpacity(parseInt(e.target.value) / 100)} className="w-full" /></div>
+        <div><label className={label}>Font Size: {fontSize}px</label><input type="range" min={16} max={96} value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full" /></div>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Text Color</label><input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>
+        <div><label className={label}>Stroke Color</label><input type="color" value={stroke} onChange={(e) => setStroke(e.target.value)} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>
+        <div><label className={label}>Angle: {angle}°</label><input type="range" min={-45} max={45} value={angle} onChange={(e) => setAngle(parseInt(e.target.value))} className="w-full" /></div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={watermark} className={btn} disabled={!file || !text.trim()}>Apply Watermark</button>
+        <button type="button" onClick={() => { clear(); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {resultUrl && preview && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <ComparePreview beforeSrc={preview} afterSrc={resultUrl} beforeLabel="Original" afterLabel="Watermarked" />
+          <a href={resultUrl} download="watermarked.png" className={btn}>Download</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 16. Image Color Palette Extractor ───── */
+export function ImageColorPaletteExtractor() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [colors, setColors] = useState<string[]>([]);
+  const [paletteSize, setPaletteSize] = useState(8);
+  const [sampleSize, setSampleSize] = useState(120);
+
+  const extract = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const size = sampleSize;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0, size, size);
+    const data = ctx.getImageData(0, 0, size, size).data;
+    const buckets = new Map<string, number>();
+    for (let i = 0; i < data.length; i += 4) {
+      const r = Math.round(data[i] / 32) * 32;
+      const g = Math.round(data[i + 1] / 32) * 32;
+      const b = Math.round(data[i + 2] / 32) * 32;
+      const hex = `#${[r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("")}`;
+      buckets.set(hex, (buckets.get(hex) || 0) + 1);
+    }
+    const top = [...buckets.entries()].sort((a, b) => b[1] - a[1]).slice(0, paletteSize).map(([hex]) => hex);
+    setColors(top);
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="Image Color Palette Extractor">
+      <UploadDropzone accept="image/*" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setColors([]); } }} hint="Extract dominant color palette from any image" />
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Palette Size: {paletteSize}</label><input type="range" min={4} max={16} value={paletteSize} onChange={(e) => setPaletteSize(parseInt(e.target.value))} className="w-full" /></div>
+        <div><label className={label}>Sample Resolution: {sampleSize}px</label><input type="range" min={60} max={240} step={20} value={sampleSize} onChange={(e) => setSampleSize(parseInt(e.target.value))} className="w-full" /></div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={extract} className={btn} disabled={!file}>Extract Palette</button>
+        <button type="button" onClick={() => navigator.clipboard?.writeText(colors.join(", "))} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={colors.length === 0}>Copy Palette</button>
+        <button type="button" onClick={() => { clear(); setColors([]); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {preview && colors.length > 0 && (
+        <div className="mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <img src={preview} alt="Source" className="max-h-40 rounded-lg border border-slate-200 bg-white object-contain" />
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {colors.map((hex) => (
+              <button key={hex} type="button" onClick={() => navigator.clipboard?.writeText(hex)} className="rounded-lg border border-slate-200 bg-white p-2 text-left hover:bg-slate-100">
+                <div className="h-8 rounded" style={{ backgroundColor: hex }} />
+                <p className="mt-1 text-xs font-semibold text-slate-700">{hex}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 17. Image Collage Maker ───── */
+export function ImageCollageMaker() {
+  const [files, setFiles] = useState<File[]>([]);
+  const [resultUrl, setResultUrl] = useState("");
+  const [layout, setLayout] = useState<"2x2" | "1x4" | "4x1">("2x2");
+  const [gap, setGap] = useState(8);
+  const [background, setBackground] = useState("#f8fafc");
+
+  const build = async () => {
+    if (files.length === 0) return;
+    const max = layout === "2x2" ? 4 : 4;
+    const imgs = await Promise.all(files.slice(0, max).map((f) => loadImageFromFile(f)));
+    const cell = 500;
+    const canvas = document.createElement("canvas");
+    if (layout === "2x2") {
+      canvas.width = 2 * cell + gap;
+      canvas.height = 2 * cell + gap;
+    }
+    if (layout === "1x4") {
+      canvas.width = 4 * cell + gap * 3;
+      canvas.height = cell;
+    }
+    if (layout === "4x1") {
+      canvas.width = cell;
+      canvas.height = 4 * cell + gap * 3;
+    }
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    imgs.forEach((img, i) => {
+      if (layout === "2x2") {
+        const row = Math.floor(i / 2);
+        const col = i % 2;
+        ctx.drawImage(img, col * (cell + gap), row * (cell + gap), cell, cell);
+      }
+      if (layout === "1x4") {
+        ctx.drawImage(img, i * (cell + gap), 0, cell, cell);
+      }
+      if (layout === "4x1") {
+        ctx.drawImage(img, 0, i * (cell + gap), cell, cell);
+      }
+      URL.revokeObjectURL(img.src);
+    });
+    setResultUrl(canvas.toDataURL("image/png"));
+  };
+
+  return (
+    <Panel title="Image Collage Maker">
+      <UploadDropzone accept="image/*" multiple onFiles={(selected) => { setFiles(selected.slice(0, 4)); setResultUrl(""); }} hint="Upload up to 4 images to build a 2×2 collage" />
+      {files.length > 0 && <p className="mt-3 text-sm text-slate-600">{files.length} image(s) selected</p>}
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Layout</label><select value={layout} onChange={(e) => setLayout(e.target.value as "2x2" | "1x4" | "4x1")} className={input}><option value="2x2">2 × 2</option><option value="1x4">1 × 4</option><option value="4x1">4 × 1</option></select></div>
+        <div><label className={label}>Gap: {gap}px</label><input type="range" min={0} max={30} value={gap} onChange={(e) => setGap(parseInt(e.target.value))} className="w-full" /></div>
+        <div><label className={label}>Background</label><input type="color" value={background} onChange={(e) => setBackground(e.target.value)} className="h-10 w-full rounded-xl border border-slate-200 px-2" /></div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={build} className={btn} disabled={files.length === 0}>Create Collage</button>
+        <button type="button" onClick={() => { setFiles([]); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={files.length === 0}>Reset</button>
+      </div>
+      {resultUrl && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <img src={resultUrl} alt="Collage" className="max-h-72 rounded-lg border border-slate-200 bg-white object-contain" />
+          <a href={resultUrl} download="collage.png" className={btn}>Download Collage</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 18. Image Blur Tool ───── */
+export function ImageBlurTool() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [blur, setBlur] = useState(6);
+  const [resultUrl, setResultUrl] = useState("");
+  const [outputFormat, setOutputFormat] = useState<"png" | "jpeg" | "webp">("png");
+  const [quality, setQuality] = useState(90);
+
+  const applyBlur = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d")!;
+    ctx.filter = `blur(${blur}px)`;
+    ctx.drawImage(img, 0, 0);
+    ctx.filter = "none";
+    const mime = outputFormat === "png" ? "image/png" : outputFormat === "webp" ? "image/webp" : "image/jpeg";
+    setResultUrl(canvas.toDataURL(mime, outputFormat === "png" ? undefined : quality / 100));
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="Image Blur Tool">
+      <UploadDropzone accept="image/*" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setResultUrl(""); } }} hint="Apply blur effect for backgrounds and overlays" />
+      <div className="mt-3"><label className={label}>Blur Radius: {blur}px</label><input type="range" min={1} max={20} value={blur} onChange={(e) => setBlur(parseInt(e.target.value))} className="w-full" /></div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Output Format</label><select value={outputFormat} onChange={(e) => setOutputFormat(e.target.value as "png" | "jpeg" | "webp")} className={input}><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WebP</option></select></div>
+        {outputFormat !== "png" ? <div><label className={label}>Quality: {quality}%</label><input type="range" min={10} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full" /></div> : <div />}
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={applyBlur} className={btn} disabled={!file}>Apply Blur</button>
+        <button type="button" onClick={() => { clear(); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {resultUrl && preview && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <ComparePreview beforeSrc={preview} afterSrc={resultUrl} beforeLabel="Original" afterLabel="Blurred" />
+          <a href={resultUrl} download={`blurred.${outputFormat === "jpeg" ? "jpg" : outputFormat}`} className={btn}>Download Blurred</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 19. Rounded Corners Tool ───── */
+export function RoundedCornersTool() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [radius, setRadius] = useState(40);
+  const [resultUrl, setResultUrl] = useState("");
+  const [outputFormat, setOutputFormat] = useState<"png" | "webp">("png");
+
+  const makeRounded = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d")!;
+    const r = Math.min(radius, canvas.width / 2, canvas.height / 2);
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    ctx.lineTo(canvas.width - r, 0);
+    ctx.quadraticCurveTo(canvas.width, 0, canvas.width, r);
+    ctx.lineTo(canvas.width, canvas.height - r);
+    ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - r, canvas.height);
+    ctx.lineTo(r, canvas.height);
+    ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - r);
+    ctx.lineTo(0, r);
+    ctx.quadraticCurveTo(0, 0, r, 0);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(img, 0, 0);
+    const mime = outputFormat === "png" ? "image/png" : "image/webp";
+    setResultUrl(canvas.toDataURL(mime));
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="Rounded Corners Image Tool">
+      <UploadDropzone accept="image/*" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setResultUrl(""); } }} hint="Create rounded-corner PNG images" />
+      <div className="mt-3"><label className={label}>Corner Radius: {radius}px</label><input type="range" min={4} max={200} value={radius} onChange={(e) => setRadius(parseInt(e.target.value))} className="w-full" /></div>
+      <div className="mt-3"><label className={label}>Output Format</label><select value={outputFormat} onChange={(e) => setOutputFormat(e.target.value as "png" | "webp")} className={input}><option value="png">PNG</option><option value="webp">WebP</option></select></div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={makeRounded} className={btn} disabled={!file}>Apply Rounded Corners</button>
+        <button type="button" onClick={() => { clear(); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {resultUrl && preview && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <ComparePreview beforeSrc={preview} afterSrc={resultUrl} beforeLabel="Original" afterLabel="Rounded" />
+          <a href={resultUrl} download={`rounded.${outputFormat}`} className={btn}>Download</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 20. Image to ASCII Art ───── */
+export function ImageToAsciiArt() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [chars, setChars] = useState("@%#*+=-:. ");
+  const [width, setWidth] = useState(90);
+  const [ascii, setAscii] = useState("");
+  const [invert, setInvert] = useState(false);
+  const [thresholdMode, setThresholdMode] = useState(false);
+
+  const generate = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const targetW = Math.max(20, width);
+    const targetH = Math.max(10, Math.round((img.height / img.width) * targetW * 0.55));
+    const canvas = document.createElement("canvas");
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0, targetW, targetH);
+    const pixels = ctx.getImageData(0, 0, targetW, targetH).data;
+    let out = "";
+    for (let y = 0; y < targetH; y++) {
+      for (let x = 0; x < targetW; x++) {
+        const i = (y * targetW + x) * 4;
+        const gray = 0.2126 * pixels[i] + 0.7152 * pixels[i + 1] + 0.0722 * pixels[i + 2];
+        const signal = invert ? 255 - gray : gray;
+        const normalized = thresholdMode ? (signal > 128 ? 255 : 0) : signal;
+        const idx = Math.min(chars.length - 1, Math.floor((normalized / 255) * (chars.length - 1)));
+        out += chars[idx] || " ";
+      }
+      out += "\n";
+    }
+    setAscii(out);
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="Image to ASCII Art">
+      <UploadDropzone accept="image/*" onFiles={(selected) => { if (selected[0]) { setFromFile(selected[0]); setAscii(""); } }} hint="Convert images into text-based ASCII art" />
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Character Set</label><input value={chars} onChange={(e) => setChars(e.target.value || "@%#*+=-:. ")} className={input} /></div>
+        <div><label className={label}>Output Width: {width}</label><input type="range" min={40} max={160} value={width} onChange={(e) => setWidth(parseInt(e.target.value))} className="w-full" /></div>
+      </div>
+      <div className="mt-2 flex flex-wrap gap-4 text-sm text-slate-700">
+        <label className="flex items-center gap-2"><input type="checkbox" checked={invert} onChange={(e) => setInvert(e.target.checked)} /> Invert brightness</label>
+        <label className="flex items-center gap-2"><input type="checkbox" checked={thresholdMode} onChange={(e) => setThresholdMode(e.target.checked)} /> High contrast mode</label>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={generate} className={btn} disabled={!file}>Generate ASCII</button>
+        <button type="button" onClick={() => {
+          const blob = new Blob([ascii], { type: "text/plain;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "ascii-art.txt";
+          link.click();
+          URL.revokeObjectURL(url);
+        }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!ascii}>Download TXT</button>
+        <button type="button" onClick={() => { clear(); setAscii(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {ascii && (
+        <div className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          {preview && <img src={preview} alt="Source" className="max-h-36 rounded-lg border border-slate-200 bg-white object-contain" />}
+          <textarea value={ascii} readOnly className="h-64 w-full rounded-xl border border-slate-200 bg-white p-3 font-mono text-[10px] leading-3 text-slate-700" />
+          <CopyButton value={ascii} />
         </div>
       )}
     </Panel>

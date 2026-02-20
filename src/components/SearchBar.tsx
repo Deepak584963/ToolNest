@@ -92,7 +92,7 @@ export default function SearchBar() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search 55+ free tools…"
+                placeholder="Search 70+ free tools…"
                 className="flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
                 autoFocus
               />

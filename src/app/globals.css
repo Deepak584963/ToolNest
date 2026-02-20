@@ -16,16 +16,26 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Inter, system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 ::selection {
   background-color: rgba(79, 70, 229, 0.2);
 }
 
-a,
-button,
-input,
-textarea,
-select {
-  transition: all 180ms ease;
+:where(a, button, input, textarea, select) {
+  transition: 180ms ease;
+}
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid rgb(99 102 241 / 70%);
+  outline-offset: 2px;
+}
+
+.text-balance {
+  text-wrap: balance;
 }

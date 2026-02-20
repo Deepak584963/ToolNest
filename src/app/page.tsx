@@ -8,25 +8,30 @@ import { tools } from "@/lib/tools";
 import { categoryMeta } from "@/lib/categories";
 
 export const metadata: Metadata = {
-  title: "ToolNest — 55+ Free Online Tools for Developers, SEO, Students & Creators",
-  description: "Use 55+ free browser-based tools: JSON formatter, QR code generator, EMI calculator, image compressor, hashtag generator, GPA calculator, and more. No signup needed.",
+  title: "ToolNest — 70+ Free Online Tools for Developers, SEO, Students & Creators",
+  description: "Use 70+ free browser-based tools: JSON formatter, regex tester, JWT decoder, SQL formatter, QR code generator, EMI calculator, image compressor, and more. No signup needed.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "ToolNest — 55+ Free Online Tools",
-    description: "55+ free, fast, browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities. No sign-up required.",
+    title: "ToolNest — 70+ Free Online Tools",
+    description: "70+ free, fast, browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities. No sign-up required.",
     url: "/",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ToolNest — 55+ Free Online Tools",
-    description: "55+ free browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities.",
+    title: "ToolNest — 70+ Free Online Tools",
+    description: "70+ free browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities.",
   },
   keywords: [
     "free online tools",
     "developer tools",
+    "regex tester",
+    "jwt decoder",
+    "cron expression builder",
+    "sql formatter",
+    "http status code lookup",
     "seo tools",
     "student tools",
     "creator tools",
@@ -56,14 +61,26 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/40 via-purple-100/30 to-cyan-100/40" />
         <div className="relative max-w-3xl">
           <p className="mb-3 inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">
-            55+ Tools • Free • No Sign-up • Browser-based
+            70+ Tools • Free • No Sign-up • Browser-based
           </p>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
             Free Online Tools for Developers, SEO, Students & Creators
           </h1>
-          <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+          <p className="mt-4 text-balance text-base leading-7 text-slate-600 sm:text-lg">
             Solve daily tasks in seconds — format JSON, generate QR codes, calculate EMI, compress images, create hashtags, plan studies, and much more. All tools run 100% in your browser with zero data collection and no account required.
           </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {[
+              "Fast browser processing",
+              "Privacy-first workflows",
+              "Mobile-friendly interface",
+              "No sign-up needed",
+            ].map((item) => (
+              <span key={item} className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-slate-700">
+                {item}
+              </span>
+            ))}
+          </div>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href="#tools" className="rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
               Explore All Tools ↓
@@ -109,7 +126,7 @@ export default function HomePage() {
         <h2 className="text-2xl font-semibold text-slate-900">Why ToolNest is the best free online tools website</h2>
         <div className="mt-4 space-y-4 text-sm leading-7 text-slate-700 sm:text-base">
           <p>
-            ToolNest brings together 55+ professional-grade utilities in one fast, clean interface. Whether you are a developer debugging JSON payloads, an SEO specialist optimizing meta tags, a student calculating CGPA, a content creator generating hashtags, or anyone who needs to compress an image or calculate EMI — we have the right tool for you.
+            ToolNest brings together 70+ professional-grade utilities in one fast, clean interface. Whether you are a developer debugging JSON payloads, an SEO specialist optimizing meta tags, a student calculating CGPA, a content creator generating hashtags, or anyone who needs to compress an image or calculate EMI — we have the right tool for you.
           </p>
           <p>
             Every tool runs entirely in your browser. Your data never leaves your device, which means maximum privacy and zero latency. There is no account to create, no software to install, and no usage limits. Just open a tool and start working.
@@ -134,7 +151,7 @@ export default function HomePage() {
             { q: "Are all tools on ToolNest free?", a: "Yes, every tool on ToolNest is 100% free to use with no hidden fees, sign-ups, or usage limits." },
             { q: "Is my data safe when using these tools?", a: "Absolutely. All tools run entirely in your browser. Your data is never sent to any server or stored anywhere." },
             { q: "Do I need to create an account?", a: "No. You can use any tool immediately without creating an account or providing any personal information." },
-            { q: "How many tools does ToolNest offer?", a: "ToolNest currently offers 55+ free tools across 7 categories: Developer, SEO, Text, Student, Creator, Image, and Utility." },
+            { q: "How many tools does ToolNest offer?", a: "ToolNest currently offers 70+ free tools across 7 categories: Developer, SEO, Text, Student, Creator, Image, and Utility." },
             { q: "Can I use these tools on my phone?", a: "Yes. Every tool is designed with a mobile-first approach and works smoothly on phones, tablets, and desktop computers." },
             { q: "How often are new tools added?", a: "We regularly add new tools based on user feedback and trending needs. Bookmark this page to stay updated." },
           ].map((faq) => (

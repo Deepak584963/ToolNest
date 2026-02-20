@@ -52,6 +52,34 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   const categoryTools = tools.filter((t) => t.category === meta.slug);
   const otherCategories = categoryMeta.filter((c) => c.slug !== meta.slug);
+  const featuredDevTools = [
+    { slug: "regex-tester-replacer", name: "Regex Tester & Replacer", description: "Test patterns and run replacements with live match previews." },
+    { slug: "jwt-decoder-inspector", name: "JWT Decoder & Inspector", description: "Decode token payloads and inspect claims safely in your browser." },
+    { slug: "cron-expression-builder", name: "Cron Expression Builder", description: "Generate cron schedules with readable summaries and presets." },
+    { slug: "sql-formatter-beautifier", name: "SQL Formatter & Beautifier", description: "Beautify or minify SQL queries for debugging and documentation." },
+    { slug: "http-status-code-lookup", name: "HTTP Status Code Lookup", description: "Find status meanings and copy response templates quickly." },
+  ];
+  const featuredCreatorTools = [
+    { slug: "youtube-chapter-timestamp-generator", name: "YouTube Chapter Timestamp Generator", description: "Generate chapter timestamps from your topic outline and video length." },
+    { slug: "engagement-rate-calculator", name: "Engagement Rate Calculator", description: "Measure social post performance by followers, reach, and views." },
+    { slug: "viral-content-calendar-generator", name: "Viral Content Calendar Generator", description: "Build monthly posting plans with pillars, angles, and formats." },
+    { slug: "best-time-to-post-planner", name: "Best Time to Post Planner", description: "Plan posting windows by platform, timezone, and audience region." },
+    { slug: "utm-link-builder-for-creators", name: "UTM Link Builder for Creators", description: "Create campaign-trackable links for bios, stories, and posts." },
+  ];
+  const featuredSeoTools = [
+    { slug: "schema-markup-generator", name: "Schema Markup Generator", description: "Generate JSON-LD for Article, Product, and FAQ pages with ready-to-publish snippets." },
+    { slug: "hreflang-tag-generator", name: "Hreflang Tag Generator", description: "Create alternate language/region tags and x-default mappings for international SEO." },
+    { slug: "redirect-rule-generator", name: "Redirect Rule Generator", description: "Generate migration redirect rules for Apache, Nginx, and Netlify in one place." },
+    { slug: "robots-meta-tag-generator", name: "Robots Meta Tag Generator", description: "Build robots meta and X-Robots-Tag directives with advanced snippet controls." },
+    { slug: "keyword-cluster-generator", name: "Keyword Cluster Generator", description: "Cluster keywords by topic and intent with instant title and H1 ideas." },
+  ];
+  const featuredUtilityTools = [
+    { slug: "emi-calculator", name: "EMI Calculator", description: "Estimate monthly EMI with total payment and total interest instantly." },
+    { slug: "loan-interest-calculator", name: "Loan Interest Calculator", description: "Analyze amortization and total interest for your loan tenure." },
+    { slug: "sip-calculator", name: "SIP Calculator", description: "Project SIP growth with maturity, invested amount, and wealth gain." },
+    { slug: "currency-converter", name: "Currency Converter", description: "Convert major currencies quickly with practical reference exchange rates." },
+    { slug: "scientific-calculator", name: "Scientific Calculator", description: "Perform advanced math with trigonometric and scientific operations." },
+  ];
 
   // Generate FAQ items for this category
   const faqs = [
@@ -117,6 +145,90 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           ))}
         </div>
       </section>
+
+      {meta.slug === "dev" && (
+        <section className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+          <h2 className="text-2xl font-semibold text-slate-900">Top developer tools for API and backend workflows</h2>
+          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+            Explore high-demand developer utilities for regex debugging, JWT token inspection, cron schedule creation, SQL query formatting, and HTTP status code references.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {featuredDevTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="rounded-xl border border-slate-200 bg-white/70 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
+                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {meta.slug === "creator" && (
+        <section className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+          <h2 className="text-2xl font-semibold text-slate-900">Top creator tools for growth and analytics workflows</h2>
+          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+            Explore high-demand creator utilities for YouTube chapters, engagement analysis, monthly content planning, posting-time optimization, and campaign link tracking.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {featuredCreatorTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="rounded-xl border border-slate-200 bg-white/70 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
+                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {meta.slug === "seo" && (
+        <section className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+          <h2 className="text-2xl font-semibold text-slate-900">Top SEO tools for technical audits and content planning</h2>
+          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+            Explore high-demand SEO utilities for structured data, hreflang deployment, redirect migrations, robots directives, and keyword clustering workflows.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {featuredSeoTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="rounded-xl border border-slate-200 bg-white/70 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
+                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {meta.slug === "utility" && (
+        <section className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+          <h2 className="text-2xl font-semibold text-slate-900">Top utility tools for finance and daily calculations</h2>
+          <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
+            Explore high-demand utility tools for EMI planning, loan analysis, SIP growth estimation, currency conversion, and scientific calculations.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {featuredUtilityTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="rounded-xl border border-slate-200 bg-white/70 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <p className="text-sm font-semibold text-slate-800 hover:text-indigo-700">{tool.name}</p>
+                <p className="mt-1 text-xs leading-6 text-slate-600 sm:text-sm">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Long description / SEO content */}
       <section className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
