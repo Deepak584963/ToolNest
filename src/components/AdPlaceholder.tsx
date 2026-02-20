@@ -1,16 +1,24 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type AdPlaceholderProps = {
   label?: string;
   slot?: string;
 };
 
+const CONSENT_KEY = "toolnest-consent";
 const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
 
 export default function AdPlaceholder({ label = "Ad Placement", slot }: AdPlaceholderProps) {
-  const enableAds = Boolean(adsenseClient && slot);
+  const [consented, setConsented] = useState(false);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(CONSENT_KEY);
+    setConsented(stored === "accepted");
+  }, []);
+
+  const enableAds = Boolean(adsenseClient && slot && consented);
 
   useEffect(() => {
     if (!enableAds) return;

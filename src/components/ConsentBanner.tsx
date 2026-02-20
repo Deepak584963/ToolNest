@@ -26,8 +26,8 @@ export default function ConsentBanner() {
   return (
     <aside className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-3xl rounded-2xl border border-white/70 bg-white/95 p-4 shadow-[0_20px_40px_rgba(15,23,42,0.2)] backdrop-blur-xl">
       <p className="text-sm leading-6 text-slate-700">
-        ToolNest uses cookies and similar technologies for analytics and ad
-        personalization where applicable. Read our{" "}
+        ToolNest uses cookies for site analytics and to serve personalized
+        advertisements through Google AdSense. Read our{" "}
         <a href="/privacy-policy" className="font-medium text-indigo-700 underline underline-offset-2 hover:text-indigo-900">
           Privacy Policy
         </a>{" "}
