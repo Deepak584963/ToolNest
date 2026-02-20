@@ -26,7 +26,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Format messy JSON and validate syntax with readable error guidance.",
     longDescription:
-      "Validate raw JSON, auto-format indentation, and understand where syntax breaks before it reaches production.",
+      "Paste raw JSON from APIs, config files, or webhook payloads and instantly validate syntax, auto-format indentation, and pinpoint exactly where errors occur with human-readable messages. Developers, QA engineers, and technical writers use this tool to catch missing commas, mismatched brackets, and malformed strings before they reach production. Whether you're debugging a REST API response or cleaning up a package.json, this formatter helps you ship error-free JSON faster.",
     keywords: ["json formatter", "json validator", "pretty json", "json error checker"],
   },
   {
@@ -35,7 +35,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Convert titles into clean, SEO-friendly slugs in one click.",
     longDescription:
-      "Generate lowercase, hyphenated slugs that are readable, consistent, and safe for URLs.",
+      "Convert blog titles, product names, and page headings into clean, lowercase, hyphenated URL slugs that are SEO-friendly and safe for any web platform. Content creators, developers, and SEO specialists rely on this tool to eliminate special characters, accents, and whitespace that break URLs or dilute search rankings. Consistent slug formatting improves crawlability, shareability, and user trust in every link you publish.",
     keywords: ["slug generator", "seo slug", "url slug tool", "title to slug"],
   },
   {
@@ -44,7 +44,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Preview search snippets for desktop and mobile before publishing.",
     longDescription:
-      "Craft metadata with length checks and visual SERP previews to improve click-through rates.",
+      "Write and preview meta titles and descriptions with real-time character and pixel-width counters, then see exactly how your page will appear on Google search results for both desktop and mobile. SEO professionals, bloggers, and marketing teams use this tool to optimize click-through rates by testing different copy variations before publishing. Catch truncation issues early and ensure every search snippet is compelling, on-brand, and within recommended length limits.",
     keywords: ["meta title", "meta description", "serp preview", "seo snippet tool"],
   },
   {
@@ -53,7 +53,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Build robots.txt rules with practical presets and crawl guidance.",
     longDescription:
-      "Create a robots.txt file for common site types and avoid accidental indexing mistakes.",
+      "Generate a properly formatted robots.txt file using practical presets for blogs, e-commerce sites, SaaS platforms, and more — no manual syntax needed. Webmasters and SEO engineers use this tool to control crawler access, block sensitive directories, and reference sitemaps without risking accidental deindexing. It is a critical first step in technical SEO that prevents search engines from wasting crawl budget on irrelevant pages.",
     keywords: ["robots txt", "crawl rules", "seo technical", "search bot directives"],
   },
   {
@@ -62,7 +62,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Generate XML sitemaps for static websites using URL lists.",
     longDescription:
-      "Create valid sitemap XML output with optional frequency and priority values for static pages.",
+      "Enter a list of page URLs along with optional change frequency and priority values to generate a standards-compliant XML sitemap ready for submission to Google Search Console and Bing Webmaster Tools. Static site owners, freelance developers, and SEO consultants use this tool to ensure every important page gets discovered and indexed. A well-structured sitemap accelerates crawling for new sites and helps search engines understand your site hierarchy.",
     keywords: ["sitemap generator", "xml sitemap", "static site seo", "seo indexing"],
   },
   {
@@ -71,7 +71,7 @@ export const tools: Tool[] = [
     category: "text",
     shortDescription: "Count words, characters, and estimate reading time with SEO hints.",
     longDescription:
-      "Analyze writing length, readability pacing, and optimization opportunities for content teams.",
+      "Paste any text to instantly count words, characters, sentences, and paragraphs while calculating estimated reading time based on average adult reading speed. Content writers, editors, and SEO teams use this tool to hit word-count targets, optimize article length for search intent, and ensure content pacing matches audience expectations. It is ideal for blog posts, essays, ad copy, and social media drafts where length directly impacts engagement and rankings.",
     keywords: ["word counter", "reading time", "content seo", "character count"],
   },
   {
@@ -80,7 +80,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Check password strength and get actionable improvement suggestions.",
     longDescription:
-      "Evaluate entropy signals, identify weak patterns, and create stronger credential habits.",
+      "Enter any password to evaluate its strength based on entropy, length, character diversity, and common vulnerability patterns like dictionary words, keyboard walks, and repeated sequences. Security-conscious developers, IT administrators, and everyday users benefit from actionable feedback that explains exactly why a password is weak and how to improve it. Building stronger credential habits reduces the risk of brute-force attacks and unauthorized account access.",
     keywords: ["password checker", "password strength", "security utility", "strong password"],
   },
   {
@@ -89,7 +89,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Generate bulk UUIDs and understand common UUID versions quickly.",
     longDescription:
-      "Create unique IDs for APIs, databases, and distributed systems directly in the browser.",
+      "Generate cryptographically random UUIDs (v4) in bulk directly in the browser with no server requests, making it safe for sensitive environments. Backend developers, database architects, and API designers use UUIDs as primary keys, correlation IDs, and session tokens across distributed systems. Copy single or batch-generated IDs instantly for use in code, configuration files, or testing scripts without installing any packages.",
     keywords: ["uuid generator", "uuid v4", "unique id", "developer tools"],
   },
   {
@@ -98,7 +98,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Encode or decode text and files in Base64 format instantly.",
     longDescription:
-      "Transform text and small files to Base64 and decode payloads safely for debugging workflows.",
+      "Encode plain text, JSON payloads, or small files into Base64 format and decode Base64 strings back to readable content — all processed locally in the browser for security. Developers and DevOps engineers use this tool to debug email attachments, inspect API payloads, embed assets in data URIs, and troubleshoot authentication tokens. It handles edge cases like UTF-8 encoding and multi-line input, making it a reliable utility for everyday development workflows.",
     keywords: ["base64 encode", "base64 decode", "data uri", "developer converter"],
   },
   {
@@ -107,7 +107,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Minify CSS for production or beautify compressed styles for editing.",
     longDescription:
-      "Switch between compact and readable CSS formats using one side-by-side utility.",
+      "Minify verbose CSS into a compact, production-ready format to reduce file size and page load time, or beautify compressed stylesheets into readable, indented code for editing and review. Frontend developers, UI designers, and performance engineers use this tool to toggle between development and deployment formats without installing build tools. It handles media queries, nested selectors, and vendor prefixes cleanly in both directions.",
     keywords: ["css minifier", "css beautifier", "frontend utility", "optimize css"],
   },
   {
@@ -116,7 +116,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Test regex patterns, inspect matches, and run replacements instantly.",
     longDescription:
-      "Build and debug regular expressions with flag toggles, live match previews, and replacement output in one browser-based workspace.",
+      "Write, test, and debug regular expressions with real-time match highlighting, flag toggles for global, case-insensitive, and multiline modes, plus a built-in replacement panel for search-and-replace workflows. Developers, data engineers, and content operations teams use this tool to validate patterns against sample text before embedding them in code. It eliminates guesswork from regex development and speeds up tasks like log parsing, input validation, and text extraction.",
     keywords: ["regex tester", "regex replace", "regular expression tool", "pattern matcher"],
   },
   {
@@ -125,7 +125,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Decode JWT header and payload safely in your browser.",
     longDescription:
-      "Inspect token claims like exp, nbf, and iat without sending JWTs to a server. Useful for auth debugging and API QA.",
+      "Paste any JSON Web Token to instantly decode its header and payload, inspect claims like exp, iss, sub, nbf, and iat, and verify expiration status — all without sending the token to an external server. Backend developers, security engineers, and API testers use this tool to debug OAuth flows, diagnose 401 errors, and validate token structures during integration testing. Client-side processing ensures sensitive tokens stay private while you troubleshoot authentication issues.",
     keywords: ["jwt decoder", "jwt inspector", "token debugger", "auth tools"],
   },
   {
@@ -134,7 +134,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Create cron schedules with presets and readable summaries.",
     longDescription:
-      "Generate valid cron expressions quickly using preset templates, field-level controls, and copy-ready crontab lines.",
+      "Build valid cron expressions using an interactive field-level editor with preset templates for common schedules like daily backups, hourly syncs, and weekly reports, then copy the final crontab line with one click. DevOps engineers, sysadmins, and backend developers use this tool to avoid syntax mistakes that cause missed or runaway scheduled jobs. Human-readable summaries confirm what each expression actually means so you can deploy cron schedules with confidence.",
     keywords: ["cron builder", "cron expression", "schedule generator", "crontab tool"],
   },
   {
@@ -143,7 +143,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Format and minify SQL queries for readability and optimization.",
     longDescription:
-      "Convert messy SQL into clean, readable statements or minify query text for compact output during tooling and testing workflows.",
+      "Paste unformatted SQL queries to get properly indented, keyword-highlighted output that is easy to read, review, and share with teammates, or minify clean SQL into compact single-line format for use in scripts and tooling. Database administrators, data analysts, and backend developers use this tool to standardize query formatting across projects and improve code-review readability. It supports SELECT, JOIN, subqueries, and common SQL dialects without needing a local IDE.",
     keywords: ["sql formatter", "sql beautifier", "format sql", "minify sql"],
   },
   {
@@ -152,7 +152,7 @@ export const tools: Tool[] = [
     category: "dev",
     shortDescription: "Find HTTP status meanings and generate API response templates.",
     longDescription:
-      "Search common status codes, understand when to use each one, and copy response JSON samples for backend and API documentation.",
+      "Search and browse HTTP status codes from 1xx to 5xx with clear explanations of when to use each one, along with copy-ready JSON response samples for API documentation and error handling. Backend developers, API designers, and technical writers reference this tool to choose the correct status code for every endpoint scenario. It reduces guesswork during REST API development and ensures your responses follow HTTP standards and best practices.",
     keywords: ["http status codes", "api status lookup", "response codes", "rest api tool"],
   },
   {
@@ -161,7 +161,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Compare page URL and canonical target to catch indexing conflicts.",
     longDescription:
-      "Detect canonical mismatches and prevent duplicate-content signals from confusing search engines.",
+      "Enter a page URL and its canonical tag value to instantly detect mismatches that cause duplicate-content signals, wasted crawl budget, and diluted link equity across your site. SEO auditors, webmasters, and content teams use this tool during site migrations, CMS updates, and routine technical audits to ensure every page points to the correct canonical version. Fixing canonical issues early prevents search engines from indexing the wrong URL and protects your organic rankings.",
     keywords: ["canonical checker", "duplicate content", "technical seo", "canonical tag"],
   },
   {
@@ -170,7 +170,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Preview social link cards using Open Graph style fields.",
     longDescription:
-      "Test how your page appears when shared on social platforms and tune metadata for engagement.",
+      "Enter Open Graph metadata fields like og:title, og:description, og:image, and og:url to preview exactly how your page will appear as a link card on Facebook, Twitter, LinkedIn, and messaging apps. Marketers, content creators, and developers use this tool to catch missing images, truncated titles, and bland descriptions before sharing links publicly. Optimizing social previews directly improves click-through rates and audience engagement from every shared link.",
     keywords: ["open graph", "social preview", "og tags", "share card tool"],
   },
   {
@@ -179,7 +179,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Measure keyword frequency and identify over-optimization risks.",
     longDescription:
-      "Analyze density percentages and term distribution to write natural, intent-aligned content.",
+      "Paste article text and a target keyword to calculate density percentage, frequency count, and distribution across your content, helping you write naturally without over-optimization penalties. SEO writers, content strategists, and editors use this tool to balance keyword usage and maintain topical relevance while keeping prose readable. It is essential for on-page SEO audits where keyword stuffing or under-optimization can directly impact search rankings.",
     keywords: ["keyword density", "seo content", "keyword frequency", "on page seo"],
   },
   {
@@ -188,7 +188,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Generate JSON-LD schema for Article, Product, and FAQ pages.",
     longDescription:
-      "Create production-ready structured data snippets for rich results with validation-friendly JSON-LD output.",
+      "Select a schema type — Article, Product, FAQ, LocalBusiness, or more — and fill in the required fields to generate production-ready JSON-LD structured data that qualifies your pages for Google rich results. SEO specialists, developers, and digital agencies use this tool to implement schema markup without hand-coding, reducing errors and speeding up deployment. Valid structured data improves search appearance with star ratings, FAQ dropdowns, and product details directly in the SERP.",
     keywords: ["schema markup generator", "json-ld generator", "structured data", "rich results"],
   },
   {
@@ -197,7 +197,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Generate hreflang alternate tags for multilingual and regional pages.",
     longDescription:
-      "Build clean hreflang implementations with x-default support and sitemap-ready alternate fragments.",
+      "Add language-region pairs and page URLs to generate correctly formatted hreflang tags with x-default support, ready to paste into HTML heads or XML sitemaps for international SEO. Global brands, multilingual publishers, and SEO agencies use this tool to prevent duplicate-content issues across regional versions of the same page. Proper hreflang implementation ensures search engines serve the right language version to the right audience, improving user experience and regional rankings.",
     keywords: ["hreflang generator", "multilingual seo", "alternate tags", "international seo"],
   },
   {
@@ -206,7 +206,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Create 301/302 redirect rules for Apache, Nginx, and Netlify.",
     longDescription:
-      "Convert old-to-new URL mappings into server-specific redirect formats to preserve rankings after URL changes.",
+      "Enter old and new URL pairs to generate server-specific redirect rules for Apache (.htaccess), Nginx, Netlify, Vercel, and Cloudflare, supporting both 301 permanent and 302 temporary redirects. SEO consultants, web developers, and site migration teams use this tool to preserve link equity, maintain search rankings, and prevent 404 errors when restructuring URLs. Automating redirect rule generation reduces manual syntax errors and speeds up large-scale migration workflows.",
     keywords: ["301 redirect generator", "redirect rules", "htaccess redirects", "seo migration"],
   },
   {
@@ -215,7 +215,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Build robots meta and X-Robots-Tag directives with advanced controls.",
     longDescription:
-      "Configure index/follow and advanced snippet-preview directives for page-level crawler behavior.",
+      "Configure page-level crawler directives including index, noindex, follow, nofollow, noarchive, nosnippet, and max-snippet controls, then copy the generated meta tag or X-Robots-Tag header value. Technical SEO specialists, developers, and content managers use this tool to fine-tune which pages search engines can index, cache, and display in snippet previews. Granular page-level control complements your robots.txt and prevents sensitive or low-value pages from appearing in search results.",
     keywords: ["robots meta tag", "x-robots-tag", "noindex generator", "technical seo"],
   },
   {
@@ -224,7 +224,7 @@ export const tools: Tool[] = [
     category: "seo",
     shortDescription: "Group keyword lists into topical clusters with SEO title and H1 ideas.",
     longDescription:
-      "Turn raw keyword lists into actionable clusters, intent labels, and content-brief style outputs for scale.",
+      "Paste a raw list of keywords to automatically group them into topical clusters with shared intent labels, suggested page titles, and H1 ideas that form the foundation of a scalable content strategy. SEO managers, content strategists, and digital marketing agencies use this tool to transform keyword research into actionable content briefs without manual spreadsheet sorting. Clustering keywords by topic improves internal linking, reduces content cannibalization, and helps you cover entire subject areas systematically.",
     keywords: ["keyword clustering", "content cluster", "seo content plan", "topic clusters"],
   },
   {
@@ -233,7 +233,7 @@ export const tools: Tool[] = [
     category: "text",
     shortDescription: "Generate placeholder text by words, sentences, or paragraphs.",
     longDescription:
-      "Produce structured filler copy for wireframes, mockups, and UI content stress testing.",
+      "Generate customizable placeholder text by word count, sentence count, or paragraph count for use in wireframes, mockups, prototypes, and UI stress testing. Designers, frontend developers, and product teams use lorem ipsum to simulate realistic content layouts before final copy is written. Structured filler text helps identify spacing issues, overflow bugs, and typographic problems early in the design process.",
     keywords: ["lorem ipsum", "placeholder text", "dummy text generator", "ui content"],
   },
   {
@@ -242,7 +242,7 @@ export const tools: Tool[] = [
     category: "text",
     shortDescription: "Remove extra spaces, line noise, and hidden junk characters.",
     longDescription:
-      "Clean pasted text from docs, spreadsheets, and AI drafts before publishing or processing.",
+      "Strip hidden characters, fix double spaces, remove smart quotes, normalize line breaks, and clean formatting artifacts left by Google Docs, Word, spreadsheets, and AI writing tools. Writers, editors, and developers use this tool to prepare clean text for CMS publishing, email templates, code comments, and data processing pipelines. It saves hours of manual cleanup and prevents rendering issues caused by invisible Unicode characters and inconsistent whitespace.",
     keywords: ["text cleaner", "remove extra spaces", "cleanup text", "content utility"],
   },
   // ──────────────── STUDENT TOOLS ────────────────
@@ -251,7 +251,7 @@ export const tools: Tool[] = [
     slug: "percentage-calculator",
     category: "student",
     shortDescription: "Find percentages, percentage change, and part-of-total values instantly.",
-    longDescription: "Calculate percentage of a number, percentage increase/decrease, and what percent one number is of another — essential for exams, finance, and daily math.",
+    longDescription: "Calculate percentage of a number, find percentage increase or decrease between two values, and determine what percent one number is of another — all in one fast calculator. Students preparing for exams, finance professionals computing margins, and anyone doing quick daily math benefit from having these three essential percentage operations in a single tool. Clear step-by-step breakdowns make it easy to understand and verify every calculation.",
     keywords: ["percentage calculator", "percent of number", "percentage change", "math calculator"],
   },
   {
@@ -259,7 +259,7 @@ export const tools: Tool[] = [
     slug: "cgpa-to-percentage-converter",
     category: "student",
     shortDescription: "Convert CGPA to percentage using common university formulas.",
-    longDescription: "Quickly translate your CGPA score into percentage with support for multiple grading systems used by Indian and international universities.",
+    longDescription: "Convert your CGPA to percentage using standard multiplier formulas from Indian universities (CBSE, VTU, Mumbai University, Anna University) and international grading scales with a single click. Engineering students, MBA applicants, and job seekers preparing for placements use this tool to accurately fill out application forms that require percentage equivalents. Support for multiple grading conventions ensures the conversion matches your institution's official formula.",
     keywords: ["cgpa to percentage", "cgpa converter", "university grades", "grade calculator"],
   },
   {
@@ -267,7 +267,7 @@ export const tools: Tool[] = [
     slug: "attendance-calculator",
     category: "student",
     shortDescription: "Track attendance percentage and find how many classes you can skip.",
-    longDescription: "Enter total and attended classes to see your attendance percentage and calculate how many more you can miss while staying above a required threshold.",
+    longDescription: "Enter total classes held and classes attended to instantly see your current attendance percentage, then calculate exactly how many more classes you can afford to miss while staying above your college's minimum requirement (typically 75%). College students and university attendees use this tool throughout the semester to make informed decisions about skipping classes without risking detention or exam debarment. The reverse calculator also shows how many consecutive classes you need to attend to recover from a low attendance rate.",
     keywords: ["attendance calculator", "attendance percentage", "college attendance", "class tracker"],
   },
   {
@@ -275,7 +275,7 @@ export const tools: Tool[] = [
     slug: "age-calculator",
     category: "student",
     shortDescription: "Calculate exact age in years, months, and days from your birthdate.",
-    longDescription: "Enter your date of birth to get a precise age breakdown including total months, weeks, and days lived — useful for forms, applications, and curiosity.",
+    longDescription: "Enter your date of birth to get a precise age breakdown in years, months, days, along with total months lived, total weeks lived, and total days lived for a complete picture. Students filling out application forms, parents tracking milestones, and anyone curious about their exact age benefit from this instant calculator. It also shows your next birthday countdown and the day of the week you were born on.",
     keywords: ["age calculator", "date of birth", "exact age", "how old am i"],
   },
   {
@@ -283,7 +283,7 @@ export const tools: Tool[] = [
     slug: "date-difference-calculator",
     category: "student",
     shortDescription: "Find the exact number of days, weeks, and months between any two dates.",
-    longDescription: "Select a start and end date to compute the difference in days, weeks, months, and years — great for project planning and deadline tracking.",
+    longDescription: "Select any two dates to compute the exact difference in days, weeks, months, and years, with results that account for varying month lengths and leap years. Students tracking assignment deadlines, project managers planning sprints, and event planners counting down to launch dates all benefit from this precise date math tool. It is also useful for calculating notice periods, contract durations, and elapsed time between any two milestones.",
     keywords: ["date difference", "days between dates", "date calculator", "duration calculator"],
   },
   {
@@ -291,7 +291,7 @@ export const tools: Tool[] = [
     slug: "exam-countdown-timer",
     category: "student",
     shortDescription: "Set target exam dates and see a live countdown in days, hours, and minutes.",
-    longDescription: "Enter your exam name and date to see exactly how much time remains. Stay motivated and plan revision schedules around real deadlines.",
+    longDescription: "Enter your exam name and date to see a real-time countdown displaying days, hours, minutes, and seconds remaining, helping you stay focused and plan revision schedules around actual deadlines. Students preparing for board exams, competitive entrance tests, and university finals use this tool to maintain urgency and allocate study time proportionally across subjects. You can track multiple exams simultaneously and prioritize the one approaching fastest.",
     keywords: ["exam countdown", "countdown timer", "exam date tracker", "study planner"],
   },
   {
@@ -299,7 +299,7 @@ export const tools: Tool[] = [
     slug: "gpa-calculator",
     category: "student",
     shortDescription: "Calculate semester and cumulative GPA with custom credit hours.",
-    longDescription: "Add courses with grades and credit hours to compute weighted GPA on a 4.0 or 10.0 scale — supports multiple grading conventions.",
+    longDescription: "Add your courses with corresponding letter grades and credit hours to compute an accurate weighted GPA on a 4.0 or 10.0 scale, supporting both semester and cumulative calculations. College students, graduate school applicants, and scholarship candidates use this tool to verify transcript accuracy, estimate semester outcomes before results, and meet GPA thresholds for academic programs. Multiple grading conventions are supported, so you can match the exact scale used by your institution.",
     keywords: ["gpa calculator", "semester gpa", "cumulative gpa", "grade point average"],
   },
   {
@@ -307,7 +307,7 @@ export const tools: Tool[] = [
     slug: "resume-headline-generator",
     category: "student",
     shortDescription: "Generate impactful resume headlines from your skills and experience.",
-    longDescription: "Enter your role, experience level, and key skills to get AI-style resume headline suggestions tailored for job applications and LinkedIn profiles.",
+    longDescription: "Enter your target job role, experience level, and key skills to generate multiple professional resume headline variations optimized for applicant tracking systems and recruiter attention. Fresh graduates, career changers, and experienced professionals use these headlines on resumes, LinkedIn profiles, and job portal summaries to make a strong first impression. Each suggestion is crafted to highlight your value proposition concisely within the typical 120-character headline limit.",
     keywords: ["resume headline", "resume title generator", "job application", "linkedin headline"],
   },
   {
@@ -315,7 +315,7 @@ export const tools: Tool[] = [
     slug: "study-time-planner",
     category: "student",
     shortDescription: "Plan daily study hours across subjects with a balanced weekly schedule.",
-    longDescription: "Enter subjects, difficulty weights, and available hours to generate a balanced study timetable that prioritizes harder topics and respects break time.",
+    longDescription: "Enter your subjects, assign difficulty weights, and set your total available study hours to generate a balanced weekly timetable that automatically allocates more time to harder topics while scheduling regular breaks. Students preparing for semester exams, competitive tests, and certification courses use this planner to eliminate guesswork and follow a structured revision strategy. The algorithm respects daily study limits and prevents burnout by distributing workload evenly across your available days.",
     keywords: ["study planner", "study timetable", "revision schedule", "time management"],
   },
   {
@@ -323,7 +323,7 @@ export const tools: Tool[] = [
     slug: "marks-required-calculator",
     category: "student",
     shortDescription: "Find out what marks you need in remaining exams to hit your target.",
-    longDescription: "Enter current scores, weightages, and your target percentage to calculate exactly what you need to score in upcoming exams to reach your goal.",
+    longDescription: "Enter your current exam scores, component weightages, and overall target percentage to calculate the exact marks you need in remaining exams to achieve your goal. Students tracking internal assessments, midterms, and final exam requirements use this tool to set realistic targets and focus their preparation where it matters most. It takes the guesswork out of grade planning and shows clearly whether your target is still achievable based on remaining opportunities.",
     keywords: ["marks required", "target marks calculator", "exam score", "pass calculator"],
   },
   // ──────────────── CREATOR TOOLS ────────────────
@@ -332,7 +332,7 @@ export const tools: Tool[] = [
     slug: "instagram-hashtag-generator",
     category: "creator",
     shortDescription: "Generate relevant hashtag sets for Instagram posts by niche and topic.",
-    longDescription: "Enter your content niche or topic to get curated hashtag groups organized by popularity tiers — perfect for growing reach and engagement.",
+    longDescription: "Enter your content niche, topic, or post theme to get curated sets of Instagram hashtags organized by popularity tiers — high-volume for reach, medium for discoverability, and niche-specific for targeted engagement. Content creators, social media managers, and small business owners use this tool to build strategic hashtag combinations that maximize post visibility without looking spammy. Properly tiered hashtags improve your chances of appearing on Explore pages and reaching audiences beyond your current followers.",
     keywords: ["instagram hashtags", "hashtag generator", "social media", "instagram growth"],
   },
   {
@@ -340,7 +340,7 @@ export const tools: Tool[] = [
     slug: "youtube-title-analyzer",
     category: "creator",
     shortDescription: "Analyze YouTube titles for click-through potential and SEO strength.",
-    longDescription: "Score video titles on length, power words, emotional triggers, and keyword placement to improve visibility and audience clicks.",
+    longDescription: "Paste a YouTube video title to get a detailed score based on length optimization, power word usage, emotional trigger presence, number inclusion, and keyword placement — all factors that influence click-through rate in search and suggested feeds. YouTubers, video marketers, and content strategists use this analyzer to A/B test title variations and pick the one most likely to attract clicks. Improving your title score directly correlates with higher impressions-to-views conversion on the platform.",
     keywords: ["youtube title", "title analyzer", "video seo", "ctr optimization"],
   },
   {
@@ -348,7 +348,7 @@ export const tools: Tool[] = [
     slug: "youtube-tag-generator",
     category: "creator",
     shortDescription: "Generate optimized YouTube tags from your video topic and keywords.",
-    longDescription: "Enter your video topic to get a list of relevant tags sorted by relevance — helps YouTube understand and recommend your content.",
+    longDescription: "Enter your video topic or primary keyword to generate a comprehensive list of relevant YouTube tags sorted by relevance, including long-tail variations and related terms that help YouTube's algorithm categorize and recommend your content. YouTubers, educators, and video marketers use this tool to fill the 500-character tag limit strategically and improve video discoverability in search results and suggested video feeds. Well-chosen tags bridge the gap between your content and the audience actively searching for it.",
     keywords: ["youtube tags", "tag generator", "video tags", "youtube seo"],
   },
   {
@@ -356,7 +356,7 @@ export const tools: Tool[] = [
     slug: "caption-generator",
     category: "creator",
     shortDescription: "Create engaging social media captions for any platform and tone.",
-    longDescription: "Enter your topic, choose a tone (casual, professional, witty), and get ready-to-post captions for Instagram, Twitter, LinkedIn, and more.",
+    longDescription: "Enter your post topic, select a tone (casual, professional, witty, inspirational), and generate ready-to-post captions tailored for Instagram, Twitter, LinkedIn, and Facebook in seconds. Social media managers, influencers, and brand marketers use this tool to overcome writer's block, maintain consistent posting schedules, and match platform-specific voice expectations. Each caption is crafted to drive engagement with built-in hooks, calls to action, and relevant emoji placement.",
     keywords: ["caption generator", "social media captions", "instagram caption", "post ideas"],
   },
   {
@@ -364,7 +364,7 @@ export const tools: Tool[] = [
     slug: "bio-generator",
     category: "creator",
     shortDescription: "Generate short, punchy bios for social profiles and portfolios.",
-    longDescription: "Enter your name, role, and interests to get multiple bio variations suitable for Instagram, Twitter, LinkedIn, and personal websites.",
+    longDescription: "Enter your name, professional role, and key interests to generate multiple polished bio variations optimized for Instagram, Twitter, LinkedIn, GitHub, and personal portfolio websites. Creators, freelancers, job seekers, and entrepreneurs use this tool to craft concise bios that communicate their value proposition within tight character limits. Each variation balances personality with professionalism, making it easy to pick the right tone for each platform.",
     keywords: ["bio generator", "instagram bio", "twitter bio", "social media bio"],
   },
   {
@@ -372,7 +372,7 @@ export const tools: Tool[] = [
     slug: "thumbnail-text-preview",
     category: "creator",
     shortDescription: "Preview how text looks on YouTube thumbnails with font and color options.",
-    longDescription: "Test thumbnail headline text with adjustable font size, color, background, and stroke to ensure readability before designing in image editors.",
+    longDescription: "Type your thumbnail headline text and adjust font size, font weight, color, background shade, and stroke thickness to preview exactly how it will look on a YouTube thumbnail before opening a design tool. YouTubers, graphic designers, and video editors use this tool to validate text readability at small sizes and ensure contrast against typical thumbnail backgrounds. Testing text visibility upfront saves revision cycles and helps create thumbnails that stand out in crowded feeds.",
     keywords: ["thumbnail preview", "youtube thumbnail", "text overlay", "thumbnail design"],
   },
   {
@@ -380,7 +380,7 @@ export const tools: Tool[] = [
     slug: "youtube-description-template-generator",
     category: "creator",
     shortDescription: "Generate structured YouTube descriptions with timestamps and links.",
-    longDescription: "Fill in video details, chapters, and social links to get a formatted description template that improves watch time and channel discovery.",
+    longDescription: "Fill in your video title, summary, chapter markers, social media links, and affiliate disclaimers to generate a fully formatted YouTube description template that boosts watch time, SEO, and channel discoverability. YouTubers and video production teams use this tool to maintain a consistent, professional description structure across all uploads without rewriting from scratch. Well-organized descriptions with timestamps and links improve viewer experience and signal content quality to YouTube's algorithm.",
     keywords: ["youtube description", "description template", "video description", "youtube seo"],
   },
   {
@@ -388,7 +388,7 @@ export const tools: Tool[] = [
     slug: "video-length-estimator",
     category: "creator",
     shortDescription: "Estimate video duration from word count and calculate RPM earnings.",
-    longDescription: "Enter your script word count and speaking pace to estimate video length, then calculate potential RPM-based revenue for YouTube creators.",
+    longDescription: "Enter your script word count and select a speaking pace (slow, normal, fast) to estimate final video duration, then input your channel's RPM to calculate potential ad revenue for that video length. YouTube creators, freelance scriptwriters, and content planners use this tool to plan video lengths that hit monetization sweet spots and match audience retention patterns. Knowing estimated duration before recording helps optimize scripts for the ideal watch-time balance.",
     keywords: ["video length", "rpm calculator", "youtube earnings", "script estimator"],
   },
   {
@@ -396,7 +396,7 @@ export const tools: Tool[] = [
     slug: "hook-generator-for-reels",
     category: "creator",
     shortDescription: "Generate scroll-stopping hooks for Instagram Reels and YouTube Shorts.",
-    longDescription: "Enter your content topic to get attention-grabbing opening lines designed to stop the scroll and boost retention on short-form video.",
+    longDescription: "Enter your content topic or niche to generate a list of attention-grabbing opening lines designed to stop the scroll and boost viewer retention in the critical first three seconds of Instagram Reels, YouTube Shorts, and TikTok videos. Short-form video creators, social media managers, and brand marketers use these hooks to increase average watch time, which directly impacts algorithmic reach. Each hook is crafted using proven engagement patterns like curiosity gaps, bold claims, and direct questions.",
     keywords: ["hook generator", "reels hooks", "shorts hooks", "viral hooks"],
   },
   {
@@ -404,7 +404,7 @@ export const tools: Tool[] = [
     slug: "content-idea-generator",
     category: "creator",
     shortDescription: "Get fresh content ideas for any niche with format and angle suggestions.",
-    longDescription: "Enter your niche and platform to receive creative content ideas across formats like tutorials, lists, stories, and comparisons.",
+    longDescription: "Enter your content niche and target platform to receive a diverse set of content ideas spanning formats like tutorials, listicles, behind-the-scenes, comparisons, myth-busting, and storytelling angles. Creators, bloggers, and social media teams use this tool to break through creative blocks, maintain a consistent publishing cadence, and diversify their content mix. Each idea comes with a format suggestion and angle that can be adapted for YouTube, Instagram, TikTok, or blog content.",
     keywords: ["content ideas", "idea generator", "content planning", "niche content"],
   },
   {
@@ -412,7 +412,7 @@ export const tools: Tool[] = [
     slug: "youtube-chapter-timestamp-generator",
     category: "creator",
     shortDescription: "Generate YouTube chapter timestamps from topic points and video length.",
-    longDescription: "Add your video sections, set total duration, and auto-generate chapter timestamps optimized for YouTube descriptions and viewer navigation.",
+    longDescription: "Add your video section titles, set the total video duration, and automatically generate properly formatted chapter timestamps that viewers can click in the YouTube description to jump to specific sections. YouTubers and video editors use this tool to improve viewer navigation, increase average watch time, and give YouTube additional metadata for search indexing. Chapters also appear as segments in the progress bar, making long-form content more accessible and professional.",
     keywords: ["youtube chapters", "timestamp generator", "video chapters", "youtube description timestamps"],
   },
   {
@@ -420,7 +420,7 @@ export const tools: Tool[] = [
     slug: "engagement-rate-calculator",
     category: "creator",
     shortDescription: "Calculate engagement rate by followers, reach, and views for social posts.",
-    longDescription: "Measure content performance using likes, comments, shares, and saves to compute engagement rate for Instagram, YouTube, TikTok, and LinkedIn.",
+    longDescription: "Enter your follower count along with total likes, comments, shares, and saves on a post to compute engagement rate using industry-standard formulas for Instagram, YouTube, TikTok, and LinkedIn. Creators, brand managers, and influencer marketing agencies use this metric to evaluate content performance, benchmark against competitors, and demonstrate ROI in sponsorship negotiations. Understanding your engagement rate helps you identify top-performing content formats and optimize your posting strategy.",
     keywords: ["engagement rate calculator", "instagram engagement", "social media analytics", "creator metrics"],
   },
   {
@@ -428,7 +428,7 @@ export const tools: Tool[] = [
     slug: "viral-content-calendar-generator",
     category: "creator",
     shortDescription: "Build a monthly content calendar with pillars, formats, and posting angles.",
-    longDescription: "Generate a ready-to-use posting calendar for your niche by selecting month, platform, and posting frequency with strategic content pillars.",
+    longDescription: "Select your niche, target platform, month, and posting frequency to generate a complete content calendar with strategic content pillars, post formats, and daily topic suggestions that keep your feed consistent and engaging. Content creators, social media managers, and marketing teams use this tool to plan weeks of content in minutes instead of hours, ensuring a balanced mix of educational, entertaining, and promotional posts. A structured calendar reduces last-minute scrambling and helps you ride trending moments with prepared content angles.",
     keywords: ["content calendar generator", "social media calendar", "creator planning", "viral content plan"],
   },
   {
@@ -436,7 +436,7 @@ export const tools: Tool[] = [
     slug: "best-time-to-post-planner",
     category: "creator",
     shortDescription: "Find best posting windows by platform, timezone, and audience region mix.",
-    longDescription: "Plan smarter publishing times by combining platform peak windows with your timezone and weighted audience geography.",
+    longDescription: "Select your primary platform, enter your timezone, and weight your audience's geographic distribution to calculate optimal posting windows that maximize initial engagement and algorithmic reach. Creators, social media managers, and brands with global audiences use this tool to schedule posts when their followers are most active, increasing the chance of appearing in feeds and Explore pages. Data-informed posting times can significantly boost impressions, engagement rate, and follower growth over time.",
     keywords: ["best time to post", "posting schedule", "social media timing", "instagram posting time"],
   },
   {
@@ -444,7 +444,7 @@ export const tools: Tool[] = [
     slug: "utm-link-builder-for-creators",
     category: "creator",
     shortDescription: "Create trackable UTM links for bio links, stories, and campaign posts.",
-    longDescription: "Build analytics-ready URLs with utm_source, utm_medium, utm_campaign, utm_term, and utm_content parameters for creator marketing campaigns.",
+    longDescription: "Enter your destination URL and fill in utm_source, utm_medium, utm_campaign, utm_term, and utm_content parameters to generate a fully tagged tracking link ready for bio links, story swipe-ups, newsletter CTAs, and sponsored posts. Creators, affiliate marketers, and digital marketing teams use UTM links to measure exactly which platforms, posts, and campaigns drive traffic and conversions in Google Analytics. Proper campaign tagging transforms vague traffic data into actionable insights that inform content and monetization strategy.",
     keywords: ["utm builder", "campaign url builder", "trackable links", "creator marketing analytics"],
   },
   // ──────────────── IMAGE TOOLS ────────────────
@@ -453,7 +453,7 @@ export const tools: Tool[] = [
     slug: "image-to-pdf-converter",
     category: "image",
     shortDescription: "Convert one or multiple images into a single PDF document.",
-    longDescription: "Upload images (JPG, PNG, WebP) and combine them into a downloadable PDF — great for scanning documents, portfolios, and assignments.",
+    longDescription: "Upload one or multiple images in JPG, PNG, or WebP format and combine them into a single downloadable PDF document with customizable page order and layout. Students submitting assignments, freelancers compiling portfolios, and office workers digitizing scanned documents use this browser-based converter to create professional PDFs without installing any software. All processing happens locally in your browser, keeping your files private and the conversion instant.",
     keywords: ["image to pdf", "jpg to pdf", "convert images", "pdf converter"],
   },
   {
@@ -461,7 +461,7 @@ export const tools: Tool[] = [
     slug: "compress-image",
     category: "image",
     shortDescription: "Reduce image file size while maintaining visual quality.",
-    longDescription: "Upload an image and adjust compression quality to shrink file size for faster web loading, email attachments, and storage optimization.",
+    longDescription: "Upload any image and use the quality slider to find the perfect balance between file size reduction and visual fidelity, then download the compressed version instantly. Web developers optimizing page speed, email marketers staying under attachment limits, and bloggers uploading to bandwidth-constrained platforms all benefit from client-side image compression. Reducing image file size without visible quality loss directly improves Core Web Vitals scores and user experience.",
     keywords: ["compress image", "image compressor", "reduce file size", "optimize image"],
   },
   {
@@ -469,7 +469,7 @@ export const tools: Tool[] = [
     slug: "resize-image",
     category: "image",
     shortDescription: "Resize images to exact pixel dimensions or percentage scale.",
-    longDescription: "Upload an image, set target width and height (with optional aspect ratio lock), and download the resized version instantly in the browser.",
+    longDescription: "Upload an image and set exact target dimensions in pixels or scale by percentage, with an optional aspect-ratio lock to prevent distortion, then download the resized version instantly in the browser. Social media managers, web designers, and e-commerce sellers use this tool to prepare images for platform-specific size requirements like Instagram squares, LinkedIn banners, and product listing thumbnails. No software installation needed — all resizing is processed locally for speed and privacy.",
     keywords: ["resize image", "image resizer", "change dimensions", "scale image"],
   },
   {
@@ -477,7 +477,7 @@ export const tools: Tool[] = [
     slug: "jpg-to-png-converter",
     category: "image",
     shortDescription: "Convert JPG images to PNG format with transparency support.",
-    longDescription: "Upload a JPG file and download it as a high-quality PNG — useful when you need transparency support or lossless format for editing.",
+    longDescription: "Upload a JPG file and convert it to high-quality PNG format to gain transparency support, lossless compression, and broader editing compatibility. Graphic designers who need to layer images, web developers requiring transparent backgrounds, and anyone working with design tools that prefer PNG will find this conversion essential. The tool processes files entirely in the browser with no upload to external servers, ensuring fast conversion and complete file privacy.",
     keywords: ["jpg to png", "image converter", "format converter", "png converter"],
   },
   {
@@ -485,7 +485,7 @@ export const tools: Tool[] = [
     slug: "png-to-jpg-converter",
     category: "image",
     shortDescription: "Convert PNG images to JPG format for smaller file sizes.",
-    longDescription: "Upload a PNG and convert it to JPG with adjustable quality — ideal for reducing file size when transparency is not needed.",
+    longDescription: "Upload a PNG image and convert it to JPG format with an adjustable quality slider, reducing file size significantly when transparency is not needed. Bloggers, e-commerce sellers, and email marketers use this tool to optimize images for web delivery where smaller file sizes mean faster loading and better performance. The conversion happens instantly in the browser, making it a quick solution for batch-preparing images before upload.",
     keywords: ["png to jpg", "image converter", "format converter", "jpg converter"],
   },
   {
@@ -493,7 +493,7 @@ export const tools: Tool[] = [
     slug: "qr-code-generator",
     category: "image",
     shortDescription: "Generate QR codes for URLs, text, WiFi, and contact information.",
-    longDescription: "Enter any text or URL to generate a downloadable QR code image with customizable size and error correction level.",
+    longDescription: "Enter any URL, plain text, WiFi credentials, or contact information to generate a high-resolution, downloadable QR code image with customizable size and error correction level for reliable scanning. Small businesses, event organizers, marketers, and educators use QR codes on menus, flyers, posters, business cards, and product packaging to bridge physical and digital experiences. The generated codes work with all standard smartphone camera apps and dedicated QR scanning apps.",
     keywords: ["qr code generator", "qr code", "generate qr", "qr maker"],
   },
   {
@@ -501,7 +501,7 @@ export const tools: Tool[] = [
     slug: "barcode-generator",
     category: "image",
     shortDescription: "Generate standard barcodes (Code128, EAN, UPC) from text input.",
-    longDescription: "Enter a value and select barcode format to generate scannable barcode images for products, inventory, and label printing.",
+    longDescription: "Enter a numeric or alphanumeric value and select from standard barcode formats including Code128, EAN-13, UPC-A, and Code39 to generate a scannable barcode image ready for download and printing. Retail businesses, warehouse managers, inventory teams, and small-scale manufacturers use this tool to create product labels, asset tags, and shipping barcodes without purchasing specialized software. Each barcode is generated as a clean, high-resolution image suitable for professional label printing.",
     keywords: ["barcode generator", "code128", "ean barcode", "product barcode"],
   },
   {
@@ -509,7 +509,7 @@ export const tools: Tool[] = [
     slug: "base64-image-encoder",
     category: "image",
     shortDescription: "Convert images to Base64 data URI strings for embedding in code.",
-    longDescription: "Upload an image to generate a Base64-encoded data URI you can use directly in HTML, CSS, or JavaScript without external file requests.",
+    longDescription: "Upload any image (PNG, JPG, GIF, WebP) to generate a Base64-encoded data URI string that can be embedded directly in HTML img tags, CSS background properties, or JavaScript source code, eliminating the need for separate image file requests. Frontend developers, email template builders, and performance engineers use inline Base64 images to reduce HTTP requests, simplify asset bundling, and ensure images render in restricted environments like HTML emails. The tool displays the encoded string with a one-click copy button and shows the resulting data size.",
     keywords: ["base64 image", "image encoder", "data uri", "inline image"],
   },
   {
@@ -517,7 +517,7 @@ export const tools: Tool[] = [
     slug: "image-metadata-viewer",
     category: "image",
     shortDescription: "View EXIF and metadata details of any uploaded image file.",
-    longDescription: "Upload a photo to extract and display metadata including camera model, GPS coordinates, date taken, resolution, and file size details.",
+    longDescription: "Upload any photo to extract and display comprehensive metadata including EXIF data (camera model, lens, exposure settings, ISO), GPS coordinates if available, date and time taken, image resolution, color space, and file size. Photographers reviewing shot settings, digital forensic investigators verifying image authenticity, and privacy-conscious users checking for embedded location data all benefit from this instant metadata inspection. No data is uploaded to any server — all extraction happens locally in your browser for complete privacy.",
     keywords: ["image metadata", "exif viewer", "photo details", "image info"],
   },
   {
@@ -525,7 +525,7 @@ export const tools: Tool[] = [
     slug: "favicon-generator",
     category: "image",
     shortDescription: "Generate favicon ICO and PNG files from any uploaded image.",
-    longDescription: "Upload a logo or icon image and generate properly sized favicons (16x16, 32x32, 48x48) as downloadable PNG files for your website.",
+    longDescription: "Upload a logo, icon, or brand mark to generate properly sized favicon files at 16x16, 32x32, and 48x48 pixels, downloadable as individual PNGs ready to add to your website's root directory or HTML head. Web developers, designers, and site owners use favicons to establish brand identity in browser tabs, bookmarks, and mobile home screens. A missing or blurry favicon looks unprofessional and is one of the easiest branding fixes any site can make.",
     keywords: ["favicon generator", "ico generator", "website icon", "favicon maker"],
   },
   {
@@ -533,7 +533,7 @@ export const tools: Tool[] = [
     slug: "webp-to-png-converter",
     category: "image",
     shortDescription: "Convert WebP images to PNG format for editing and compatibility.",
-    longDescription: "Upload a WebP image and convert it into a PNG file for workflows that require lossless editing and wider compatibility.",
+    longDescription: "Upload a WebP image and convert it to widely compatible PNG format for use in design tools, presentations, and workflows that don't support WebP natively. Designers, content editors, and developers working with older software or platforms that require PNG for lossless editing and transparency support benefit from this instant browser-based conversion. The tool preserves full image quality during conversion with no file size limits or server uploads.",
     keywords: ["webp to png", "webp converter", "png image", "image converter"],
   },
   {
@@ -541,7 +541,7 @@ export const tools: Tool[] = [
     slug: "png-to-webp-converter",
     category: "image",
     shortDescription: "Convert PNG files to lightweight WebP with quality control.",
-    longDescription: "Convert PNG images to WebP format with adjustable quality to reduce size while preserving visual clarity.",
+    longDescription: "Upload PNG images and convert them to Google's WebP format with an adjustable quality slider, achieving significantly smaller file sizes while preserving visual clarity for web delivery. Web developers optimizing page speed, CMS administrators managing media libraries, and performance-focused teams use WebP to meet Core Web Vitals benchmarks and reduce bandwidth costs. This tool processes everything locally in the browser, making it fast, private, and free for unlimited conversions.",
     keywords: ["png to webp", "webp converter", "image optimizer", "reduce image size"],
   },
   {
@@ -549,7 +549,7 @@ export const tools: Tool[] = [
     slug: "image-cropper",
     category: "image",
     shortDescription: "Crop images by exact X, Y, width, and height values.",
-    longDescription: "Trim image areas with pixel-accurate controls for social media, design assets, and document screenshots.",
+    longDescription: "Upload an image and define exact crop boundaries using pixel-accurate X, Y, width, and height controls, or use preset aspect ratios for common social media formats like Instagram squares, YouTube thumbnails, and Twitter headers. Designers, marketers, and content teams use this tool to precisely trim images for platform-specific requirements without opening heavyweight editing software. The crop preview updates in real time so you can adjust boundaries visually before downloading the final output.",
     keywords: ["image cropper", "crop image", "photo crop", "pixel crop"],
   },
   {
@@ -557,7 +557,7 @@ export const tools: Tool[] = [
     slug: "image-rotate-flip-tool",
     category: "image",
     shortDescription: "Rotate and flip images instantly in your browser.",
-    longDescription: "Apply 90/180/270 degree rotation and horizontal or vertical flips, then download the transformed image.",
+    longDescription: "Upload an image and apply 90-degree, 180-degree, or 270-degree clockwise rotation, plus horizontal or vertical flips, then download the corrected version instantly. Photographers fixing camera orientation, e-commerce sellers standardizing product shots, and anyone working with scanned documents that loaded sideways will find this tool faster than opening a full image editor. All transformations are processed in the browser with a live preview before download.",
     keywords: ["rotate image", "flip image", "mirror image", "image orientation"],
   },
   {
@@ -565,7 +565,7 @@ export const tools: Tool[] = [
     slug: "image-watermark-tool",
     category: "image",
     shortDescription: "Add text watermarks with position, size, and opacity controls.",
-    longDescription: "Protect your images by applying customizable text watermarks for branding, attribution, or proofing.",
+    longDescription: "Upload an image and add customizable text watermarks with full control over font size, opacity, color, rotation angle, and placement position to protect your intellectual property before sharing online. Photographers, designers, and content creators use watermarks to deter unauthorized use while still showcasing their work on portfolios, social media, and client proofing galleries. The tool processes everything in-browser, ensuring your original unwatermarked files never leave your device.",
     keywords: ["watermark image", "add watermark", "text watermark", "protect image"],
   },
   {
@@ -573,7 +573,7 @@ export const tools: Tool[] = [
     slug: "image-color-palette-extractor",
     category: "image",
     shortDescription: "Extract dominant color palettes from uploaded images.",
-    longDescription: "Analyze any image and generate a quick palette of dominant colors for branding, UI design, and creative work.",
+    longDescription: "Upload any image to automatically extract its dominant color palette with hex codes, RGB values, and visual swatches that you can copy and use directly in design tools, CSS, or brand guidelines. UI/UX designers, brand strategists, and creative teams use this tool to derive color schemes from photography, inspiration images, and competitor visuals for consistent design language. It is a fast way to build mood boards, ensure color harmony, and establish accessible contrast ratios.",
     keywords: ["color palette", "extract colors", "dominant colors", "image colors"],
   },
   {
@@ -581,7 +581,7 @@ export const tools: Tool[] = [
     slug: "image-collage-maker",
     category: "image",
     shortDescription: "Combine up to 4 photos into a simple collage.",
-    longDescription: "Build a 2x2 collage from multiple images and download a single combined output for social sharing or presentations.",
+    longDescription: "Upload up to four images to arrange them in a clean 2x2 grid collage layout and download the combined result as a single image file ready for social media posts, presentations, or comparison views. Content creators, students, and marketers use collages to showcase before-and-after transformations, product variations, event highlights, and visual summaries in one shareable frame. The tool handles automatic resizing and alignment so each image fills its grid cell evenly.",
     keywords: ["collage maker", "photo collage", "combine images", "image grid"],
   },
   {
@@ -589,7 +589,7 @@ export const tools: Tool[] = [
     slug: "image-blur-tool",
     category: "image",
     shortDescription: "Apply blur effects to images with adjustable intensity.",
-    longDescription: "Create blurred visuals for backgrounds, privacy masking, and design overlays using a simple blur radius slider.",
+    longDescription: "Upload an image and apply a Gaussian blur effect with an adjustable radius slider to create soft backgrounds, privacy-safe versions of screenshots, and frosted-glass design overlays. Designers, developers, and social media managers use blurred images as background layers behind text, as redacted versions of sensitive content, and as aesthetic elements in UI mockups and presentations. The blur intensity updates in real time so you can preview the exact effect before downloading.",
     keywords: ["blur image", "image blur", "blur effect", "photo blur"],
   },
   {
@@ -597,7 +597,7 @@ export const tools: Tool[] = [
     slug: "rounded-corners-image-tool",
     category: "image",
     shortDescription: "Generate PNGs with rounded corners from any image.",
-    longDescription: "Apply rounded corners and export clean PNG outputs for UI mockups, cards, and social visuals.",
+    longDescription: "Upload any image and apply customizable rounded corners with adjustable border-radius values, then export the result as a transparent PNG ready for use in UI mockups, app store screenshots, card components, and social media graphics. Developers, designers, and marketers use rounded-corner images to match modern design aesthetics without manual masking in Photoshop or Figma. The tool is especially useful for quickly preparing profile pictures, product images, and feature screenshots with a polished, app-like appearance.",
     keywords: ["rounded corners", "rounded image", "image corner radius", "ui image"],
   },
   {
@@ -605,7 +605,7 @@ export const tools: Tool[] = [
     slug: "image-to-ascii-art",
     category: "image",
     shortDescription: "Convert photos into text-based ASCII art.",
-    longDescription: "Transform images into ASCII characters with configurable width and character density for creative text output.",
+    longDescription: "Upload any image to convert it into text-based ASCII art with configurable output width and character density, producing creative text renderings you can paste into code comments, terminal displays, READMEs, and social media posts. Developers, retro-art enthusiasts, and creative coders use ASCII art for decorative headers, fun profile elements, and nostalgic visual effects. The tool maps pixel brightness to character weight, producing surprisingly detailed text representations of photos and logos.",
     keywords: ["ascii art", "image to ascii", "text art", "ascii generator"],
   },
   // ──────────────── UTILITY TOOLS ────────────────
@@ -614,7 +614,7 @@ export const tools: Tool[] = [
     slug: "emi-calculator",
     category: "utility",
     shortDescription: "Calculate monthly EMI for loans with principal, rate, and tenure.",
-    longDescription: "Enter loan amount, interest rate, and tenure to compute equated monthly installments with a detailed breakdown of principal and interest components.",
+    longDescription: "Enter your loan amount, annual interest rate, and repayment tenure in months or years to compute your equated monthly installment with a clear breakdown of how much goes toward principal versus interest each month. Home buyers, car loan applicants, and personal loan seekers use this calculator to compare loan offers, plan monthly budgets, and understand the true cost of borrowing before signing any agreement. Visual charts show how your payment composition shifts from interest-heavy to principal-heavy over the loan term.",
     keywords: ["emi calculator", "loan emi", "monthly installment", "home loan calculator"],
   },
   {
@@ -622,7 +622,7 @@ export const tools: Tool[] = [
     slug: "loan-interest-calculator",
     category: "utility",
     shortDescription: "Calculate total interest payable on any loan with amortization view.",
-    longDescription: "Enter loan details to see total interest, total payment, and a month-by-month amortization schedule showing how principal reduces over time.",
+    longDescription: "Enter your loan principal, annual interest rate, and term length to calculate total interest payable, total repayment amount, and view a detailed month-by-month amortization schedule showing how your outstanding balance reduces with each payment. Borrowers evaluating mortgage refinancing, personal loans, and business credit lines use this tool to understand the long-term cost of debt and compare prepayment scenarios. The amortization table makes it easy to see exactly when you cross the halfway point on principal repayment.",
     keywords: ["loan interest", "interest calculator", "amortization", "loan calculator"],
   },
   {
@@ -630,7 +630,7 @@ export const tools: Tool[] = [
     slug: "gst-calculator",
     category: "utility",
     shortDescription: "Calculate GST amounts with inclusive and exclusive pricing for India.",
-    longDescription: "Enter an amount and GST rate to compute tax-inclusive and tax-exclusive prices, with CGST and SGST breakdowns for Indian taxation.",
+    longDescription: "Enter a product or service amount and select the applicable GST slab rate (5%, 12%, 18%, or 28%) to instantly compute tax-inclusive and tax-exclusive prices with a detailed split of CGST, SGST, and IGST components. Indian business owners, accountants, freelancers, and GST-registered sellers use this tool to prepare accurate invoices, verify tax calculations, and estimate pricing for quotations. It simplifies the math behind India's Goods and Services Tax system for everyday business transactions.",
     keywords: ["gst calculator", "gst india", "tax calculator", "cgst sgst"],
   },
   {
@@ -638,7 +638,7 @@ export const tools: Tool[] = [
     slug: "currency-converter",
     category: "utility",
     shortDescription: "Convert between major world currencies with approximate exchange rates.",
-    longDescription: "Select source and target currencies, enter an amount, and get instant conversion using built-in approximate exchange rates for quick reference.",
+    longDescription: "Select source and target currencies from a comprehensive list of major world currencies, enter an amount, and get an instant conversion using built-in approximate exchange rates for quick reference and planning. Travelers, freelancers invoicing international clients, students comparing costs abroad, and online shoppers evaluating cross-border prices all benefit from this fast, no-signup currency calculator. While rates are approximate, the tool provides reliable ballpark conversions for everyday financial decisions.",
     keywords: ["currency converter", "exchange rate", "money converter", "forex calculator"],
   },
   {
@@ -646,7 +646,7 @@ export const tools: Tool[] = [
     slug: "sip-calculator",
     category: "utility",
     shortDescription: "Calculate returns on Systematic Investment Plans with compound growth.",
-    longDescription: "Enter monthly SIP amount, expected annual return, and investment duration to see projected maturity value, total invested, and wealth gained.",
+    longDescription: "Enter your monthly SIP investment amount, expected annual return rate, and investment duration to calculate the projected maturity value, total amount invested, and estimated wealth gained through the power of compounding. First-time mutual fund investors, financial planners, and anyone building a long-term savings strategy uses this calculator to visualize how small, consistent monthly investments grow substantially over time. Comparing different SIP scenarios helps you set realistic financial goals and choose the right investment horizon.",
     keywords: ["sip calculator", "mutual fund", "investment calculator", "compound interest"],
   },
   {
@@ -654,7 +654,7 @@ export const tools: Tool[] = [
     slug: "inflation-calculator",
     category: "utility",
     shortDescription: "See the future cost of goods adjusted for inflation over time.",
-    longDescription: "Enter a current price and annual inflation rate to calculate future value over any number of years — understand purchasing power erosion.",
+    longDescription: "Enter any current price or cost along with an expected annual inflation rate and time period to calculate the future value of that amount, revealing exactly how purchasing power erodes over time. Students studying economics, retirement planners, salary negotiators, and budget-conscious consumers use this tool to make inflation-adjusted financial decisions. Understanding the real impact of inflation helps you set meaningful savings targets and evaluate whether investments are genuinely growing or merely keeping pace with rising costs.",
     keywords: ["inflation calculator", "future value", "purchasing power", "cost of living"],
   },
   {
@@ -662,7 +662,7 @@ export const tools: Tool[] = [
     slug: "age-in-days-calculator",
     category: "utility",
     shortDescription: "Find your exact age in days, hours, minutes, and seconds.",
-    longDescription: "Enter your birth date and time to see a precise breakdown of your age in multiple units — days, hours, minutes, and even seconds lived.",
+    longDescription: "Enter your date and time of birth to see a comprehensive breakdown of your exact age in days, hours, minutes, and seconds, updated in real time as every second passes. Curious individuals, milestone trackers, and parents logging child development stages enjoy seeing their life quantified in surprising detail. This calculator also makes a fun conversation starter and helps you discover interesting facts like how many heartbeats or breaths you've taken based on average human rates.",
     keywords: ["age in days", "days old", "age calculator", "birthday calculator"],
   },
   {
@@ -670,7 +670,7 @@ export const tools: Tool[] = [
     slug: "time-zone-converter",
     category: "utility",
     shortDescription: "Convert times between world time zones instantly.",
-    longDescription: "Select source and target time zones, enter a time, and see the converted result — essential for scheduling across global teams.",
+    longDescription: "Select a source time zone and target time zone, enter any time, and instantly see the converted result with clear AM/PM and date-change indicators for cross-timezone scheduling. Remote workers, international teams, freelancers coordinating with global clients, and travelers planning calls across time zones rely on this tool to avoid scheduling mistakes. It handles daylight saving time differences and supports all major IANA time zones for accurate, year-round conversions.",
     keywords: ["time zone converter", "timezone", "world clock", "time conversion"],
   },
   {
@@ -678,7 +678,7 @@ export const tools: Tool[] = [
     slug: "unit-converter",
     category: "utility",
     shortDescription: "Convert between units of length, weight, temperature, and more.",
-    longDescription: "Select a measurement category and convert between common units like km/miles, kg/lbs, Celsius/Fahrenheit, liters/gallons, and more.",
+    longDescription: "Select a measurement category — length, weight, temperature, volume, area, speed, or data storage — and convert between common units like kilometers to miles, kilograms to pounds, Celsius to Fahrenheit, and liters to gallons with instant results. Students, engineers, travelers, and anyone working with international measurements use this tool to eliminate manual conversion math and avoid costly unit errors. The clean interface makes it fast to switch between categories and compare multiple conversions in one session.",
     keywords: ["unit converter", "measurement converter", "length converter", "weight converter"],
   },
   {
@@ -686,7 +686,7 @@ export const tools: Tool[] = [
     slug: "scientific-calculator",
     category: "utility",
     shortDescription: "Perform advanced math with trigonometry, logarithms, and exponents.",
-    longDescription: "A full-featured scientific calculator in the browser with support for sin, cos, tan, log, ln, exponents, roots, pi, and factorial operations.",
+    longDescription: "Perform advanced mathematical calculations directly in the browser with full support for trigonometric functions (sin, cos, tan), logarithms (log, ln), exponents, square and nth roots, factorial, pi, and Euler's number. Students, engineers, scientists, and developers who need quick access to scientific math without installing desktop software or searching for formulas will find this calculator covers all standard operations. The intuitive button layout mirrors physical scientific calculators, making it familiar and fast to use for complex expressions.",
     keywords: ["scientific calculator", "math calculator", "trigonometry", "advanced calculator"],
   },
 ];

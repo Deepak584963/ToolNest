@@ -91,6 +91,7 @@ export default function Footer() {
               <li><Link href="/terms-of-service" className="text-sm text-slate-600 transition hover:text-indigo-600">Terms of Service</Link></li>
               <li><Link href="/privacy-policy" className="text-sm text-slate-600 transition hover:text-indigo-600">Privacy Policy</Link></li>
               <li><Link href="/disclaimer" className="text-sm text-slate-600 transition hover:text-indigo-600">Disclaimer</Link></li>
+              <li><Link href="/feed.xml" className="text-sm text-slate-600 transition hover:text-indigo-600">RSS Feed</Link></li>
             </ul>
           </nav>
         </div>

@@ -6,7 +6,7 @@ import { getCategorySlugs } from "@/lib/categories";
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticRoutes = ["", "/about", "/contact", "/terms-of-service", "/privacy-policy", "/disclaimer"].map((path) => ({
+  const staticRoutes = ["", "/about", "/contact", "/terms-of-service", "/privacy-policy", "/disclaimer", "/feed.xml"].map((path) => ({
     url: `${siteConfig.url}${path}`,
     lastModified: now,
     changeFrequency: path === "" ? ("daily" as const) : ("monthly" as const),

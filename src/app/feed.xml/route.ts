@@ -24,7 +24,7 @@ export function GET() {
       <guid isPermaLink="true">${siteConfig.url}/tools/${tool.slug}</guid>
       <description>${escapeXml(tool.shortDescription)}</description>
       <category>${escapeXml(categoryName)}</category>
-      <pubDate>${new Date("2025-01-01T00:00:00Z").toUTCString()}</pubDate>
+      <pubDate>${new Date("2026-02-01T00:00:00Z").toUTCString()}</pubDate>
     </item>`;
     })
     .join("\n");

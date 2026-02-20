@@ -408,8 +408,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             >
               <span className="text-2xl transition-transform group-hover:scale-110">{cat.icon}</span>
               <div>
-                <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{cat.name} Tools</p>
-                <p className="text-xs text-slate-500">{tools.filter((t) => t.category === cat.slug).length} tools</p>
+                <span className="block text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{cat.name} Tools</span>
+                <span className="block text-xs text-slate-500">{tools.filter((t) => t.category === cat.slug).length} tools</span>
               </div>
             </Link>
           ))}

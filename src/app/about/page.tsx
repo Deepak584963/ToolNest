@@ -48,12 +48,16 @@ export default function AboutPage() {
         <div className="section-accent rounded-2xl border border-slate-100/80 bg-white/70 p-5 pl-6 sm:p-6 sm:pl-7">
           <h2 className="text-base font-bold text-slate-800 sm:text-lg">What We Offer</h2>
           <p className="mt-2">
-            We provide a curated collection of 15+ browser-based tools spanning three categories:
+            We provide a curated collection of 70+ browser-based tools spanning seven categories:
           </p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
-            <li><strong>Developer tools:</strong> JSON formatter, Base64 encoder/decoder, CSS minifier, UUID generator, and password strength checker for everyday coding tasks.</li>
-            <li><strong>SEO tools:</strong> Meta tag previews, robots.txt and sitemap generators, canonical URL checkers, Open Graph preview, keyword density analysis, and slug generators for on-page optimization.</li>
+            <li><strong>Developer tools:</strong> JSON formatter, Base64 encoder/decoder, CSS minifier, UUID generator, regex tester, JWT decoder, cron builder, and more for everyday coding tasks.</li>
+            <li><strong>SEO tools:</strong> Schema markup generator, meta tag previews, robots.txt and sitemap generators, canonical URL checkers, hreflang tags, keyword clustering, and slug generators for on-page optimization.</li>
             <li><strong>Text utilities:</strong> Word counter with reading time estimates, Lorem Ipsum generator, and text cleaner for content preparation workflows.</li>
+            <li><strong>Student tools:</strong> Percentage calculator, CGPA converter, attendance tracker, GPA calculator, exam countdown timer, study planner, and marks-required calculator for academic needs.</li>
+            <li><strong>Creator tools:</strong> YouTube chapter generator, engagement rate calculator, content calendar planner, best-time-to-post planner, UTM link builder, and hashtag generators for social media growth.</li>
+            <li><strong>Image tools:</strong> Image compressor, image-to-PDF converter, image cropper, QR code generator, favicon generator, and color palette extractor for visual workflows.</li>
+            <li><strong>Utility tools:</strong> EMI calculator, loan interest calculator, SIP calculator, currency converter, scientific calculator, and unit converters for everyday calculations.</li>
           </ul>
           <p className="mt-2">
             Every tool runs entirely in your browser. Your data stays on your device and is never uploaded to our servers for processing.
