@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import AdPlaceholder from "@/components/AdPlaceholder";
 import HomeToolsSection from "@/components/HomeToolsSection";
 import { FAQSchema, ItemListSchema, OrganizationSchema, WebSiteSchema } from "@/components/JsonLd";
 import { siteConfig } from "@/lib/site";
@@ -147,8 +146,6 @@ export default function HomePage() {
       <section id="tools" className="reveal-up reveal-delay-2 mt-10 scroll-mt-24 rounded-3xl border border-white/50 bg-white/65 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
         <HomeToolsSection />
       </section>
-
-      <AdPlaceholder slot="3333333333" />
 
       {/* SEO content */}
       <section className="reveal-up reveal-delay-2 mt-12 rounded-3xl border border-white/50 bg-white/70 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import AdPlaceholder from "@/components/AdPlaceholder";
 import FAQAccordion from "@/components/FAQAccordion";
 import { BreadcrumbSchema, FAQSchema, HowToSchema, SoftwareAppSchema } from "@/components/JsonLd";
 import ShareTool from "@/components/ShareTool";
@@ -157,8 +156,6 @@ export default async function ToolPage({ params }: ToolPageProps) {
         <ToolUIWrapper slug={slug} />
       </section>
 
-      <AdPlaceholder label="Below tool UI" slot="1111111111" />
-
       <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-lg">📖</div>
@@ -191,8 +188,6 @@ export default async function ToolPage({ params }: ToolPageProps) {
           </div>
         </section>
       ) : null}
-
-      <AdPlaceholder label="After content section" slot="2222222222" />
 
       {faqs.length > 0 ? (
         <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
