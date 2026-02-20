@@ -113,7 +113,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <FAQSchema items={faqs} />
 
       {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="text-sm text-slate-500">
+      <nav aria-label="Breadcrumb" className="reveal-up text-sm text-slate-500">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li><Link href="/" className="hover:text-indigo-700">Home</Link></li>
           <li aria-hidden>/</li>
@@ -124,7 +124,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </nav>
 
       {/* Hero */}
-      <header className="relative overflow-hidden rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_12px_34px_rgba(79,70,229,0.1)] sm:p-8">
+      <header className="reveal-up reveal-delay-1 relative overflow-hidden rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_12px_34px_rgba(79,70,229,0.1)] sm:p-8">
         <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/35 via-sky-100/20 to-cyan-100/35" />
         <div className="relative">
         <p className="mb-2 text-4xl">{meta.icon}</p>
@@ -141,7 +141,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </header>
 
       {/* Tools Grid */}
-      <section aria-label={`${meta.name} tools list`} className="rounded-2xl border border-white/70 bg-white/75 p-4 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-6">
+      <section aria-label={`${meta.name} tools list`} className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/75 p-4 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-6">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {categoryTools.map((tool) => (
             <ToolCard key={tool.slug} tool={tool} />
@@ -150,7 +150,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {meta.slug === "dev" && (
-        <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
           <h2 className="text-2xl font-semibold text-slate-900">Top developer tools for API and backend workflows</h2>
           <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
             Explore high-demand developer utilities for regex debugging, JWT token inspection, cron schedule creation, SQL query formatting, and HTTP status code references.
@@ -171,7 +171,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "creator" && (
-        <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
           <h2 className="text-2xl font-semibold text-slate-900">Top creator tools for growth and analytics workflows</h2>
           <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
             Explore high-demand creator utilities for YouTube chapters, engagement analysis, monthly content planning, posting-time optimization, and campaign link tracking.
@@ -192,7 +192,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "seo" && (
-        <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
           <h2 className="text-2xl font-semibold text-slate-900">Top SEO tools for technical audits and content planning</h2>
           <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
             Explore high-demand SEO utilities for structured data, hreflang deployment, redirect migrations, robots directives, and keyword clustering workflows.
@@ -213,7 +213,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "utility" && (
-        <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
           <h2 className="text-2xl font-semibold text-slate-900">Top utility tools for finance and daily calculations</h2>
           <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
             Explore high-demand utility tools for EMI planning, loan analysis, SIP growth estimation, currency conversion, and scientific calculations.
@@ -234,7 +234,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {/* Long description / SEO content */}
-      <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+      <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">About our {meta.name.toLowerCase()} tools</h2>
         <div className="mt-4 space-y-4 text-sm leading-7 text-slate-700 sm:text-base">
           <p>{meta.longDescription}</p>
@@ -248,7 +248,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {/* FAQs */}
-      <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+      <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Frequently asked questions</h2>
         <div className="mt-4 space-y-4">
           {faqs.map((faq) => (
@@ -263,7 +263,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {/* Explore other categories */}
-      <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+      <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Explore other tool categories</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {otherCategories.map((cat) => (

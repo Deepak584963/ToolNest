@@ -109,7 +109,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
         />
       )}
 
-      <nav aria-label="Breadcrumb" className="text-sm text-slate-500">
+      <nav aria-label="Breadcrumb" className="reveal-up text-sm text-slate-500">
         <ol className="flex items-center gap-1.5 flex-wrap">
           <li><Link href="/" className="hover:text-indigo-700">Home</Link></li>
           <li aria-hidden>/</li>
@@ -119,7 +119,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
         </ol>
       </nav>
 
-      <header className="relative overflow-hidden rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_12px_34px_rgba(79,70,229,0.1)] sm:p-8">
+      <header className="reveal-up reveal-delay-1 relative overflow-hidden rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_12px_34px_rgba(79,70,229,0.1)] sm:p-8">
         <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/35 via-sky-100/20 to-cyan-100/35" />
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="relative">
@@ -138,13 +138,13 @@ export default async function ToolPage({ params }: ToolPageProps) {
         </div>
       </header>
 
-      <section aria-label={`${tool.name} interface`} className="tool-mobile-shell">
+      <section aria-label={`${tool.name} interface`} className="tool-mobile-shell reveal-up reveal-delay-2">
         <ToolUIWrapper slug={slug} />
       </section>
 
       <AdPlaceholder label="Below tool UI" slot="1111111111" />
 
-      <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+      <section className="reveal-up reveal-delay-2 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">How to use {tool.name}</h2>
         <div className="mt-5 space-y-6 text-sm leading-7 text-slate-700 sm:text-base">
           {sections.map((section) => (
@@ -159,7 +159,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
       <AdPlaceholder label="After content section" slot="2222222222" />
 
       {faqs.length > 0 ? (
-        <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+        <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
           <h2 className="text-2xl font-semibold text-slate-900">Frequently asked questions</h2>
           <div className="mt-4">
             <FAQAccordion items={faqs} />
@@ -167,7 +167,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
         </section>
       ) : null}
 
-      <section className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
+      <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-white/85 p-6 shadow-[0_10px_30px_rgba(79,70,229,0.08)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Related tools you might like</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {relatedTools.map((relatedTool) => (
@@ -184,7 +184,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
       </section>
 
       {/* Category CTA */}
-      <section className="rounded-2xl border border-white/70 bg-linear-to-r from-indigo-50 to-cyan-50 p-6 text-center sm:p-8">
+      <section className="reveal-up reveal-delay-3 rounded-2xl border border-white/70 bg-linear-to-r from-indigo-50 to-cyan-50 p-6 text-center sm:p-8">
         <h2 className="text-xl font-semibold text-slate-900">Explore all {categoryLabel} tools</h2>
         <p className="mt-2 text-sm text-slate-600">Discover more free {categoryLabel.toLowerCase()} tools on ToolNest.</p>
         <Link

@@ -75,7 +75,7 @@ export default function HomeToolsSection() {
             key={cat.key}
             type="button"
             onClick={() => setActiveCategory(cat.key)}
-            className={`min-h-10 rounded-full px-4 py-2 text-sm font-semibold transition ${
+            className={`pressable micro-lift min-h-10 rounded-full px-4 py-2 text-sm font-semibold transition ${
               activeCategory === cat.key
                 ? "bg-indigo-600 text-white shadow-[0_10px_24px_rgba(79,70,229,0.34)]"
                 : "bg-white/85 text-slate-700 hover:bg-white hover:text-indigo-700"
@@ -97,7 +97,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-full bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>
@@ -117,7 +117,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-full bg-pink-50 px-3 py-2 text-xs font-semibold text-pink-700 transition hover:bg-pink-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full bg-pink-50 px-3 py-2 text-xs font-semibold text-pink-700 transition hover:bg-pink-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>
@@ -137,7 +137,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-full bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>
@@ -157,7 +157,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-full bg-cyan-50 px-3 py-2 text-xs font-semibold text-cyan-700 transition hover:bg-cyan-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full bg-cyan-50 px-3 py-2 text-xs font-semibold text-cyan-700 transition hover:bg-cyan-100 sm:py-1.5"
               >
                 {tool.label}
               </Link>

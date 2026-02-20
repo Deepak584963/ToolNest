@@ -17,7 +17,7 @@ type ToolCardProps = {
 
 export default function ToolCard({ tool }: ToolCardProps) {
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-white/70 bg-white/80 p-4 shadow-[0_12px_28px_rgba(79,70,229,0.1)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_34px_rgba(6,182,212,0.18)] sm:p-5">
+    <article className="group micro-lift reveal-up flex h-full flex-col rounded-2xl border border-white/70 bg-white/80 p-4 shadow-[0_12px_28px_rgba(79,70,229,0.1)] transition hover:shadow-[0_18px_34px_rgba(6,182,212,0.18)] sm:p-5">
       <div className={`mb-3 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${categoryColors[tool.category]}`}>
         {tool.category}
       </div>
@@ -25,7 +25,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
       <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{tool.shortDescription}</p>
       <Link
         href={`/tools/${tool.slug}`}
-        className="mt-4 inline-flex min-h-10 w-fit items-center gap-2 rounded-full border border-cyan-100 bg-cyan-50/85 px-4 py-2 text-sm font-semibold text-cyan-700 transition group-hover:border-indigo-100 group-hover:bg-indigo-50 group-hover:text-indigo-700"
+        className="pressable mt-4 inline-flex min-h-10 w-fit items-center gap-2 rounded-full border border-cyan-100 bg-cyan-50/85 px-4 py-2 text-sm font-semibold text-cyan-700 transition group-hover:border-indigo-100 group-hover:bg-indigo-50 group-hover:text-indigo-700"
       >
         Open tool
         <span aria-hidden>→</span>

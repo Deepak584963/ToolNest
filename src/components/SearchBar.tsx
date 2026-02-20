@@ -85,7 +85,7 @@ export default function SearchBar() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex h-10 w-10 items-center justify-center gap-2 rounded-full border border-white/70 bg-white/78 px-0 text-sm text-slate-500 shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-xl transition hover:border-indigo-300 hover:text-indigo-600 sm:h-auto sm:w-auto sm:min-w-52 sm:justify-start sm:px-3 sm:py-1.5"
+        className="pressable micro-lift flex h-10 w-10 items-center justify-center gap-2 rounded-full border border-white/70 bg-white/78 px-0 text-sm text-slate-500 shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-xl transition hover:border-indigo-300 hover:text-indigo-600 sm:h-auto sm:w-auto sm:min-w-52 sm:justify-start sm:px-3 sm:py-1.5"
         aria-label="Search tools"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -132,7 +132,7 @@ export default function SearchBar() {
               <button
                 type="button"
                 onClick={() => { setOpen(false); setQuery(""); }}
-                className="rounded-md bg-slate-100 px-2.5 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-200"
+                className="pressable rounded-md bg-slate-100 px-2.5 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-200"
               >
                 <span className="sm:hidden">Close</span>
                 <span className="hidden sm:inline">ESC</span>
@@ -153,7 +153,7 @@ export default function SearchBar() {
                         href={`/tools/${tool.slug}`}
                         onMouseEnter={() => setActiveIndex(index)}
                         onClick={() => { setOpen(false); setQuery(""); }}
-                        className={`flex items-start gap-3 rounded-xl px-3 py-3 transition ${activeIndex === index ? "bg-indigo-50/90" : "hover:bg-indigo-50/85"}`}
+                        className={`pressable micro-lift flex items-start gap-3 rounded-xl px-3 py-3 transition ${activeIndex === index ? "bg-indigo-50/90" : "hover:bg-indigo-50/85"}`}
                       >
                         <div className="flex-1">
                           <p className="text-sm font-semibold text-slate-800">{tool.name}</p>

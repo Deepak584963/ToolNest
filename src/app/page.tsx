@@ -57,7 +57,7 @@ export default function HomePage() {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/68 p-6 shadow-[0_16px_40px_rgba(79,70,229,0.14)] backdrop-blur-xl sm:p-10">
+      <section className="reveal-up relative overflow-hidden rounded-3xl border border-white/70 bg-white/68 p-6 shadow-[0_16px_40px_rgba(79,70,229,0.14)] backdrop-blur-xl sm:p-10">
         <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-indigo-100/50 via-purple-100/35 to-cyan-100/50" />
         <div className="relative max-w-3xl">
           <p className="mb-3 inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">
@@ -82,10 +82,10 @@ export default function HomePage() {
             ))}
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="#tools" className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 sm:w-auto">
+            <Link href="#tools" className="pressable micro-lift inline-flex min-h-11 w-full items-center justify-center rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 sm:w-auto">
               Explore All Tools ↓
             </Link>
-            <Link href="/about" className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-indigo-50 sm:w-auto">
+            <Link href="/about" className="pressable micro-lift inline-flex min-h-11 w-full items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-indigo-50 sm:w-auto">
               Learn More
             </Link>
           </div>
@@ -93,7 +93,7 @@ export default function HomePage() {
       </section>
 
       {/* Category cards */}
-      <section className="mt-10 rounded-2xl border border-white/70 bg-white/66 p-5 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-7">
+      <section className="reveal-up reveal-delay-1 mt-10 rounded-2xl border border-white/70 bg-white/66 p-5 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-7">
         <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Browse by category</h2>
         <p className="mt-2 text-sm text-slate-600">Choose a category to find the right tool fast.</p>
         <div className="mt-5 grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
@@ -115,14 +115,14 @@ export default function HomePage() {
       </section>
 
       {/* All tools grid */}
-      <section id="tools" className="mt-10 scroll-mt-24 rounded-2xl border border-white/70 bg-white/66 p-5 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-7">
+      <section id="tools" className="reveal-up reveal-delay-2 mt-10 scroll-mt-24 rounded-2xl border border-white/70 bg-white/66 p-5 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-7">
         <HomeToolsSection />
       </section>
 
       <AdPlaceholder slot="3333333333" />
 
       {/* SEO content */}
-      <section className="mt-12 rounded-2xl border border-white/70 bg-white/76 p-6 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-8">
+      <section className="reveal-up reveal-delay-2 mt-12 rounded-2xl border border-white/70 bg-white/76 p-6 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Why ToolNest is the best free online tools website</h2>
         <div className="mt-4 space-y-4 text-sm leading-7 text-slate-700 sm:text-base">
           <p>
@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ for homepage */}
-      <section className="mt-8 rounded-2xl border border-white/70 bg-white/76 p-6 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-8">
+      <section className="reveal-up reveal-delay-3 mt-8 rounded-2xl border border-white/70 bg-white/76 p-6 shadow-[0_12px_30px_rgba(79,70,229,0.1)] sm:p-8">
         <h2 className="text-2xl font-semibold text-slate-900">Frequently asked questions</h2>
         <div className="mt-4 space-y-3">
           {[
