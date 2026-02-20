@@ -1,5 +1,34 @@
 import { siteConfig } from "@/lib/site";
 
+/* ------------------------------------------------------------------ */
+/*  Organization (standalone — used on homepage, about)               */
+/* ------------------------------------------------------------------ */
+
+export function OrganizationSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: `${siteConfig.url}/icon`,
+    description: siteConfig.description,
+    email: siteConfig.email,
+    sameAs: [`https://twitter.com/${siteConfig.twitterHandle.replace("@", "")}`],
+    foundingDate: siteConfig.datePublished,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  WebSite + SearchAction (sitelinks searchbox eligibility)          */
+/* ------------------------------------------------------------------ */
+
 type WebSiteSchemaProps = {
   url?: string;
   name?: string;
@@ -12,10 +41,20 @@ export function WebSiteSchema({ url = siteConfig.url, name = siteConfig.name }: 
     name,
     url,
     description: siteConfig.description,
+    inLanguage: "en-US",
     publisher: {
       "@type": "Organization",
       name,
       url,
+      logo: `${url}/icon`,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${url}/?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   };
 
@@ -135,9 +174,12 @@ type SoftwareAppSchemaProps = {
   description: string;
   url: string;
   category: string;
+  keywords?: string[];
+  datePublished?: string;
+  dateModified?: string;
 };
 
-export function SoftwareAppSchema({ name, description, url, category }: SoftwareAppSchemaProps) {
+export function SoftwareAppSchema({ name, description, url, category, keywords, datePublished, dateModified }: SoftwareAppSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -146,10 +188,64 @@ export function SoftwareAppSchema({ name, description, url, category }: Software
     url,
     applicationCategory: category,
     operatingSystem: "All",
+    browserRequirements: "Requires JavaScript. Works in Chrome, Firefox, Safari, Edge.",
     offers: {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
+    },
+    provider: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    ...(keywords && keywords.length > 0 ? { keywords: keywords.join(", ") } : {}),
+    ...(datePublished ? { datePublished } : {}),
+    ...(dateModified ? { dateModified } : {}),
+    isAccessibleForFree: true,
+    inLanguage: "en-US",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  CollectionPage (category pages listing tools)                     */
+/* ------------------------------------------------------------------ */
+
+type CollectionPageSchemaProps = {
+  name: string;
+  description: string;
+  url: string;
+  items: { name: string; url: string }[];
+};
+
+export function CollectionPageSchema({ name, description, url, items }: CollectionPageSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    description,
+    url,
+    isPartOf: {
+      "@type": "WebSite",
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: items.length,
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        url: item.url,
+      })),
     },
   };
 

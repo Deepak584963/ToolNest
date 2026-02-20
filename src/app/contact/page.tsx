@@ -13,12 +13,14 @@ export const metadata: Metadata = {
     description: "Reach ToolNest for feedback, bug reports, feature requests, partnerships, or support.",
     url: "/contact",
     siteName: siteConfig.name,
+    locale: "en_US",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact ToolNest",
     description: "Reach ToolNest for feedback, bug reports, feature requests, partnerships, or support.",
+    site: "@toolnest",
   },
 };
 

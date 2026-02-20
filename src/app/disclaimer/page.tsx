@@ -13,12 +13,14 @@ export const metadata: Metadata = {
     description: "Read the ToolNest disclaimer for tool output accuracy, liability limits, and third-party content notices.",
     url: "/disclaimer",
     siteName: siteConfig.name,
+    locale: "en_US",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title: "ToolNest Disclaimer",
     description: "Read the ToolNest disclaimer for tool output accuracy, liability limits, and third-party content notices.",
+    site: "@toolnest",
   },
 };
 

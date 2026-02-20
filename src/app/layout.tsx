@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
+    locale: siteConfig.locale,
     type: "website",
   },
   twitter: {
@@ -39,7 +40,31 @@ export const metadata: Metadata = {
     title: "ToolNest — 70+ Free Online Tools",
     description: siteConfig.description,
     creator: siteConfig.twitterHandle,
+    site: siteConfig.twitterHandle,
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "googlef2df34d8de1e60a6",
+  },
+  other: {
+    "theme-color": siteConfig.themeColor,
+    "color-scheme": "light",
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-title": siteConfig.name,
+  },
+  category: "technology",
 };
 
 export default function RootLayout({

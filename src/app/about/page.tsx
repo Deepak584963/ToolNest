@@ -13,12 +13,14 @@ export const metadata: Metadata = {
     description: "Learn how ToolNest builds fast, privacy-first tools for developers, SEO, students, creators, and daily workflows.",
     url: "/about",
     siteName: siteConfig.name,
+    locale: "en_US",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title: "About ToolNest",
     description: "Learn how ToolNest builds fast, privacy-first tools for developers, SEO, students, creators, and daily workflows.",
+    site: "@toolnest",
   },
 };
 

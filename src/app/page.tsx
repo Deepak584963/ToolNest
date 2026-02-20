@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import AdPlaceholder from "@/components/AdPlaceholder";
 import HomeToolsSection from "@/components/HomeToolsSection";
-import { ItemListSchema, WebSiteSchema } from "@/components/JsonLd";
+import { FAQSchema, ItemListSchema, OrganizationSchema, WebSiteSchema } from "@/components/JsonLd";
 import { siteConfig } from "@/lib/site";
 import { tools } from "@/lib/tools";
 import { categoryMeta } from "@/lib/categories";
@@ -17,12 +17,16 @@ export const metadata: Metadata = {
     title: "ToolNest — 70+ Free Online Tools",
     description: "70+ free, fast, browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities. No sign-up required.",
     url: "/",
+    siteName: "ToolNest",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "ToolNest — 70+ Free Online Tools",
     description: "70+ free browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities.",
+    site: "@toolnest",
+    creator: "@toolnest",
   },
   keywords: [
     "free online tools",
@@ -46,9 +50,20 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  const homeFaqs = [
+    { question: "Are all tools on ToolNest free?", answer: "Yes, every tool on ToolNest is 100% free to use with no hidden fees, sign-ups, or usage limits." },
+    { question: "Is my data safe when using these tools?", answer: "Absolutely. All tools run entirely in your browser. Your data is never sent to any server or stored anywhere." },
+    { question: "Do I need to create an account?", answer: "No. You can use any tool immediately without creating an account or providing any personal information." },
+    { question: "How many tools does ToolNest offer?", answer: "ToolNest currently offers 70+ free tools across 7 categories: Developer, SEO, Text, Student, Creator, Image, and Utility." },
+    { question: "Can I use these tools on my phone?", answer: "Yes. Every tool is designed with a mobile-first approach and works smoothly on phones, tablets, and desktop computers." },
+    { question: "How often are new tools added?", answer: "We regularly add new tools based on user feedback and trending needs. Bookmark this page to stay updated." },
+  ];
+
   return (
     <>
       <WebSiteSchema />
+      <OrganizationSchema />
+      <FAQSchema items={homeFaqs} />
       <ItemListSchema
         items={tools.map((t) => ({
           name: t.name,
@@ -166,20 +181,13 @@ export default function HomePage() {
         </div>
         <div className="gradient-divider mt-4" />
         <div className="mt-5 space-y-3">
-          {[
-            { q: "Are all tools on ToolNest free?", a: "Yes, every tool on ToolNest is 100% free to use with no hidden fees, sign-ups, or usage limits." },
-            { q: "Is my data safe when using these tools?", a: "Absolutely. All tools run entirely in your browser. Your data is never sent to any server or stored anywhere." },
-            { q: "Do I need to create an account?", a: "No. You can use any tool immediately without creating an account or providing any personal information." },
-            { q: "How many tools does ToolNest offer?", a: "ToolNest currently offers 70+ free tools across 7 categories: Developer, SEO, Text, Student, Creator, Image, and Utility." },
-            { q: "Can I use these tools on my phone?", a: "Yes. Every tool is designed with a mobile-first approach and works smoothly on phones, tablets, and desktop computers." },
-            { q: "How often are new tools added?", a: "We regularly add new tools based on user feedback and trending needs. Bookmark this page to stay updated." },
-          ].map((faq) => (
-            <details key={faq.q} className="group rounded-2xl border border-slate-200/60 bg-white/80 p-4 transition hover:border-indigo-200/60">
+          {homeFaqs.map((faq) => (
+            <details key={faq.question} className="group rounded-2xl border border-slate-200/60 bg-white/80 p-4 transition hover:border-indigo-200/60">
               <summary className="flex cursor-pointer items-center justify-between gap-2 text-sm font-bold text-slate-800 group-open:text-indigo-600">
-                {faq.q}
+                {faq.question}
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0 text-slate-400 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
               </summary>
-              <p className="mt-3 text-sm leading-relaxed text-slate-500">{faq.a}</p>
+              <p className="mt-3 text-sm leading-relaxed text-slate-500">{faq.answer}</p>
             </details>
           ))}
         </div>

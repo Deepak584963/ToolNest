@@ -50,12 +50,18 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
       title,
       description,
       url: `/tools/${tool.slug}`,
+      siteName: "ToolNest",
+      locale: "en_US",
       type: "article",
+      publishedTime: "2025-01-01T00:00:00Z",
+      modifiedTime: new Date().toISOString(),
+      authors: ["ToolNest Team"],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      site: "@toolnest",
     },
     keywords: tool.keywords,
   };
@@ -103,6 +109,9 @@ export default async function ToolPage({ params }: ToolPageProps) {
         description={tool.shortDescription}
         url={`${siteConfig.url}/tools/${tool.slug}`}
         category={categoryAppMap[tool.category] ?? "BrowserApplication"}
+        keywords={tool.keywords}
+        datePublished="2025-01-01T00:00:00Z"
+        dateModified={new Date().toISOString()}
       />
       {workflow.length > 0 && (
         <HowToSchema

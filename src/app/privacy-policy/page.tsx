@@ -12,12 +12,14 @@ export const metadata: Metadata = {
     description: "Read how ToolNest handles privacy, cookies, analytics, and advertising disclosures.",
     url: "/privacy-policy",
     siteName: siteConfig.name,
+    locale: "en_US",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title: "ToolNest Privacy Policy",
     description: "Read how ToolNest handles privacy, cookies, analytics, and advertising disclosures.",
+    site: "@toolnest",
   },
 };
 

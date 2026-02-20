@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ToolCard from "@/components/ToolCard";
-import { BreadcrumbSchema, FAQSchema } from "@/components/JsonLd";
+import { BreadcrumbSchema, CollectionPageSchema, FAQSchema } from "@/components/JsonLd";
 import { siteConfig } from "@/lib/site";
 import { categoryMeta, getCategoryMeta, getCategorySlugs } from "@/lib/categories";
 import { tools } from "@/lib/tools";
@@ -31,12 +31,15 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       title: meta.title,
       description: meta.description,
       url: `/tools/category/${meta.slug}`,
+      siteName: "ToolNest",
+      locale: "en_US",
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: meta.title,
       description: meta.description,
+      site: "@toolnest",
     },
     keywords: meta.keywords,
   };
@@ -118,6 +121,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         ]}
       />
       <FAQSchema items={faqs} />
+      <CollectionPageSchema
+        name={`${meta.name} Tools`}
+        description={meta.description}
+        url={`${siteConfig.url}/tools/category/${meta.slug}`}
+        items={categoryTools.map((t) => ({
+          name: t.name,
+          url: `${siteConfig.url}/tools/${t.slug}`,
+        }))}
+      />
 
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="reveal-up text-sm text-slate-400">

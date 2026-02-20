@@ -12,12 +12,14 @@ export const metadata: Metadata = {
     description: "Review the terms governing use of ToolNest tools, website content, and service limitations.",
     url: "/terms-of-service",
     siteName: siteConfig.name,
+    locale: "en_US",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title: "ToolNest Terms of Service",
     description: "Review the terms governing use of ToolNest tools, website content, and service limitations.",
+    site: "@toolnest",
   },
 };
 
