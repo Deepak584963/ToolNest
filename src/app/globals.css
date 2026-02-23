@@ -769,3 +769,71 @@ details[open] > summary + * {
     background: linear-gradient(135deg, rgba(var(--accent), 0.12), rgba(var(--accent-cyan), 0.1));
   }
 }
+
+/* ── Tool UI Form & Panel Fallbacks ── */
+/* Makes up for missing dark:* tailwind classes across the 80+ tools */
+.dark section.bg-white\/80 {
+  background-color: rgba(15, 23, 42, 0.75) !important;
+  border-color: rgba(51, 65, 85, 0.6) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark section h2.text-slate-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark label.text-slate-700,
+.dark .text-slate-700,
+.dark .text-slate-800 {
+  color: #cbd5e1 !important;
+}
+
+.dark :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select) {
+  background-color: rgba(30, 41, 59, 0.6) !important;
+  border-color: rgba(51, 65, 85, 0.6) !important;
+  color: #f8fafc !important;
+  color-scheme: dark;
+}
+
+.dark :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select):focus {
+  border-color: #818cf8 !important;
+  outline-color: rgba(129, 140, 248, 0.5) !important;
+}
+
+.dark .bg-slate-50,
+.dark .bg-slate-100 {
+  background-color: rgba(30, 41, 59, 0.6) !important;
+}
+
+.dark .border-slate-200 {
+  border-color: rgba(51, 65, 85, 0.6) !important;
+}
+
+.dark .bg-slate-900 {
+  background-color: #0f172a !important;
+  border: 1px solid rgba(51, 65, 85, 0.6) !important;
+}
+
+.dark .bg-indigo-50 {
+  background-color: rgba(79, 70, 229, 0.15) !important;
+}
+
+.dark .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+.dark .bg-rose-50 {
+  background-color: rgba(244, 63, 94, 0.1) !important;
+}
+
+.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+}
+
+.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}

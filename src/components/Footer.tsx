@@ -37,7 +37,7 @@ const popularTools = [
 
 export default function Footer() {
   return (
-    <footer className="mt-16 border-t border-white/50 bg-white/65 backdrop-blur-xl">
+    <footer className="mt-16 border-t border-white/50 bg-white/65 backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-900/40">
       <div className="gradient-divider" />
       <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Main grid */}
@@ -45,10 +45,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-4">
             <p className="text-xl font-extrabold gradient-text">ToolNest</p>
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-500">
+            <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-500 dark:text-slate-400">
               110+ free, browser-based tools for developers, SEO, students, creators, and everyday tasks. No sign-up required.
             </p>
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-indigo-200/50 bg-gradient-to-r from-indigo-50/80 to-violet-50/80 px-4 py-1.5 text-xs font-bold text-indigo-600 shadow-[0_1px_4px_rgba(99,102,241,0.08)]">
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-indigo-200/50 bg-gradient-to-r from-indigo-50/80 to-violet-50/80 px-4 py-1.5 text-xs font-bold text-indigo-600 shadow-[0_1px_4px_rgba(99,102,241,0.08)] dark:border-indigo-500/30 dark:from-indigo-900/20 dark:to-violet-900/20 dark:text-indigo-400">
               <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
               Fast &bull; Private &bull; Free forever
             </div>
@@ -56,11 +56,11 @@ export default function Footer() {
 
           {/* Categories */}
           <nav aria-label="Tool categories" className="sm:col-span-1 lg:col-span-3">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Tool Categories</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Tool Categories</p>
             <ul className="mt-4 space-y-2.5">
               {categoryLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="group inline-flex items-center gap-2 text-sm text-slate-600 transition hover:text-indigo-600">
+                  <Link href={link.href} className="group inline-flex items-center gap-2 text-sm text-slate-600 transition hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">
                     <span className="transition-transform duration-200 group-hover:scale-110">{link.icon}</span> {link.label}
                   </Link>
                 </li>
@@ -70,11 +70,11 @@ export default function Footer() {
 
           {/* Popular Tools */}
           <nav aria-label="Popular tools" className="sm:col-span-1 lg:col-span-3">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Popular Tools</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Popular Tools</p>
             <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
               {popularTools.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-slate-600 transition hover:text-indigo-600 hover:translate-x-0.5 inline-block">
+                  <Link href={link.href} className="text-sm text-slate-600 transition hover:text-indigo-600 hover:translate-x-0.5 inline-block dark:text-slate-300 dark:hover:text-indigo-400">
                     {link.label}
                   </Link>
                 </li>
@@ -84,14 +84,14 @@ export default function Footer() {
 
           {/* Legal & Info */}
           <nav aria-label="Company links" className="sm:col-span-2 lg:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Company</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Company</p>
             <ul className="mt-4 space-y-2.5">
-              <li><Link href="/about" className="text-sm text-slate-600 transition hover:text-indigo-600">About Us</Link></li>
-              <li><Link href="/contact" className="text-sm text-slate-600 transition hover:text-indigo-600">Contact</Link></li>
-              <li><Link href="/terms-of-service" className="text-sm text-slate-600 transition hover:text-indigo-600">Terms of Service</Link></li>
-              <li><Link href="/privacy-policy" className="text-sm text-slate-600 transition hover:text-indigo-600">Privacy Policy</Link></li>
-              <li><Link href="/disclaimer" className="text-sm text-slate-600 transition hover:text-indigo-600">Disclaimer</Link></li>
-              <li><Link href="/feed.xml" className="text-sm text-slate-600 transition hover:text-indigo-600">RSS Feed</Link></li>
+              <li><Link href="/about" className="text-sm text-slate-600 transition hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">About Us</Link></li>
+              <li><Link href="/contact" className="text-sm text-slate-600 transition hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">Contact</Link></li>
+              <li><Link href="/terms-of-service" className="text-sm text-slate-600 transition hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">Terms of Service</Link></li>
+              <li><Link href="/privacy-policy" className="text-sm text-slate-600 transition hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">Privacy Policy</Link></li>
+              <li><Link href="/disclaimer" className="text-sm text-slate-600 transition hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">Disclaimer</Link></li>
+              <li><Link href="/feed.xml" className="text-sm text-slate-600 transition hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">RSS Feed</Link></li>
             </ul>
           </nav>
         </div>
@@ -99,10 +99,10 @@ export default function Footer() {
         {/* Bottom copyright */}
         <div className="gradient-divider mt-10" />
         <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 dark:text-slate-500">
             © {new Date().getFullYear()} ToolNest. All rights reserved.
           </p>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 dark:text-slate-500">
             Built for speed, privacy, and accessibility.
           </p>
         </div>
