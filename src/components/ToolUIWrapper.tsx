@@ -2352,7 +2352,7 @@ function InternalLinkSuggestionTool() {
 /* ───── SERP Snippet Pixel Checker ───── */
 function SerpSnippetPixelChecker() {
   const [title, setTitle] = useState("ToolNest — Free Online SEO Tools for Webmasters");
-  const [description, setDescription] = useState("ToolNest provides 70+ free browser-based SEO, image, student, creator, and utility tools. No sign-up needed. Run everything locally in your browser.");
+  const [description, setDescription] = useState("ToolNest provides 110+ free browser-based SEO, image, student, creator, and utility tools. No sign-up needed. Run everything locally in your browser.");
   const [url, setUrl] = useState("https://tool-nest.tech");
   const titleRef = useRef<HTMLSpanElement>(null);
   const descRef = useRef<HTMLSpanElement>(null);

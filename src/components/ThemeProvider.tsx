@@ -1,20 +1,27 @@
-"use client";
-
-import { useEffect } from "react";
-
-/**
- * Initializes the dark mode class on <html> before first paint.
- * This runs as a client component in the layout body.
- */
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    const stored = localStorage.getItem("tn-theme") || "system";
-    const isDark =
-      stored === "dark" ||
-      (stored === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    document.documentElement.classList.toggle("dark", isDark);
-    document.documentElement.style.colorScheme = isDark ? "dark" : "light";
-  }, []);
-
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                var stored = localStorage.getItem("tn-theme") || "system";
+                var isDark = stored === "dark" || (stored === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+                if (isDark) {
+                  document.documentElement.classList.add("dark");
+                  document.documentElement.style.colorScheme = "dark";
+                } else {
+                  document.documentElement.classList.remove("dark");
+                  document.documentElement.style.colorScheme = "light";
+                }
+              } catch (e) {}
+            })();
+          `,
+        }}
+      />
+      {children}
+    </>
+  );
 }

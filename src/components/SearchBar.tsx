@@ -125,7 +125,7 @@ export default function SearchBar() {
                     router.push(`/tools/${slug}`);
                   }
                 }}
-                placeholder="Search 70+ free tools…"
+                placeholder="Search 110+ free tools…"
                 className="flex-1 bg-transparent text-base text-slate-800 outline-none placeholder:text-slate-400 sm:text-sm"
                 autoFocus
               />
@@ -144,7 +144,7 @@ export default function SearchBar() {
               {query.length < 2 ? (
                 <div className="px-3 py-8 text-center">
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 text-xl shadow-[0_2px_8px_rgba(99,102,241,0.1)]">🔍</div>
-                  <p className="mt-3 text-sm font-medium text-slate-500">Search 70+ free tools</p>
+                  <p className="mt-3 text-sm font-medium text-slate-500">Search 110+ free tools</p>
                   <p className="mt-1 text-xs text-slate-400">Type at least 2 characters to search…</p>
                 </div>
               ) : results.length === 0 ? (

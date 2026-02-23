@@ -21,10 +21,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "ToolNest — 70+ Free Online Tools",
+    default: "ToolNest — 110+ Free Online Tools",
     template: "%s | ToolNest",
   },
-  description: "70+ free online tools for developers, SEO, students, creators, image processing, and everyday utilities. No sign-up, runs in your browser.",
+  description: "110+ free online tools for developers, SEO, students, creators, image processing, and everyday utilities. No sign-up, runs in your browser.",
   alternates: {
     canonical: "/",
     types: {
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "ToolNest — 70+ Free Online Tools",
+    title: "ToolNest — 110+ Free Online Tools",
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ToolNest — 70+ Free Online Tools",
+    title: "ToolNest — 110+ Free Online Tools",
     description: siteConfig.description,
     creator: siteConfig.twitterHandle,
     site: siteConfig.twitterHandle,

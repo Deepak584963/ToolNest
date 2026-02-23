@@ -42,7 +42,7 @@ export default function Header() {
             <span className="gradient-text text-xl">ToolNest</span>
             <span className="hidden items-center gap-1 rounded-full border border-indigo-200/60 bg-indigo-50/90 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-600 sm:inline-flex dark:border-indigo-500/30 dark:bg-indigo-950/50 dark:text-indigo-400">
               <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              70+ tools
+              110+ tools
             </span>
           </span>
         </Link>

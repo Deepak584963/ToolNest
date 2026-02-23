@@ -73,17 +73,22 @@ export function useTheme() {
   }, []);
 
   const isDark =
-    typeof window !== "undefined"
-      ? theme === "dark" ||
-        (theme === "system" &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
+    typeof document !== "undefined"
+      ? document.documentElement.classList.contains("dark")
       : false;
 
   const cycleTheme = useCallback(() => {
+    let currentTheme: Theme = "system";
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(THEME_KEY);
+      if (stored === "dark" || stored === "light") {
+        currentTheme = stored;
+      }
+    }
     const order: Theme[] = ["light", "dark", "system"];
-    const idx = order.indexOf(theme);
+    const idx = order.indexOf(currentTheme);
     setTheme(order[(idx + 1) % order.length]);
-  }, [theme, setTheme]);
+  }, [setTheme]);
 
   return { theme, setTheme, isDark, cycleTheme };
 }

@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "ToolNest — 70+ Free Online Tools";
+export const alt = "ToolNest — 110+ Free Online Tools";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -51,7 +51,7 @@ export default async function OGImage() {
             }}
           >
             <div style={{ width: 8, height: 8, borderRadius: 4, background: "#6366F1", display: "flex" }} />
-            <span>70+ Free Tools • No Sign-up</span>
+            <span>110+ Free Tools • No Sign-up</span>
           </div>
           <div style={{ fontSize: 56, fontWeight: 800, textAlign: "center", letterSpacing: -1, color: "#0F172A", display: "flex" }}>
             ToolNest
@@ -75,7 +75,7 @@ export default async function OGImage() {
           </div>
           <div style={{ display: "flex", gap: 32, marginTop: 28 }}>
             {[
-              { val: "70+", label: "Tools" },
+              { val: "110+", label: "Tools" },
               { val: "7", label: "Categories" },
               { val: "100%", label: "Browser-based" },
               { val: "0", label: "Data Collected" },

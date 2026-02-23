@@ -4,14 +4,14 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Page Not Found",
   description:
-    "The page you are looking for does not exist. Browse our collection of 70+ free developer, SEO, student, creator, and utility tools.",
+    "The page you are looking for does not exist. Browse our collection of 110+ free developer, SEO, student, creator, and utility tools.",
   robots: {
     index: false,
     follow: true,
   },
   openGraph: {
     title: "Page Not Found — ToolNest",
-    description: "The page you are looking for does not exist. Browse our collection of 70+ free online tools.",
+    description: "The page you are looking for does not exist. Browse our collection of 110+ free online tools.",
     type: "website",
   },
 };

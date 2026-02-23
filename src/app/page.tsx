@@ -8,14 +8,14 @@ import { tools } from "@/lib/tools";
 import { categoryMeta } from "@/lib/categories";
 
 export const metadata: Metadata = {
-  title: "ToolNest — 70+ Free Online Tools for Developers, SEO, Students & Creators",
-  description: "Use 70+ free browser-based tools: JSON formatter, regex tester, JWT decoder, SQL formatter, QR code generator, EMI calculator, image compressor, and more. No signup needed.",
+  title: "ToolNest — 110+ Free Online Tools for Developers, SEO, Students & Creators",
+  description: "Use 110+ free browser-based tools: JSON formatter, regex tester, JWT decoder, SQL formatter, QR code generator, EMI calculator, image compressor, and more. No signup needed.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "ToolNest — 70+ Free Online Tools",
-    description: "70+ free, fast, browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities. No sign-up required.",
+    title: "ToolNest — 110+ Free Online Tools",
+    description: "110+ free, fast, browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities. No sign-up required.",
     url: "/",
     siteName: "ToolNest",
     locale: "en_US",
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ToolNest — 70+ Free Online Tools",
-    description: "70+ free browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities.",
+    title: "ToolNest — 110+ Free Online Tools",
+    description: "110+ free browser-based tools for developers, SEO, students, creators, image tasks, and daily utilities.",
     site: "@toolnest",
     creator: "@toolnest",
   },
@@ -54,7 +54,7 @@ export default function HomePage() {
     { question: "Are all tools on ToolNest free?", answer: "Yes, every tool on ToolNest is 100% free to use with no hidden fees, sign-ups, or usage limits." },
     { question: "Is my data safe when using these tools?", answer: "Absolutely. All tools run entirely in your browser. Your data is never sent to any server or stored anywhere." },
     { question: "Do I need to create an account?", answer: "No. You can use any tool immediately without creating an account or providing any personal information." },
-    { question: "How many tools does ToolNest offer?", answer: "ToolNest currently offers 70+ free tools across 7 categories: Developer, SEO, Text, Student, Creator, Image, and Utility." },
+    { question: "How many tools does ToolNest offer?", answer: "ToolNest currently offers 110+ free tools across 7 categories: Developer, SEO, Text, Student, Creator, Image, and Utility." },
     { question: "Can I use these tools on my phone?", answer: "Yes. Every tool is designed with a mobile-first approach and works smoothly on phones, tablets, and desktop computers." },
     { question: "How often are new tools added?", answer: "We regularly add new tools based on user feedback and trending needs. Bookmark this page to stay updated." },
   ];
@@ -80,7 +80,7 @@ export default function HomePage() {
         <div className="relative max-w-3xl">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-200/50 bg-indigo-50/80 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-indigo-600 shadow-[0_2px_8px_rgba(99,102,241,0.08)]">
             <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            70+ Tools &bull; Free &bull; No Sign-up &bull; Browser-based
+            110+ Tools &bull; Free &bull; No Sign-up &bull; Browser-based
           </p>
           <h1 className="text-balance text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl dark:text-slate-50">
             Free Online Tools for{" "}
@@ -104,7 +104,7 @@ export default function HomePage() {
         {/* Stats bar */}
         <div className="relative mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { value: "70+", label: "Free Tools", icon: "⚡", color: "from-indigo-500/10 to-violet-500/10" },
+            { value: "110+", label: "Free Tools", icon: "⚡", color: "from-indigo-500/10 to-violet-500/10" },
             { value: "7", label: "Categories", icon: "📂", color: "from-cyan-500/10 to-sky-500/10" },
             { value: "100%", label: "Browser-based", icon: "🔒", color: "from-emerald-500/10 to-teal-500/10" },
             { value: "0", label: "Data Collected", icon: "🛡️", color: "from-amber-500/10 to-orange-500/10" },
@@ -164,7 +164,7 @@ export default function HomePage() {
         <div className="gradient-divider mt-4" />
         <div className="mt-5 space-y-4 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8 dark:text-slate-400">
           <p>
-            ToolNest brings together 70+ professional-grade utilities in one fast, clean interface. Whether you are a developer debugging JSON payloads, an SEO specialist optimizing meta tags, a student calculating CGPA, a content creator generating hashtags, or anyone who needs to compress an image or calculate EMI — we have the right tool for you.
+            ToolNest brings together 110+ professional-grade utilities in one fast, clean interface. Whether you are a developer debugging JSON payloads, an SEO specialist optimizing meta tags, a student calculating CGPA, a content creator generating hashtags, or anyone who needs to compress an image or calculate EMI — we have the right tool for you.
           </p>
           <p>
             Every tool runs entirely in your browser. Your data never leaves your device, which means maximum privacy and zero latency. There is no account to create, no software to install, and no usage limits. Just open a tool and start working.

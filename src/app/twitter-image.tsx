@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "ToolNest — 70+ Free Online Tools";
+export const alt = "ToolNest — 110+ Free Online Tools";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -51,7 +51,7 @@ export default async function TwitterImage() {
             }}
           >
             <div style={{ width: 8, height: 8, borderRadius: 4, background: "#6366F1", display: "flex" }} />
-            <span>70+ Free Tools</span>
+            <span>110+ Free Tools</span>
           </div>
           <div style={{ fontSize: 56, fontWeight: 800, color: "#0F172A", letterSpacing: -1, display: "flex" }}>
             ToolNest

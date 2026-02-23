@@ -46,7 +46,7 @@ export default function Footer() {
           <div className="lg:col-span-4">
             <p className="text-xl font-extrabold gradient-text">ToolNest</p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-500">
-              70+ free, browser-based tools for developers, SEO, students, creators, and everyday tasks. No sign-up required.
+              110+ free, browser-based tools for developers, SEO, students, creators, and everyday tasks. No sign-up required.
             </p>
             <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-indigo-200/50 bg-gradient-to-r from-indigo-50/80 to-violet-50/80 px-4 py-1.5 text-xs font-bold text-indigo-600 shadow-[0_1px_4px_rgba(99,102,241,0.08)]">
               <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
