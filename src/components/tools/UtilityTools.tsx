@@ -619,3 +619,175 @@ export function ScientificCalculator() {
     </Panel>
   );
 }
+
+/* ───── 11. Tip Calculator ───── */
+export function TipCalculator() {
+  const [bill, setBill] = useState("50");
+  const [tipPct, setTipPct] = useState("15");
+  const [people, setPeople] = useState("2");
+
+  const result = useMemo(() => {
+    const b = parseFloat(bill);
+    const t = parseFloat(tipPct);
+    const p = parseInt(people);
+    if (isNaN(b) || isNaN(t) || isNaN(p) || p < 1) return null;
+    const tipAmount = b * (t / 100);
+    const total = b + tipAmount;
+    const perPerson = total / p;
+    const tipPerPerson = tipAmount / p;
+    return { tipAmount: tipAmount.toFixed(2), total: total.toFixed(2), perPerson: perPerson.toFixed(2), tipPerPerson: tipPerPerson.toFixed(2) };
+  }, [bill, tipPct, people]);
+
+  return (
+    <Panel title="Tip Calculator & Bill Splitter">
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div><label className={label}>Bill Amount</label><input type="number" value={bill} onChange={e => setBill(e.target.value)} className={input} placeholder="0.00" /></div>
+        <div>
+          <label className={label}>Tip %</label>
+          <input type="number" value={tipPct} onChange={e => setTipPct(e.target.value)} className={input} />
+          <div className="mt-1.5 flex gap-1">
+            {[10, 15, 18, 20, 25].map(p => (
+              <button key={p} type="button" onClick={() => setTipPct(String(p))} className={`flex-1 rounded-lg py-1 text-xs font-semibold transition ${tipPct === String(p) ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>{p}%</button>
+            ))}
+          </div>
+        </div>
+        <div><label className={label}>People</label><input type="number" min={1} value={people} onChange={e => setPeople(e.target.value)} className={input} /></div>
+      </div>
+      {result && (
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className={`${stat} bg-indigo-50`}><p className="text-lg font-bold text-indigo-700">${result.tipAmount}</p><p className="text-xs text-indigo-500">Tip Total</p></div>
+          <div className={`${stat} bg-emerald-50`}><p className="text-lg font-bold text-emerald-700">${result.total}</p><p className="text-xs text-emerald-500">Grand Total</p></div>
+          <div className={`${stat} bg-amber-50`}><p className="text-lg font-bold text-amber-700">${result.perPerson}</p><p className="text-xs text-amber-500">Per Person</p></div>
+          <div className={`${stat} bg-purple-50`}><p className="text-lg font-bold text-purple-700">${result.tipPerPerson}</p><p className="text-xs text-purple-500">Tip / Person</p></div>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 12. BMI Calculator ───── */
+export function BmiCalculator() {
+  const [heightCm, setHeightCm] = useState("170");
+  const [weightKg, setWeightKg] = useState("70");
+  const [unit, setUnit] = useState<"metric" | "imperial">("metric");
+
+  const result = useMemo(() => {
+    let h = parseFloat(heightCm);
+    let w = parseFloat(weightKg);
+    if (isNaN(h) || isNaN(w) || h <= 0 || w <= 0) return null;
+    if (unit === "imperial") { h = h * 2.54; w = w * 0.453592; } // inches to cm, lbs to kg
+    const hm = h / 100;
+    const bmi = w / (hm * hm);
+    let category = "Obese";
+    let color = "text-red-700";
+    let bg = "bg-red-50";
+    if (bmi < 18.5) { category = "Underweight"; color = "text-amber-700"; bg = "bg-amber-50"; }
+    else if (bmi < 25) { category = "Normal Weight"; color = "text-emerald-700"; bg = "bg-emerald-50"; }
+    else if (bmi < 30) { category = "Overweight"; color = "text-orange-700"; bg = "bg-orange-50"; }
+    return { bmi: bmi.toFixed(1), category, color, bg };
+  }, [heightCm, weightKg, unit]);
+
+  return (
+    <Panel title="BMI Calculator">
+      <div className="mb-3 flex gap-2">
+        {(["metric", "imperial"] as const).map(u => (
+          <button key={u} type="button" onClick={() => setUnit(u)} className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${unit === u ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}>{u === "metric" ? "Metric (cm/kg)" : "Imperial (in/lbs)"}</button>
+        ))}
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div><label className={label}>{unit === "metric" ? "Height (cm)" : "Height (inches)"}</label><input type="number" value={heightCm} onChange={e => setHeightCm(e.target.value)} className={input} /></div>
+        <div><label className={label}>{unit === "metric" ? "Weight (kg)" : "Weight (lbs)"}</label><input type="number" value={weightKg} onChange={e => setWeightKg(e.target.value)} className={input} /></div>
+      </div>
+      {result && (
+        <div className="mt-4 flex flex-col items-center gap-3">
+          <div className={`rounded-2xl ${result.bg} px-8 py-6 text-center`}>
+            <p className={`text-4xl font-extrabold ${result.color}`}>{result.bmi}</p>
+            <p className={`mt-1 text-sm font-bold ${result.color}`}>{result.category}</p>
+          </div>
+          <div className="flex gap-1 w-full max-w-md">
+            <div className="flex-1 h-3 rounded-l-full bg-amber-400" title="Underweight < 18.5" />
+            <div className="flex-[2] h-3 bg-emerald-500" title="Normal 18.5-24.9" />
+            <div className="flex-1 h-3 bg-orange-400" title="Overweight 25-29.9" />
+            <div className="flex-1 h-3 rounded-r-full bg-red-500" title="Obese 30+" />
+          </div>
+          <div className="flex gap-3 text-xs text-slate-500">
+            <span>{"<18.5 Under"}</span><span>{"18.5-24.9 Normal"}</span><span>{"25-29.9 Over"}</span><span>{"30+ Obese"}</span>
+          </div>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 13. Electricity Bill Calculator ───── */
+type Appliance = { id: string; name: string; watts: string; hours: string };
+
+export function ElectricityBillCalculator() {
+  const [appliances, setAppliances] = useState<Appliance[]>([
+    { id: "1", name: "Air Conditioner", watts: "1500", hours: "8" },
+    { id: "2", name: "LED Light", watts: "10", hours: "10" },
+    { id: "3", name: "Refrigerator", watts: "150", hours: "24" },
+  ]);
+  const [rate, setRate] = useState("8");
+
+  const update = (id: string, field: keyof Appliance, value: string) =>
+    setAppliances(prev => prev.map(a => a.id === id ? { ...a, [field]: value } : a));
+  const add = () => setAppliances(prev => [...prev, { id: Date.now().toString(), name: "", watts: "", hours: "" }]);
+  const remove = (id: string) => setAppliances(prev => prev.filter(a => a.id !== id));
+
+  const results = useMemo(() => {
+    const r = parseFloat(rate);
+    if (isNaN(r)) return null;
+    const items = appliances.map(a => {
+      const w = parseFloat(a.watts) || 0;
+      const h = parseFloat(a.hours) || 0;
+      const dailyKwh = (w * h) / 1000;
+      const monthlyKwh = dailyKwh * 30;
+      const monthlyCost = monthlyKwh * r;
+      return { ...a, dailyKwh, monthlyKwh, monthlyCost };
+    });
+    const totalMonthly = items.reduce((s, i) => s + i.monthlyCost, 0);
+    const totalDaily = items.reduce((s, i) => s + i.dailyKwh, 0);
+    const totalYearly = totalMonthly * 12;
+    return { items, totalMonthly, totalDaily, totalYearly };
+  }, [appliances, rate]);
+
+  return (
+    <div className="space-y-4">
+      <Panel title="Electricity Bill Calculator">
+        <div className="mb-3">
+          <label className={label}>Electricity Rate (₹ per kWh / unit)</label>
+          <input type="number" step="0.5" value={rate} onChange={e => setRate(e.target.value)} className={`${input} max-w-xs`} />
+        </div>
+        <div className="space-y-2">
+          {appliances.map(a => (
+            <div key={a.id} className="grid gap-2 sm:grid-cols-4 items-end">
+              <input value={a.name} onChange={e => update(a.id, "name", e.target.value)} className={input} placeholder="Appliance name" />
+              <input type="number" value={a.watts} onChange={e => update(a.id, "watts", e.target.value)} className={input} placeholder="Watts" />
+              <input type="number" value={a.hours} onChange={e => update(a.id, "hours", e.target.value)} className={input} placeholder="Hours/day" />
+              <button type="button" onClick={() => remove(a.id)} className="rounded-full bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-100 transition">Remove</button>
+            </div>
+          ))}
+        </div>
+        <button type="button" onClick={add} className="mt-3 rounded-full bg-slate-100 px-4 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition">+ Add Appliance</button>
+      </Panel>
+      {results && (
+        <Panel title="Estimated Costs">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className={`${stat} bg-indigo-50`}><p className="text-lg font-bold text-indigo-700">{results.totalDaily.toFixed(2)} kWh</p><p className="text-xs text-indigo-500">Daily Usage</p></div>
+            <div className={`${stat} bg-emerald-50`}><p className="text-lg font-bold text-emerald-700">₹{results.totalMonthly.toFixed(0)}</p><p className="text-xs text-emerald-500">Monthly Bill</p></div>
+            <div className={`${stat} bg-amber-50`}><p className="text-lg font-bold text-amber-700">₹{results.totalYearly.toFixed(0)}</p><p className="text-xs text-amber-500">Yearly Bill</p></div>
+          </div>
+          <div className="mt-4 overflow-auto">
+            <table className="w-full text-xs">
+              <thead className="bg-slate-50"><tr><th className="px-2 py-1.5 text-left">Appliance</th><th className="px-2 py-1.5 text-right">Watts</th><th className="px-2 py-1.5 text-right">Hrs/Day</th><th className="px-2 py-1.5 text-right">kWh/Month</th><th className="px-2 py-1.5 text-right">₹/Month</th></tr></thead>
+              <tbody>{results.items.map(i => (
+                <tr key={i.id} className="border-t border-slate-100"><td className="px-2 py-1">{i.name || "—"}</td><td className="px-2 py-1 text-right">{i.watts}</td><td className="px-2 py-1 text-right">{i.hours}</td><td className="px-2 py-1 text-right">{i.monthlyKwh.toFixed(1)}</td><td className="px-2 py-1 text-right font-semibold">₹{i.monthlyCost.toFixed(0)}</td></tr>
+              ))}</tbody>
+            </table>
+          </div>
+        </Panel>
+      )}
+    </div>
+  );
+}

@@ -1357,3 +1357,342 @@ export function UtmLinkBuilderForCreators() {
     </Panel>
   );
 }
+
+/* ───── 16. YouTube Title Length Checker ───── */
+export function YouTubeTitleLengthChecker() {
+  const [title, setTitle] = useState("");
+
+  const analysis = useMemo(() => {
+    const chars = title.length;
+    // Approximate pixel width: avg character ~7.5px at 14px Roboto
+    const estPixelWidth = Math.round(title.split("").reduce((sum, ch) => {
+      if (/[A-Z]/.test(ch)) return sum + 9.2;
+      if (/[a-z]/.test(ch)) return sum + 7.0;
+      if (/[0-9]/.test(ch)) return sum + 7.5;
+      if (ch === " ") return sum + 3.5;
+      return sum + 7.5;
+    }, 0));
+
+    const desktopLimit = 70;
+    const mobileLimit = 55;
+    const suggestedLimit = 500; // pixel width limit for desktop
+
+    const desktopTruncated = chars > desktopLimit;
+    const mobileTruncated = chars > mobileLimit;
+    const pixelTruncated = estPixelWidth > suggestedLimit;
+
+    let rating = "Excellent";
+    if (chars > mobileLimit) rating = "Caution — may truncate on mobile";
+    if (chars > desktopLimit) rating = "Too long — will truncate on most surfaces";
+    if (chars === 0) rating = "Enter a title to check";
+
+    return { chars, estPixelWidth, desktopTruncated, mobileTruncated, pixelTruncated, rating, desktopLimit, mobileLimit };
+  }, [title]);
+
+  const barPercent = Math.min(100, (analysis.chars / analysis.desktopLimit) * 100);
+  const barColor = analysis.chars === 0 ? "bg-slate-200" : analysis.chars <= analysis.mobileLimit ? "bg-emerald-500" : analysis.chars <= analysis.desktopLimit ? "bg-amber-500" : "bg-rose-500";
+
+  return (
+    <Panel title="YouTube Title Length Checker">
+      <div>
+        <label className={label}>YouTube video title</label>
+        <input value={title} onChange={(event) => setTitle(event.target.value)} className={input} placeholder="e.g. 10 SEO Mistakes That Kill Your Rankings in 2026" />
+      </div>
+      <div className="mt-3 h-2 w-full rounded-full bg-slate-100">
+        <div className={`h-full rounded-full transition-all ${barColor}`} style={{ width: `${barPercent}%` }} />
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-4">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><p className="text-xs text-slate-500">Characters</p><p className="text-lg font-semibold text-slate-900">{analysis.chars}</p></div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><p className="text-xs text-slate-500">Est. pixel width</p><p className="text-lg font-semibold text-slate-900">{analysis.estPixelWidth}px</p></div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><p className="text-xs text-slate-500">Desktop ({analysis.desktopLimit} chars)</p><p className={`text-lg font-semibold ${analysis.desktopTruncated ? "text-rose-600" : "text-emerald-600"}`}>{analysis.desktopTruncated ? "Truncated" : "Safe"}</p></div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><p className="text-xs text-slate-500">Mobile ({analysis.mobileLimit} chars)</p><p className={`text-lg font-semibold ${analysis.mobileTruncated ? "text-rose-600" : "text-emerald-600"}`}>{analysis.mobileTruncated ? "Truncated" : "Safe"}</p></div>
+      </div>
+      <p className="mt-3 text-sm font-medium text-slate-700">{analysis.rating}</p>
+      <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600 space-y-1">
+        <p>✅ <strong>Best practice:</strong> Keep titles under 55 characters for full visibility on all surfaces.</p>
+        <p>⚠️ Desktop search truncates around 70 characters. Mobile feeds truncate even earlier (~55 chars).</p>
+        <p>💡 Front-load keywords and value — put the most important words first in case of truncation.</p>
+      </div>
+    </Panel>
+  );
+}
+
+/* ───── 17. YouTube Shorts Aspect Ratio Tool ───── */
+const shortsPresets: { name: string; w: number; h: number }[] = [
+  { name: "Standard Shorts (1080×1920)", w: 1080, h: 1920 },
+  { name: "720p Vertical (720×1280)", w: 720, h: 1280 },
+  { name: "4K Vertical (2160×3840)", w: 2160, h: 3840 },
+  { name: "iPhone 15 (1179×2556)", w: 1179, h: 2556 },
+  { name: "Galaxy S24 (1080×2340)", w: 1080, h: 2340 },
+];
+
+export function YouTubeShortsAspectRatioTool() {
+  const [width, setWidth] = useState(1080);
+  const [height, setHeight] = useState(1920);
+
+  const result = useMemo(() => {
+    const w = Math.max(1, width);
+    const h = Math.max(1, height);
+    const gcdCalc = (a: number, b: number): number => (b === 0 ? a : gcdCalc(b, a % b));
+    const g = gcdCalc(w, h);
+    const rw = w / g;
+    const rh = h / g;
+
+    const is916 = Math.abs((w / h) - (9 / 16)) < 0.01;
+    const isVertical = h > w;
+    const topUnsafe = Math.round(h * 0.1);
+    const bottomUnsafe = Math.round(h * 0.2);
+    const safeHeight = h - topUnsafe - bottomUnsafe;
+
+    let verdict = "✅ Perfect 9:16 — ready for YouTube Shorts!";
+    if (!isVertical) verdict = "❌ Not vertical. Shorts require portrait orientation (height > width).";
+    else if (!is916) verdict = `⚠️ Aspect ratio is ${rw}:${rh} — not exactly 9:16. May display with black bars.`;
+
+    return { rw, rh, is916, isVertical, topUnsafe, bottomUnsafe, safeHeight, verdict };
+  }, [width, height]);
+
+  const applyPreset = (preset: typeof shortsPresets[0]) => {
+    setWidth(preset.w);
+    setHeight(preset.h);
+  };
+
+  return (
+    <Panel title="YouTube Shorts Aspect Ratio Tool">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Width (px)</label><input type="number" min={1} value={width} onChange={(event) => setWidth(Number(event.target.value) || 1)} className={input} /></div>
+        <div><label className={label}>Height (px)</label><input type="number" min={1} value={height} onChange={(event) => setHeight(Number(event.target.value) || 1)} className={input} /></div>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {shortsPresets.map((preset) => (
+          <button key={preset.name} type="button" onClick={() => applyPreset(preset)} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200">{preset.name}</button>
+        ))}
+      </div>
+      <div className="mt-4 grid gap-3 sm:grid-cols-4">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><p className="text-xs text-slate-500">Ratio</p><p className="text-lg font-semibold text-slate-900">{result.rw}:{result.rh}</p></div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><p className="text-xs text-slate-500">9:16 Valid</p><p className={`text-lg font-semibold ${result.is916 ? "text-emerald-600" : "text-rose-600"}`}>{result.is916 ? "Yes" : "No"}</p></div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><p className="text-xs text-slate-500">Orientation</p><p className={`text-lg font-semibold ${result.isVertical ? "text-emerald-600" : "text-rose-600"}`}>{result.isVertical ? "Vertical ✓" : "Horizontal ✗"}</p></div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><p className="text-xs text-slate-500">Safe height</p><p className="text-lg font-semibold text-slate-900">{result.safeHeight}px</p></div>
+      </div>
+      <p className="mt-3 text-sm font-medium text-slate-700">{result.verdict}</p>
+      <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600 space-y-1">
+        <p>🔴 <strong>Top ~10% ({result.topUnsafe}px):</strong> Channel name, subscribe button. Avoid placing text here.</p>
+        <p>🔴 <strong>Bottom ~20% ({result.bottomUnsafe}px):</strong> Title, description, like/comment buttons overlay. Keep key visuals above this zone.</p>
+        <p>🟢 <strong>Safe area:</strong> {result.safeHeight}px in the center — place all important text and visuals here.</p>
+      </div>
+      <div className="mt-4 flex items-center justify-center">
+        <div className="relative rounded-lg border-2 border-slate-300 bg-slate-900" style={{ width: 90, height: 160 }}>
+          <div className="absolute inset-x-0 top-0 bg-rose-400/30 rounded-t-md" style={{ height: "10%" }}><p className="text-center text-[7px] text-rose-200 pt-0.5">unsafe</p></div>
+          <div className="absolute inset-x-0 bottom-0 bg-rose-400/30 rounded-b-md" style={{ height: "20%" }}><p className="text-center text-[7px] text-rose-200 pt-2">unsafe</p></div>
+          <div className="absolute inset-x-0 bg-emerald-400/15 flex items-center justify-center" style={{ top: "10%", bottom: "20%" }}><p className="text-[8px] text-emerald-300 font-semibold">SAFE ZONE</p></div>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ───── 18. Reel Caption Formatter ───── */
+const separatorStyles: Record<string, string> = {
+  dots: "・・・",
+  dashes: "— — —",
+  stars: "✦ ✦ ✦",
+  line: "───────────",
+  space: "\n\n",
+};
+
+export function ReelCaptionFormatter() {
+  const [caption, setCaption] = useState("");
+  const [hashtags, setHashtags] = useState("");
+  const [separator, setSeparator] = useState<keyof typeof separatorStyles>("dots");
+  const [addSpaceBefore, setAddSpaceBefore] = useState(true);
+  const [bulletEmoji, setBulletEmoji] = useState("▸");
+
+  const formatted = useMemo(() => {
+    if (!caption.trim()) return "";
+
+    let body = caption.trim();
+
+    // Convert lines starting with - or * to bullet emoji
+    body = body
+      .split("\n")
+      .map((line) => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+          return `${bulletEmoji} ${trimmed.slice(2)}`;
+        }
+        return trimmed;
+      })
+      .join("\n");
+
+    const parts: string[] = [body];
+
+    if (hashtags.trim()) {
+      const sep = separatorStyles[separator] || separatorStyles.dots;
+      if (addSpaceBefore) {
+        parts.push("\n" + sep + "\n");
+      } else {
+        parts.push("\n" + sep + "\n");
+      }
+      parts.push(hashtags.trim());
+    }
+
+    return parts.join("");
+  }, [caption, hashtags, separator, addSpaceBefore, bulletEmoji]);
+
+  const charCount = formatted.length;
+  const limit = 2200;
+  const firstLineLen = formatted.split("\n")[0]?.length ?? 0;
+
+  return (
+    <Panel title="Reel Caption Formatter">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div>
+          <label className={label}>Caption text (use - or * for bullet points)</label>
+          <textarea value={caption} onChange={(event) => setCaption(event.target.value)} className="h-44 w-full rounded-xl border border-slate-200 p-3 text-sm" placeholder={"Save this for later ✨\n\n- Tip one goes here\n- Tip two goes here\n- Tip three goes here\n\nWhich tip is your favourite? Comment below 👇"} />
+          <div className="mt-3">
+            <label className={label}>Hashtags (separate block)</label>
+            <textarea value={hashtags} onChange={(event) => setHashtags(event.target.value)} className="h-20 w-full rounded-xl border border-slate-200 p-3 text-sm" placeholder="#reels #instagram #creator #growth" />
+          </div>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            <div><label className={label}>Separator style</label><select value={separator} onChange={(event) => setSeparator(event.target.value)} className={input}><option value="dots">Dots ・・・</option><option value="dashes">Dashes — — —</option><option value="stars">Stars ✦ ✦ ✦</option><option value="line">Line ────</option><option value="space">Blank space</option></select></div>
+            <div><label className={label}>Bullet emoji</label><input value={bulletEmoji} onChange={(event) => setBulletEmoji(event.target.value)} className={input} /></div>
+            <div className="flex items-end"><label className="inline-flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={addSpaceBefore} onChange={(event) => setAddSpaceBefore(event.target.checked)} /> Extra space before hashtags</label></div>
+          </div>
+        </div>
+        <div>
+          <label className={label}>Formatted preview</label>
+          <textarea value={formatted} readOnly className="h-44 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm whitespace-pre-wrap" />
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            <p className={`rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs text-slate-700`}>Characters: <strong className={charCount > limit ? "text-rose-600" : ""}>{charCount}</strong> / {limit}</p>
+            <p className={`rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs text-slate-700`}>First line: <strong className={firstLineLen > 125 ? "text-amber-600" : ""}>{firstLineLen}</strong> chars</p>
+            <p className="rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs text-slate-700">Lines: <strong>{formatted.split("\n").length}</strong></p>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <CopyButton value={formatted} />
+            <button type="button" onClick={() => downloadText("reel-caption.txt", formatted)} className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700" disabled={!formatted}>Download</button>
+          </div>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ───── 19. Hook Idea Generator by Niche ───── */
+const nicheHookDb: Record<string, Record<string, string[]>> = {
+  fitness: {
+    question: ["Are you still doing {sub} wrong?", "Why does nobody talk about this {sub} mistake?", "What happens when you stop {sub} for 30 days?"],
+    bold: ["Stop doing crunches if you want {sub} results.", "This one {sub} change fixed everything.", "{sub} is dead — here's what replaced it."],
+    story: ["I tried {sub} for 90 days straight. Here's what happened.", "My trainer told me to quit {sub}. I didn't listen.", "From zero to {sub} transformation in 60 days."],
+    stat: ["97% of people do {sub} wrong according to research.", "{sub} burns 3x more calories than you think.", "Only 12% of gym-goers know this {sub} trick."],
+  },
+  finance: {
+    question: ["Why are you still losing money on {sub}?", "What's the real cost of ignoring {sub}?", "Is {sub} actually worth it in 2026?"],
+    bold: ["This one {sub} habit costs you ₹50,000 a year.", "Stop saving — start doing {sub} instead.", "{sub} is the biggest money trap nobody warns you about."],
+    story: ["I went from ₹0 to ₹10L using this {sub} system.", "My biggest {sub} mistake cost me everything.", "How {sub} changed my financial life in 6 months."],
+    stat: ["78% of people don't track their {sub} — and it shows.", "{sub} could save you ₹1,00,000 over 5 years.", "The top 1% all do this one {sub} thing differently."],
+  },
+  tech: {
+    question: ["Is {sub} really the future?", "Why did everyone stop talking about {sub}?", "Should you switch to {sub} in 2026?"],
+    bold: ["{sub} is overrated — here's what actually works.", "I used {sub} for 30 days and here's the truth.", "Forget {sub} — this tool does it 10x better."],
+    story: ["I replaced my entire {sub} setup. Zero regrets.", "This {sub} saved me 4 hours every week.", "How I went viral using {sub} nobody knows about."],
+    stat: ["{sub} adoption grew 340% this year alone.", "90% of devs are switching to {sub} — here's why.", "This {sub} trick reduced my load time by 60%."],
+  },
+  food: {
+    question: ["Why does your {sub} taste bland?", "What's the secret ingredient in perfect {sub}?", "Are you storing {sub} wrong this whole time?"],
+    bold: ["Your {sub} recipe is missing this one step.", "Restaurant {sub} uses this trick you don't.", "Stop overcomplicating {sub} — here's the easy way."],
+    story: ["My grandma's {sub} recipe with a modern twist.", "I tested 10 {sub} recipes — only this one worked.", "The {sub} that made 1M people save this reel."],
+    stat: ["68% of home cooks skip this crucial {sub} step.", "This {sub} method is 3x faster with better results.", "Chefs agree: this is the #1 {sub} mistake."],
+  },
+  travel: {
+    question: ["Is {sub} still worth visiting in 2026?", "What nobody tells you about {sub}?", "Why is {sub} so overhyped?"],
+    bold: ["Don't visit {sub} without knowing this.", "{sub} on a budget — yes, it's possible.", "The hidden side of {sub} no influencer shows you."],
+    story: ["I spent a week in {sub} with just ₹10,000.", "This {sub} experience changed how I travel forever.", "Got scammed in {sub} — here's how to avoid it."],
+    stat: ["{sub} tourism jumped 200% this year.", "Only 5% of travelers know about this {sub} hack.", "{sub} is 40% cheaper if you book this way."],
+  },
+  education: {
+    question: ["Are you studying {sub} the wrong way?", "Why can't you remember {sub} after studying?", "What if everything you know about {sub} is wrong?"],
+    bold: ["Stop highlighting — this {sub} method works better.", "One {sub} technique got me from 60% to 95%.", "The {sub} study hack top students won't share."],
+    story: ["I failed {sub} 3 times before discovering this.", "How I mastered {sub} in just 2 weeks.", "This {sub} method got me into my dream college."],
+    stat: ["Students who use this {sub} method score 40% higher.", "85% of students study {sub} inefficiently.", "This {sub} technique has 12 peer-reviewed studies behind it."],
+  },
+  beauty: {
+    question: ["Is your {sub} routine making things worse?", "Why doesn't your {sub} last all day?", "What dermatologists hide about {sub}?"],
+    bold: ["Stop buying expensive {sub} — use this instead.", "Your {sub} order is completely wrong.", "This ₹200 {sub} product outperforms luxury brands."],
+    story: ["My {sub} transformation after quitting this one product.", "I followed a dermatologist's {sub} routine for 30 days.", "The {sub} mistake that ruined my skin for months."],
+    stat: ["92% of people apply {sub} in the wrong order.", "This {sub} ingredient is backed by 50+ studies.", "{sub} sales grew 180% — but does it actually work?"],
+  },
+};
+
+export function HookIdeaGeneratorByNiche() {
+  const niches = Object.keys(nicheHookDb);
+  const styles = ["question", "bold", "story", "stat"];
+
+  const [niche, setNiche] = useState(niches[0]);
+  const [subTopic, setSubTopic] = useState("");
+  const [selectedStyles, setSelectedStyles] = useState<string[]>(styles);
+  const [count, setCount] = useState(8);
+  const [hooks, setHooks] = useState<{ hook: string; style: string }[]>([]);
+
+  const toggleStyle = (style: string) => {
+    setSelectedStyles((prev) => prev.includes(style) ? prev.filter((s) => s !== style) : [...prev, style]);
+  };
+
+  const generate = () => {
+    const db = nicheHookDb[niche] || {};
+    const sub = subTopic.trim() || niche;
+    const pool: { hook: string; style: string }[] = [];
+
+    for (const style of selectedStyles) {
+      const templates = db[style] || [];
+      templates.forEach((tpl) => {
+        pool.push({ hook: tpl.replaceAll("{sub}", sub), style });
+      });
+    }
+
+    // Shuffle and pick
+    const shuffled = pool.sort(() => Math.random() - 0.5);
+    setHooks(shuffled.slice(0, Math.max(3, Math.min(20, count))));
+  };
+
+  return (
+    <Panel title="Hook Idea Generator by Niche">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div>
+          <label className={label}>Niche</label>
+          <select value={niche} onChange={(event) => setNiche(event.target.value)} className={input}>
+            {niches.map((n) => <option key={n} value={n}>{n.charAt(0).toUpperCase() + n.slice(1)}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className={label}>Sub-topic (optional)</label>
+          <input value={subTopic} onChange={(event) => setSubTopic(event.target.value)} className={input} placeholder={`e.g. ${niche === "fitness" ? "abs workout" : niche === "finance" ? "SIP investing" : "trending topic"}`} />
+        </div>
+        <div>
+          <label className={label}>Hook count</label>
+          <input type="number" min={3} max={20} value={count} onChange={(event) => setCount(Number(event.target.value) || 8)} className={input} />
+        </div>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {styles.map((style) => (
+          <button key={style} type="button" onClick={() => toggleStyle(style)} className={`rounded-full px-3 py-1 text-xs font-semibold transition ${selectedStyles.includes(style) ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>
+            {style.charAt(0).toUpperCase() + style.slice(1)}
+          </button>
+        ))}
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={generate} className={btn} disabled={selectedStyles.length === 0}>Generate Hooks</button>
+        <button type="button" onClick={() => downloadText("niche-hooks.txt", hooks.map((h) => `[${h.style}] ${h.hook}`).join("\n"))} className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700" disabled={hooks.length === 0}>Download</button>
+      </div>
+      {hooks.length > 0 && (
+        <div className="mt-4 space-y-2">
+          {hooks.map((item, index) => (
+            <div key={index} className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white p-3">
+              <span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">{item.style}</span>
+              <p className="flex-1 text-sm text-slate-700">{item.hook}</p>
+              <CopyButton value={item.hook} />
+            </div>
+          ))}
+        </div>
+      )}
+    </Panel>
+  );
+}

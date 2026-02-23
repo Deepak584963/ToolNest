@@ -144,37 +144,38 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       />
 
       {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="reveal-up text-sm text-slate-400">
-        <ol className="flex flex-wrap items-center gap-1.5">
-          <li><Link href="/" className="font-medium text-slate-500 hover:text-indigo-600 transition">Home</Link></li>
-          <li aria-hidden className="text-slate-300">/</li>
-          <li><Link href="/#tools" className="font-medium text-slate-500 hover:text-indigo-600 transition">Tools</Link></li>
-          <li aria-hidden className="text-slate-300">/</li>
-          <li className="font-semibold text-indigo-600">{meta.name} Tools</li>
+      <nav aria-label="Breadcrumb" className="reveal-up text-sm">
+        <ol className="flex flex-wrap items-center gap-2">
+          <li><Link href="/" className="inline-flex items-center gap-1 font-medium text-slate-500 transition hover:text-indigo-600"><svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>Home</Link></li>
+          <li aria-hidden className="text-slate-300">›</li>
+          <li><Link href="/#tools" className="font-medium text-slate-500 transition hover:text-indigo-600">Tools</Link></li>
+          <li aria-hidden className="text-slate-300">›</li>
+          <li className="rounded-full bg-indigo-50/80 px-2.5 py-0.5 font-semibold text-indigo-600 text-xs">{meta.name} Tools</li>
         </ol>
       </nav>
 
       {/* Hero */}
-      <header className="reveal-up reveal-delay-1 relative overflow-hidden rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_34px_rgba(99,102,241,0.08)] sm:p-8 lg:p-10">
+      <header className="reveal-up reveal-delay-1 relative overflow-hidden rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_16px_40px_rgba(99,102,241,0.1)] sm:p-8 lg:p-10">
         <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-indigo-100/30 via-purple-50/20 to-cyan-100/30" />
-        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-linear-to-br from-indigo-200/15 to-violet-200/15 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 animate-float rounded-full bg-linear-to-br from-indigo-200/20 to-violet-200/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-8 -left-8 h-40 w-40 animate-float-delayed rounded-full bg-linear-to-tr from-cyan-200/15 to-sky-200/15 blur-3xl" />
         <div className="relative">
-        <p className="mb-3 text-4xl">{meta.icon}</p>
+        <p className="mb-3 text-4xl drop-shadow">{meta.icon}</p>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
           Free Online <span className="gradient-text">{meta.name} Tools</span>
         </h1>
         <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-500 sm:text-base sm:leading-8">
           {meta.description}
         </p>
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-indigo-200/50 bg-indigo-50/80 px-3.5 py-1.5 text-xs font-bold text-indigo-600">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-500" />
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-indigo-200/50 bg-indigo-50/80 px-3.5 py-1.5 text-xs font-bold text-indigo-600 shadow-sm">
+          <span className="pulse-dot" />
           {categoryTools.length} free tools available
         </p>
         </div>
       </header>
 
       {/* Tools Grid */}
-      <section aria-label={`${meta.name} tools list`} className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/70 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-7">
+      <section aria-label={`${meta.name} tools list`} className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/75 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-7">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {categoryTools.map((tool) => (
             <ToolCard key={tool.slug} tool={tool} />
@@ -183,9 +184,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {meta.slug === "dev" && (
-        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-lg">🛠️</div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 text-lg shadow-[0_2px_8px_rgba(99,102,241,0.1)]">🛠️</div>
             <h2 className="text-2xl font-extrabold text-slate-900">Top developer tools</h2>
           </div>
           <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
@@ -197,7 +198,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+                className="card-hover-glow pressable group rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)]"
               >
                 <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
@@ -208,9 +209,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "creator" && (
-        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pink-50 text-lg">🎬</div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-50 to-rose-50 text-lg shadow-[0_2px_8px_rgba(236,72,153,0.1)]">🎬</div>
             <h2 className="text-2xl font-extrabold text-slate-900">Top creator tools</h2>
           </div>
           <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
@@ -222,7 +223,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+                className="card-hover-glow pressable group rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)]"
               >
                 <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
@@ -233,9 +234,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "seo" && (
-        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-lg">🔍</div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-50 to-violet-50 text-lg shadow-[0_2px_8px_rgba(139,92,246,0.1)]">🔍</div>
             <h2 className="text-2xl font-extrabold text-slate-900">Top SEO tools</h2>
           </div>
           <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
@@ -247,7 +248,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+                className="card-hover-glow pressable group rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)]"
               >
                 <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
@@ -258,9 +259,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "utility" && (
-        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-lg">🧮</div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-50 to-emerald-50 text-lg shadow-[0_2px_8px_rgba(20,184,166,0.1)]">🧮</div>
             <h2 className="text-2xl font-extrabold text-slate-900">Top utility tools</h2>
           </div>
           <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
@@ -272,7 +273,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+                className="card-hover-glow pressable group rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)]"
               >
                 <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
@@ -283,9 +284,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "image" && (
-        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-lg">🖼️</div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 text-lg shadow-[0_2px_8px_rgba(249,115,22,0.1)]">🖼️</div>
             <h2 className="text-2xl font-extrabold text-slate-900">Top image tools</h2>
           </div>
           <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
@@ -297,7 +298,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+                className="card-hover-glow pressable group rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)]"
               >
                 <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
@@ -308,9 +309,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "text" && (
-        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-lg">📝</div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-50 to-yellow-50 text-lg shadow-[0_2px_8px_rgba(245,158,11,0.1)]">📝</div>
             <h2 className="text-2xl font-extrabold text-slate-900">Top text tools</h2>
           </div>
           <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
@@ -322,7 +323,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+                className="card-hover-glow pressable group rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)]"
               >
                 <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
@@ -333,9 +334,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {meta.slug === "student" && (
-        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-lg">🎓</div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 text-lg shadow-[0_2px_8px_rgba(139,92,246,0.1)]">🎓</div>
             <h2 className="text-2xl font-extrabold text-slate-900">Top student tools</h2>
           </div>
           <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base">
@@ -347,7 +348,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group pressable micro-lift rounded-2xl border border-slate-200/60 bg-white/85 p-4 transition hover:border-indigo-200/60"
+                className="card-hover-glow pressable group rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)]"
               >
                 <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{tool.name}</h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{tool.description}</p>
@@ -358,8 +359,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {/* Long description / SEO content */}
-      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
-        <h2 className="text-2xl font-extrabold text-slate-900">About our {meta.name.toLowerCase()} tools</h2>
+      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 text-lg shadow-[0_2px_8px_rgba(99,102,241,0.1)]">📋</div>
+          <h2 className="text-2xl font-extrabold text-slate-900">About our {meta.name.toLowerCase()} tools</h2>
+        </div>
         <div className="gradient-divider mt-4" />
         <div className="mt-5 space-y-4 text-sm leading-7 text-slate-500 sm:text-base sm:leading-8">
           <p>{meta.longDescription}</p>
@@ -373,29 +377,30 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {/* FAQs */}
-      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-lg">❓</div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 text-lg shadow-[0_2px_8px_rgba(99,102,241,0.1)]">❓</div>
           <h2 className="text-2xl font-extrabold text-slate-900">Frequently asked questions</h2>
         </div>
         <div className="gradient-divider mt-4" />
         <div className="mt-5 space-y-3">
-          {faqs.map((faq) => (
-            <details key={faq.question} className="group rounded-2xl border border-slate-200/60 bg-white/80 p-4 transition hover:border-indigo-200/60">
-              <summary className="flex cursor-pointer items-center justify-between gap-2 text-sm font-bold text-slate-800 group-open:text-indigo-600">
-                {faq.question}
+          {faqs.map((faq, i) => (
+            <details key={faq.question} className="group rounded-2xl border border-slate-200/60 bg-white/80 p-4 transition-all duration-200 hover:border-indigo-200/60 open:border-indigo-200/50 open:bg-white/95 open:shadow">
+              <summary className="flex cursor-pointer items-center gap-2.5 text-sm font-bold text-slate-800 group-open:text-indigo-600">
+                <span className="faq-number text-[11px]">{i + 1}</span>
+                <span className="flex-1">{faq.question}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0 text-slate-400 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
               </summary>
-              <p className="mt-3 text-sm leading-relaxed text-slate-500">{faq.answer}</p>
+              <p className="mt-3 pl-9 text-sm leading-relaxed text-slate-500">{faq.answer}</p>
             </details>
           ))}
         </div>
       </section>
 
       {/* Explore other categories */}
-      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/80 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_10px_28px_rgba(99,102,241,0.06)] sm:p-8">
+      <section className="reveal-up reveal-delay-3 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-lg">📂</div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 text-lg shadow-[0_2px_8px_rgba(99,102,241,0.1)]">📂</div>
           <h2 className="text-2xl font-extrabold text-slate-900">Explore other categories</h2>
         </div>
         <div className="gradient-divider mt-4" />
@@ -404,11 +409,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             <Link
               key={cat.slug}
               href={`/tools/category/${cat.slug}`}
-              className="group gradient-border flex items-center gap-3 rounded-2xl bg-white/85 p-4 transition hover:shadow-[0_4px_12px_rgba(99,102,241,0.08),0_12px_24px_rgba(99,102,241,0.08)]"
+              className="card-hover-glow pressable group flex items-center gap-3 rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)]"
             >
-              <span className="text-2xl transition-transform group-hover:scale-110">{cat.icon}</span>
+              <span className="text-2xl transition-transform duration-200 group-hover:scale-110 group-hover:rotate-6">{cat.icon}</span>
               <div>
-                <span className="block text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{cat.name} Tools</span>
+                <span className="block text-sm font-bold text-slate-800 transition group-hover:text-indigo-600">{cat.name} Tools</span>
                 <span className="block text-xs text-slate-500">{tools.filter((t) => t.category === cat.slug).length} tools</span>
               </div>
             </Link>

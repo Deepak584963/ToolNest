@@ -1816,3 +1816,568 @@ export function ImageToAsciiArt() {
     </Panel>
   );
 }
+
+/* ───── 21. Image Compressor Under 100KB ───── */
+export function ImageCompressorUnder100kb() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [outputFormat, setOutputFormat] = useState<"jpeg" | "webp">("jpeg");
+  const [maxWidth, setMaxWidth] = useState("0");
+  const [maxHeight, setMaxHeight] = useState("0");
+  const [result, setResult] = useState<{ url: string; size: number; width: number; height: number; qualityUsed: number; ext: string } | null>(null);
+  const [processing, setProcessing] = useState(false);
+
+  useEffect(() => {
+    return () => { if (result?.url) URL.revokeObjectURL(result.url); };
+  }, [result]);
+
+  const compress = async () => {
+    if (!file) return;
+    setProcessing(true);
+    try {
+      const img = await loadImageFromFile(file);
+      const canvas = document.createElement("canvas");
+      const widthLimit = parseInt(maxWidth) || img.width;
+      const heightLimit = parseInt(maxHeight) || img.height;
+      const scale = Math.min(1, widthLimit / img.width, heightLimit / img.height);
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const ctx = canvas.getContext("2d")!;
+      if (outputFormat === "jpeg") {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      const targetBytes = 100 * 1024; // 100KB
+      const mimeType = outputFormat === "webp" ? "image/webp" : "image/jpeg";
+      let q = 95;
+      let blob: Blob | null = null;
+      let bestBlob: Blob | null = null;
+      let bestQ = q;
+
+      // Binary-search-like approach for best quality under 100KB
+      while (q >= 5) {
+        blob = await canvasToBlob(canvas, mimeType, q / 100);
+        if (blob && blob.size <= targetBytes) {
+          bestBlob = blob;
+          bestQ = q;
+          break;
+        }
+        q -= 5;
+      }
+
+      // If still over, try even lower and with dimension reduction
+      if (!bestBlob && blob && blob.size > targetBytes) {
+        // Try with reduced dimensions
+        const dimScale = Math.sqrt(targetBytes / blob.size) * 0.9;
+        const smallCanvas = document.createElement("canvas");
+        smallCanvas.width = Math.max(50, Math.round(canvas.width * dimScale));
+        smallCanvas.height = Math.max(50, Math.round(canvas.height * dimScale));
+        const sCtx = smallCanvas.getContext("2d")!;
+        if (outputFormat === "jpeg") {
+          sCtx.fillStyle = "#ffffff";
+          sCtx.fillRect(0, 0, smallCanvas.width, smallCanvas.height);
+        }
+        sCtx.drawImage(img, 0, 0, smallCanvas.width, smallCanvas.height);
+        bestBlob = await canvasToBlob(smallCanvas, mimeType, 60 / 100);
+        bestQ = 60;
+        canvas.width = smallCanvas.width;
+        canvas.height = smallCanvas.height;
+      }
+
+      URL.revokeObjectURL(img.src);
+      if (!bestBlob) { setProcessing(false); return; }
+      setResult({
+        url: URL.createObjectURL(bestBlob),
+        size: bestBlob.size,
+        width: canvas.width,
+        height: canvas.height,
+        qualityUsed: bestQ,
+        ext: outputFormat === "webp" ? "webp" : "jpg",
+      });
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  return (
+    <Panel title="Image Compressor Under 100KB">
+      <UploadDropzone
+        accept="image/*"
+        onFiles={(selected) => {
+          if (!selected[0]) return;
+          setFromFile(selected[0]);
+          setResult(null);
+        }}
+        hint="Upload an image to compress it under 100KB automatically"
+      />
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div>
+          <label className={label}>Output Format</label>
+          <select value={outputFormat} onChange={(e) => setOutputFormat(e.target.value as "jpeg" | "webp")} className={input}>
+            <option value="jpeg">JPG</option>
+            <option value="webp">WebP</option>
+          </select>
+        </div>
+        <div><label className={label}>Max Width (px)</label><input type="number" value={maxWidth} onChange={(e) => setMaxWidth(e.target.value)} className={input} placeholder="0 = auto" /></div>
+        <div><label className={label}>Max Height (px)</label><input type="number" value={maxHeight} onChange={(e) => setMaxHeight(e.target.value)} className={input} placeholder="0 = auto" /></div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={compress} className={btn} disabled={!file || processing}>
+          {processing ? "Compressing..." : "Compress to <100KB"}
+        </button>
+        <button type="button" onClick={() => { clear(); setResult(null); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {file && result && (
+        <div className="mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-xl bg-white border border-slate-200 p-3 text-center">
+              <p className="text-xs text-slate-500">Original Size</p>
+              <p className="text-lg font-bold text-slate-900">{formatKB(file.size)}</p>
+            </div>
+            <div className={`rounded-xl border p-3 text-center ${result.size <= 100 * 1024 ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"}`}>
+              <p className="text-xs text-slate-500">Compressed Size</p>
+              <p className={`text-lg font-bold ${result.size <= 100 * 1024 ? "text-emerald-700" : "text-amber-700"}`}>{formatKB(result.size)}</p>
+            </div>
+            <div className="rounded-xl bg-white border border-slate-200 p-3 text-center">
+              <p className="text-xs text-slate-500">Reduction</p>
+              <p className="text-lg font-bold text-indigo-700">{Math.round((1 - result.size / file.size) * 100)}%</p>
+            </div>
+          </div>
+          <p className="text-sm text-slate-600">
+            Output: {result.width} × {result.height}px • Quality: {result.qualityUsed}% • Format: {result.ext.toUpperCase()}
+            {result.size <= 100 * 1024 ? " ✓ Under 100KB" : " ⚠ Could not reach 100KB"}
+          </p>
+          {preview && <ComparePreview beforeSrc={preview} afterSrc={result.url} beforeLabel="Original" afterLabel="Compressed" />}
+          <a href={result.url} download={`compressed-under-100kb.${result.ext}`} className={btn}>Download</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ───── 22. Passport Photo Maker ───── */
+const PASSPORT_FORMATS = [
+  { name: "India (51×51mm / 2×2in)", width: 600, height: 600, label: "India" },
+  { name: "US Passport (2×2in)", width: 600, height: 600, label: "US" },
+  { name: "UK Passport (35×45mm)", width: 413, height: 531, label: "UK" },
+  { name: "Schengen Visa (35×45mm)", width: 413, height: 531, label: "Schengen" },
+  { name: "China Visa (33×48mm)", width: 390, height: 567, label: "China" },
+  { name: "Japan Visa (35×45mm)", width: 413, height: 531, label: "Japan" },
+  { name: "Custom", width: 0, height: 0, label: "Custom" },
+];
+
+export function PassportPhotoMaker() {
+  const { file, preview, setFromFile, clear } = useFileInput("image/*");
+  const [formatIdx, setFormatIdx] = useState(0);
+  const [customW, setCustomW] = useState("600");
+  const [customH, setCustomH] = useState("600");
+  const [offsetX, setOffsetX] = useState(50);
+  const [offsetY, setOffsetY] = useState(50);
+  const [bgColor, setBgColor] = useState("#ffffff");
+  const [resultUrl, setResultUrl] = useState("");
+
+  const selectedFormat = PASSPORT_FORMATS[formatIdx];
+  const targetW = selectedFormat.width || parseInt(customW) || 600;
+  const targetH = selectedFormat.height || parseInt(customH) || 600;
+
+  const generate = async () => {
+    if (!file) return;
+    const img = await loadImageFromFile(file);
+    const canvas = document.createElement("canvas");
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext("2d")!;
+
+    // Fill background
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Calculate crop area preserving aspect ratio
+    const targetRatio = targetW / targetH;
+    const imgRatio = img.width / img.height;
+    let srcW: number, srcH: number, srcX: number, srcY: number;
+
+    if (imgRatio > targetRatio) {
+      // Image is wider — crop sides
+      srcH = img.height;
+      srcW = img.height * targetRatio;
+      srcX = ((img.width - srcW) * offsetX) / 100;
+      srcY = ((img.height - srcH) * offsetY) / 100;
+    } else {
+      // Image is taller — crop top/bottom
+      srcW = img.width;
+      srcH = img.width / targetRatio;
+      srcX = ((img.width - srcW) * offsetX) / 100;
+      srcY = ((img.height - srcH) * offsetY) / 100;
+    }
+
+    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, targetW, targetH);
+    setResultUrl(canvas.toDataURL("image/jpeg", 0.95));
+    URL.revokeObjectURL(img.src);
+  };
+
+  return (
+    <Panel title="Passport Photo Maker">
+      <UploadDropzone
+        accept="image/*"
+        onFiles={(selected) => {
+          if (!selected[0]) return;
+          setFromFile(selected[0]);
+          setResultUrl("");
+        }}
+        hint="Upload a portrait photo to create passport-size prints"
+      />
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div>
+          <label className={label}>Photo Format</label>
+          <select value={formatIdx} onChange={(e) => { setFormatIdx(parseInt(e.target.value)); setResultUrl(""); }} className={input}>
+            {PASSPORT_FORMATS.map((f, i) => (
+              <option key={i} value={i}>{f.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className={label}>Background Color</label>
+          <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="h-10 w-full rounded-xl border border-slate-200 px-2" />
+        </div>
+      </div>
+      {selectedFormat.label === "Custom" && (
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div><label className={label}>Width (px)</label><input type="number" value={customW} onChange={(e) => setCustomW(e.target.value)} className={input} /></div>
+          <div><label className={label}>Height (px)</label><input type="number" value={customH} onChange={(e) => setCustomH(e.target.value)} className={input} /></div>
+        </div>
+      )}
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div><label className={label}>Horizontal Position: {offsetX}%</label><input type="range" min={0} max={100} value={offsetX} onChange={(e) => setOffsetX(parseInt(e.target.value))} className="w-full" /></div>
+        <div><label className={label}>Vertical Position: {offsetY}%</label><input type="range" min={0} max={100} value={offsetY} onChange={(e) => setOffsetY(parseInt(e.target.value))} className="w-full" /></div>
+      </div>
+      <p className="mt-2 text-xs text-slate-500">Output: {targetW} × {targetH}px ({selectedFormat.label !== "Custom" ? selectedFormat.name : `${customW}×${customH}px`})</p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={generate} className={btn} disabled={!file}>Generate Passport Photo</button>
+        <button type="button" onClick={() => { clear(); setResultUrl(""); }} className="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition" disabled={!file}>Reset</button>
+      </div>
+      {resultUrl && preview && (
+        <div className="mt-4 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <ComparePreview beforeSrc={preview} afterSrc={resultUrl} beforeLabel="Original" afterLabel="Passport Photo" />
+          <p className="text-sm text-slate-600">Dimensions: {targetW} × {targetH}px • Format: {selectedFormat.label !== "Custom" ? selectedFormat.name : "Custom"}</p>
+          <a href={resultUrl} download={`passport-photo-${targetW}x${targetH}.jpg`} className={btn}>Download Passport Photo</a>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ── SVG to PNG Converter ── */
+export function SvgToPngConverter() {
+  const [svgCode, setSvgCode] = useState("");
+  const [width, setWidth] = useState("512");
+  const [height, setHeight] = useState("512");
+  const [bgColor, setBgColor] = useState("transparent");
+  const [result, setResult] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const convert = useCallback(() => {
+    if (!svgCode.trim()) return;
+    const w = parseInt(width) || 512;
+    const h = parseInt(height) || 512;
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d")!;
+    if (bgColor !== "transparent") { ctx.fillStyle = bgColor; ctx.fillRect(0, 0, w, h); }
+    const blob = new Blob([svgCode], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => { ctx.drawImage(img, 0, 0, w, h); setResult(canvas.toDataURL("image/png")); URL.revokeObjectURL(url); };
+    img.onerror = () => { alert("Invalid SVG"); URL.revokeObjectURL(url); };
+    img.src = url;
+  }, [svgCode, width, height, bgColor]);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setSvgCode(reader.result as string);
+    reader.readAsText(file);
+  };
+
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+
+  return (
+    <div className="space-y-4">
+      <Panel title="SVG to PNG Converter">
+        <div className="space-y-3">
+          <div>
+            <label className={label}>Upload SVG or Paste Code</label>
+            <input ref={fileRef} type="file" accept=".svg" onChange={handleFile} className={input} />
+          </div>
+          <textarea value={svgCode} onChange={e => setSvgCode(e.target.value)} className={`${input} h-32 font-mono text-xs`} placeholder="<svg>...</svg>" />
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div><label className={label}>Width (px)</label><input type="number" value={width} onChange={e => setWidth(e.target.value)} className={input} /></div>
+            <div><label className={label}>Height (px)</label><input type="number" value={height} onChange={e => setHeight(e.target.value)} className={input} /></div>
+            <div><label className={label}>Background</label><select value={bgColor} onChange={e => setBgColor(e.target.value)} className={input}><option value="transparent">Transparent</option><option value="#ffffff">White</option><option value="#000000">Black</option></select></div>
+          </div>
+          <button type="button" onClick={convert} disabled={!svgCode.trim()} className="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">Convert to PNG</button>
+        </div>
+      </Panel>
+      {result && (
+        <Panel title="Result">
+          <div className="flex flex-col items-center gap-3">
+            <img src={result} alt="Converted PNG" className="max-h-64 rounded-xl border border-slate-200 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAAOdEVYdFRpdGxlAGNoZWNrZXJzqa0jcwAAADFJREFUOI1jfPny5X8GKgImahkAAizUMmAUDFsDaB9EWFhYUDjUTkejYNgaQG0XAADM9gkLeyIFdwAAAABJRU5ErkJggg==')]" />
+            <a href={result} download="converted.png" className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white hover:bg-slate-700 transition">Download PNG</a>
+          </div>
+        </Panel>
+      )}
+    </div>
+  );
+}
+
+/* ── Image Noise / Grain Effect ── */
+export function ImageNoiseGrainEffect() {
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [intensity, setIntensity] = useState(30);
+  const [result, setResult] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFile(f);
+    const reader = new FileReader();
+    reader.onload = () => setPreview(reader.result as string);
+    reader.readAsDataURL(f);
+    setResult(null);
+  };
+
+  const apply = useCallback(() => {
+    if (!preview) return;
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const noise = (Math.random() - 0.5) * intensity * 2;
+        data[i] = Math.max(0, Math.min(255, data[i] + noise));
+        data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
+        data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
+      }
+      ctx.putImageData(imageData, 0, 0);
+      setResult(canvas.toDataURL("image/png"));
+    };
+    img.src = preview;
+  }, [preview, intensity]);
+
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+
+  return (
+    <div className="space-y-4">
+      <Panel title="Image Noise / Grain Effect">
+        <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className={input} />
+        <div className="mt-3">
+          <label className={label}>Noise Intensity: {intensity}</label>
+          <input type="range" min={5} max={100} value={intensity} onChange={e => setIntensity(parseInt(e.target.value))} className="w-full accent-indigo-600" />
+        </div>
+        <button type="button" onClick={apply} disabled={!preview} className="mt-3 rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">Apply Grain Effect</button>
+      </Panel>
+      {(preview || result) && (
+        <Panel title="Preview">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {preview && <div><p className="text-xs text-slate-500 mb-1">Original</p><img src={preview} alt="Original" className="max-h-64 rounded-xl border border-slate-200 w-full object-contain" /></div>}
+            {result && <div><p className="text-xs text-slate-500 mb-1">With Grain</p><img src={result} alt="With noise" className="max-h-64 rounded-xl border border-slate-200 w-full object-contain" /><a href={result} download="noisy.png" className="mt-2 inline-block rounded-full bg-slate-900 px-4 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition">Download</a></div>}
+          </div>
+        </Panel>
+      )}
+    </div>
+  );
+}
+
+/* ── Screenshot Mockup Generator ── */
+export function ScreenshotMockupGenerator() {
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [device, setDevice] = useState<"phone" | "laptop" | "tablet">("phone");
+  const [bgColor, setBgColor] = useState("#6366f1");
+  const [result, setResult] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFile(f);
+    const reader = new FileReader();
+    reader.onload = () => setPreview(reader.result as string);
+    reader.readAsDataURL(f);
+    setResult(null);
+  };
+
+  const generate = useCallback(() => {
+    if (!preview) return;
+    const img = new Image();
+    img.onload = () => {
+      const configs = {
+        phone: { w: 800, h: 1200, sx: 80, sy: 120, sw: 640, sh: 960, r: 40, bw: 8 },
+        laptop: { w: 1400, h: 900, sx: 100, sy: 60, sw: 1200, sh: 750, r: 12, bw: 10 },
+        tablet: { w: 1000, h: 1300, sx: 60, sy: 80, sw: 880, sh: 1140, r: 30, bw: 8 },
+      };
+      const c = configs[device];
+      const canvas = document.createElement("canvas");
+      canvas.width = c.w + 200;
+      canvas.height = c.h + 200;
+      const ctx = canvas.getContext("2d")!;
+      // background gradient
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, bgColor);
+      grad.addColorStop(1, bgColor + "88");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // device frame
+      const fx = 100, fy = 100;
+      ctx.fillStyle = "#1a1a2e";
+      ctx.beginPath();
+      ctx.roundRect(fx, fy, c.w, c.h, c.r);
+      ctx.fill();
+      // screen border
+      ctx.fillStyle = "#111";
+      ctx.beginPath();
+      ctx.roundRect(fx + c.bw, fy + c.bw, c.w - c.bw * 2, c.h - c.bw * 2, c.r - 4);
+      ctx.fill();
+      // screenshot
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(fx + c.sx - 50, fy + c.sy - 40, c.sw, c.sh, 4);
+      ctx.clip();
+      ctx.drawImage(img, fx + c.sx - 50, fy + c.sy - 40, c.sw, c.sh);
+      ctx.restore();
+      setResult(canvas.toDataURL("image/png"));
+    };
+    img.src = preview;
+  }, [preview, device, bgColor]);
+
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+
+  return (
+    <div className="space-y-4">
+      <Panel title="Screenshot Mockup Generator">
+        <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className={input} />
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+          <div>
+            <label className={label}>Device</label>
+            <select value={device} onChange={e => setDevice(e.target.value as typeof device)} className={input}>
+              <option value="phone">📱 Phone</option>
+              <option value="laptop">💻 Laptop</option>
+              <option value="tablet">📋 Tablet</option>
+            </select>
+          </div>
+          <div>
+            <label className={label}>Background Color</label>
+            <input type="color" value={bgColor} onChange={e => setBgColor(e.target.value)} className={`${input} h-10 p-1`} />
+          </div>
+          <div className="flex items-end">
+            <button type="button" onClick={generate} disabled={!preview} className="w-full rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">Generate Mockup</button>
+          </div>
+        </div>
+      </Panel>
+      {result && (
+        <Panel title="Mockup Preview">
+          <img src={result} alt="Mockup" className="max-h-96 rounded-xl border border-slate-200 mx-auto" />
+          <div className="mt-3 text-center">
+            <a href={result} download="mockup.png" className="inline-block rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white hover:bg-slate-700 transition">Download Mockup</a>
+          </div>
+        </Panel>
+      )}
+    </div>
+  );
+}
+
+/* ── Image Background Remover ── */
+export function ImageBackgroundRemover() {
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [result, setResult] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [threshold, setThreshold] = useState(30);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFile(f);
+    const reader = new FileReader();
+    reader.onload = () => setPreview(reader.result as string);
+    reader.readAsDataURL(f);
+    setResult(null);
+  };
+
+  const remove = useCallback(() => {
+    if (!preview) return;
+    setProcessing(true);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      // Sample corners for background color
+      const samples = [
+        [0, 0], [img.width - 1, 0], [0, img.height - 1], [img.width - 1, img.height - 1],
+      ];
+      let bgR = 0, bgG = 0, bgB = 0;
+      for (const [x, y] of samples) {
+        const idx = (y * img.width + x) * 4;
+        bgR += data[idx]; bgG += data[idx + 1]; bgB += data[idx + 2];
+      }
+      bgR /= 4; bgG /= 4; bgB /= 4;
+      const t = threshold * 3;
+      for (let i = 0; i < data.length; i += 4) {
+        const dist = Math.abs(data[i] - bgR) + Math.abs(data[i + 1] - bgG) + Math.abs(data[i + 2] - bgB);
+        if (dist < t) { data[i + 3] = 0; }
+        else if (dist < t * 1.5) { data[i + 3] = Math.round(((dist - t) / (t * 0.5)) * 255); }
+      }
+      ctx.putImageData(imageData, 0, 0);
+      setResult(canvas.toDataURL("image/png"));
+      setProcessing(false);
+    };
+    img.src = preview;
+  }, [preview, threshold]);
+
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+
+  return (
+    <div className="space-y-4">
+      <Panel title="Image Background Remover">
+        <p className="mb-3 text-sm text-slate-600">Upload an image to remove its background. Works best with solid-color backgrounds.</p>
+        <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className={input} />
+        <div className="mt-3">
+          <label className={label}>Sensitivity: {threshold}</label>
+          <input type="range" min={5} max={80} value={threshold} onChange={e => setThreshold(parseInt(e.target.value))} className="w-full accent-indigo-600" />
+          <p className="text-xs text-slate-400">Higher = more aggressive removal. Lower = preserve more details.</p>
+        </div>
+        <button type="button" onClick={remove} disabled={!preview || processing} className="mt-3 rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">
+          {processing ? "Processing..." : "Remove Background"}
+        </button>
+      </Panel>
+      {(preview || result) && (
+        <Panel title="Result">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {preview && <div><p className="text-xs text-slate-500 mb-1">Original</p><img src={preview} alt="Original" className="max-h-64 rounded-xl border border-slate-200 w-full object-contain" /></div>}
+            {result && <div><p className="text-xs text-slate-500 mb-1">Background Removed</p><img src={result} alt="Result" className="max-h-64 rounded-xl border border-slate-200 w-full object-contain bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAAOdEVYdFRpdGxlAGNoZWNrZXJzqa0jcwAAADFJREFUOI1jfPny5X8GKgImahkAAizUMmAUDFsDaB9EWFhYUDjUTkejYNgaQG0XAADM9gkLeyIFdwAAAABJRU5ErkJggg==')]" /><a href={result} download="no-bg.png" className="mt-2 inline-block rounded-full bg-slate-900 px-4 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition">Download PNG</a></div>}
+          </div>
+        </Panel>
+      )}
+    </div>
+  );
+}

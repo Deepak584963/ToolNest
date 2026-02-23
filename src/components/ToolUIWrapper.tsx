@@ -1,12 +1,12 @@
 "use client";
 
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CopyButton from "@/components/CopyButton";
 
-import { PercentageCalculator, CgpaToPercentageConverter, AttendanceCalculator, AgeCalculator, DateDifferenceCalculator, ExamCountdownTimer, GpaCalculator, ResumeHeadlineGenerator, StudyTimePlanner, MarksRequiredCalculator } from "@/components/tools/StudentTools";
-import { InstagramHashtagGenerator, YouTubeTitleAnalyzer, YouTubeTagGenerator, CaptionGenerator, BioGenerator, ThumbnailTextPreview, YouTubeDescriptionTemplateGenerator, VideoLengthEstimator, HookGeneratorForReels, ContentIdeaGenerator, YouTubeChapterTimestampGenerator, EngagementRateCalculator, ViralContentCalendarGenerator, BestTimeToPostPlanner, UtmLinkBuilderForCreators } from "@/components/tools/CreatorTools";
-import { ImageToPdfConverter, CompressImage, ResizeImage, JpgToPngConverter, PngToJpgConverter, QrCodeGenerator, BarcodeGenerator, Base64ImageEncoder, ImageMetadataViewer, FaviconGenerator, WebpToPngConverter, PngToWebpConverter, ImageCropper, ImageRotateFlipTool, ImageWatermarkTool, ImageColorPaletteExtractor, ImageCollageMaker, ImageBlurTool, RoundedCornersTool, ImageToAsciiArt } from "@/components/tools/ImageTools";
-import { EmiCalculator, LoanInterestCalculator, GstCalculator, CurrencyConverter, SipCalculator, InflationCalculator, AgeInDaysCalculator, TimeZoneConverter, UnitConverter, ScientificCalculator } from "@/components/tools/UtilityTools";
+import { PercentageCalculator, CgpaToPercentageConverter, AttendanceCalculator, AgeCalculator, DateDifferenceCalculator, ExamCountdownTimer, GpaCalculator, ResumeHeadlineGenerator, StudyTimePlanner, MarksRequiredCalculator, AttendanceShortageCalculator, SemesterGpaPredictor, StudyTimetablePrintableGenerator, PomodoroTimer, GradeScaleConverter, AssignmentDeadlineTracker } from "@/components/tools/StudentTools";
+import { InstagramHashtagGenerator, YouTubeTitleAnalyzer, YouTubeTagGenerator, CaptionGenerator, BioGenerator, ThumbnailTextPreview, YouTubeDescriptionTemplateGenerator, VideoLengthEstimator, HookGeneratorForReels, ContentIdeaGenerator, YouTubeChapterTimestampGenerator, EngagementRateCalculator, ViralContentCalendarGenerator, BestTimeToPostPlanner, UtmLinkBuilderForCreators, YouTubeTitleLengthChecker, YouTubeShortsAspectRatioTool, ReelCaptionFormatter, HookIdeaGeneratorByNiche } from "@/components/tools/CreatorTools";
+import { ImageToPdfConverter, CompressImage, ResizeImage, JpgToPngConverter, PngToJpgConverter, QrCodeGenerator, BarcodeGenerator, Base64ImageEncoder, ImageMetadataViewer, FaviconGenerator, WebpToPngConverter, PngToWebpConverter, ImageCropper, ImageRotateFlipTool, ImageWatermarkTool, ImageColorPaletteExtractor, ImageCollageMaker, ImageBlurTool, RoundedCornersTool, ImageToAsciiArt, ImageCompressorUnder100kb, PassportPhotoMaker, SvgToPngConverter, ImageNoiseGrainEffect, ScreenshotMockupGenerator, ImageBackgroundRemover } from "@/components/tools/ImageTools";
+import { EmiCalculator, LoanInterestCalculator, GstCalculator, CurrencyConverter, SipCalculator, InflationCalculator, AgeInDaysCalculator, TimeZoneConverter, UnitConverter, ScientificCalculator, TipCalculator, BmiCalculator, ElectricityBillCalculator } from "@/components/tools/UtilityTools";
 
 type ToolUIWrapperProps = {
   slug: string;
@@ -2202,6 +2202,745 @@ function TextCleaner() {
   );
 }
 
+/* ───── FAQ Schema Generator Page Template ───── */
+function FaqSchemaGeneratorPageTemplate() {
+  const [pairs, setPairs] = useState<{q: string; a: string}[]>([{q: "", a: ""}, {q: "", a: ""}, {q: "", a: ""}]);
+
+  const updatePair = (idx: number, field: "q" | "a", value: string) => {
+    setPairs(prev => prev.map((p, i) => i === idx ? {...p, [field]: value} : p));
+  };
+
+  const addPair = () => setPairs(prev => [...prev, {q: "", a: ""}]);
+  const removePair = (idx: number) => setPairs(prev => prev.filter((_, i) => i !== idx));
+
+  const validPairs = pairs.filter(p => p.q.trim() && p.a.trim());
+
+  const schema = useMemo(() => {
+    if (validPairs.length === 0) return "";
+    const obj = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: validPairs.map(p => ({
+        "@type": "Question",
+        name: p.q.trim(),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: p.a.trim(),
+        },
+      })),
+    };
+    return `<script type="application/ld+json">\n${JSON.stringify(obj, null, 2)}\n</script>`;
+  }, [validPairs]);
+
+  return (
+    <div className="space-y-4">
+      <Panel title="FAQ Schema Generator">
+        <p className="mb-3 text-sm text-slate-600">Add question-answer pairs to generate FAQPage JSON-LD schema markup.</p>
+        <div className="space-y-4">
+          {pairs.map((pair, idx) => (
+            <div key={idx} className="rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-indigo-600">Q{idx + 1}</span>
+                {pairs.length > 1 && <button type="button" onClick={() => removePair(idx)} className="text-xs text-red-500 hover:text-red-700">✕ Remove</button>}
+              </div>
+              <input value={pair.q} onChange={(e) => updatePair(idx, "q", e.target.value)} className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none" placeholder={`Question ${idx + 1}`} />
+              <textarea value={pair.a} onChange={(e) => updatePair(idx, "a", e.target.value)} className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none h-20" placeholder="Answer" />
+            </div>
+          ))}
+        </div>
+        <button type="button" onClick={addPair} className="mt-3 rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">+ Add Q&A Pair</button>
+      </Panel>
+      {validPairs.length > 0 && (
+        <Panel title="Generated JSON-LD Schema">
+          <div className="rounded-xl border border-slate-200 bg-slate-900 p-4">
+            <pre className="text-xs text-green-400 overflow-x-auto whitespace-pre-wrap">{schema}</pre>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <CopyButton value={schema} />
+            <span className="text-xs text-slate-500 self-center">{validPairs.length} Q&A pair(s) • {schema.length} chars</span>
+          </div>
+          <div className="mt-4">
+            <h3 className="text-sm font-semibold text-slate-700 mb-2">Rich Result Preview</h3>
+            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-2">
+              {validPairs.map((p, i) => (
+                <details key={i} className="group border border-slate-100 rounded-lg">
+                  <summary className="cursor-pointer p-3 text-sm font-medium text-blue-700 hover:bg-slate-50 list-none flex items-center gap-2">
+                    <span className="text-slate-400 group-open:rotate-90 transition-transform">▶</span>
+                    {p.q}
+                  </summary>
+                  <p className="px-3 pb-3 text-sm text-slate-600">{p.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </Panel>
+      )}
+    </div>
+  );
+}
+
+/* ───── Internal Link Suggestion Tool ───── */
+function InternalLinkSuggestionTool() {
+  const [pagesInput, setPagesInput] = useState("https://example.com/seo-guide | seo guide\nhttps://example.com/keyword-research | keyword research\nhttps://example.com/link-building | link building");
+  const [content, setContent] = useState("");
+  const [suggestions, setSuggestions] = useState<{keyword: string; url: string; count: number; positions: number[]}[]>([]);
+
+  const analyze = useCallback(() => {
+    if (!content.trim() || !pagesInput.trim()) { setSuggestions([]); return; }
+    const pages = pagesInput.split("\n").map(line => {
+      const parts = line.split("|").map(s => s.trim());
+      return { url: parts[0] || "", keyword: parts[1] || "" };
+    }).filter(p => p.url && p.keyword);
+
+    const contentLower = content.toLowerCase();
+    const results: typeof suggestions = [];
+    for (const page of pages) {
+      const kw = page.keyword.toLowerCase();
+      const positions: number[] = [];
+      let idx = contentLower.indexOf(kw);
+      while (idx !== -1) {
+        positions.push(idx);
+        idx = contentLower.indexOf(kw, idx + kw.length);
+      }
+      if (positions.length > 0) {
+        results.push({ keyword: page.keyword, url: page.url, count: positions.length, positions });
+      }
+    }
+    results.sort((a, b) => b.count - a.count);
+    setSuggestions(results);
+  }, [content, pagesInput]);
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      <Panel title="Page URLs & Keywords">
+        <p className="mb-2 text-xs text-slate-500">One per line: URL | keyword</p>
+        <textarea value={pagesInput} onChange={(e) => setPagesInput(e.target.value)} className="h-36 w-full rounded-xl border border-slate-200 p-3 text-sm font-mono focus:border-indigo-400 focus:outline-none" placeholder="https://example.com/page | target keyword" />
+        <div className="mt-3">
+          <label className="block text-sm font-medium text-slate-700 mb-1">Content to Analyze</label>
+          <textarea value={content} onChange={(e) => setContent(e.target.value)} className="h-48 w-full rounded-xl border border-slate-200 p-3 text-sm focus:border-indigo-400 focus:outline-none" placeholder="Paste the content of the page you want to optimize for internal links..." />
+        </div>
+        <button type="button" onClick={analyze} className="mt-3 rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition" disabled={!content.trim() || !pagesInput.trim()}>Find Link Opportunities</button>
+      </Panel>
+      <Panel title={`Suggestions (${suggestions.length})`}>
+        {suggestions.length === 0 ? (
+          <p className="text-sm text-slate-500">No matches yet. Enter pages and content, then click analyze.</p>
+        ) : (
+          <div className="space-y-3">
+            {suggestions.map((s, i) => (
+              <div key={i} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900">"{s.keyword}"</p>
+                    <p className="text-xs text-indigo-600 break-all">{s.url}</p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">{s.count}×</span>
+                </div>
+                <p className="mt-1 text-xs text-slate-500">Found at position{s.positions.length > 1 ? "s" : ""}: {s.positions.slice(0, 5).join(", ")}{s.positions.length > 5 ? " ..." : ""}</p>
+              </div>
+            ))}
+            <div className="mt-2 flex gap-2">
+              <CopyButton value={suggestions.map(s => `${s.keyword} → ${s.url} (${s.count}× found)`).join("\n")} />
+              <span className="text-xs text-slate-500 self-center">{suggestions.reduce((a, s) => a + s.count, 0)} total matches across {suggestions.length} keywords</span>
+            </div>
+          </div>
+        )}
+      </Panel>
+    </div>
+  );
+}
+
+/* ───── SERP Snippet Pixel Checker ───── */
+function SerpSnippetPixelChecker() {
+  const [title, setTitle] = useState("ToolNest — Free Online SEO Tools for Webmasters");
+  const [description, setDescription] = useState("ToolNest provides 70+ free browser-based SEO, image, student, creator, and utility tools. No sign-up needed. Run everything locally in your browser.");
+  const [url, setUrl] = useState("https://tool-nest.tech");
+  const titleRef = useRef<HTMLSpanElement>(null);
+  const descRef = useRef<HTMLSpanElement>(null);
+  const [titlePx, setTitlePx] = useState(0);
+  const [descPx, setDescPx] = useState(0);
+
+  const TITLE_LIMIT = 580;
+  const DESC_LIMIT = 920;
+
+  useEffect(() => {
+    if (titleRef.current) setTitlePx(titleRef.current.offsetWidth);
+    if (descRef.current) setDescPx(descRef.current.offsetWidth);
+  }, [title, description]);
+
+  const titleOk = titlePx <= TITLE_LIMIT;
+  const descOk = descPx <= DESC_LIMIT;
+
+  return (
+    <div className="space-y-4">
+      <Panel title="SERP Snippet Pixel Checker">
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Page Title</label>
+            <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none" placeholder="Your page title" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Meta Description</label>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none h-20" placeholder="Your meta description" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Display URL</label>
+            <input value={url} onChange={(e) => setUrl(e.target.value)} className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none" placeholder="https://example.com/page" />
+          </div>
+        </div>
+
+        {/* Pixel measurement bars */}
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className={`rounded-xl border p-3 text-center ${titleOk ? "bg-emerald-50 border-emerald-200" : "bg-red-50 border-red-200"}`}>
+            <p className="text-xs text-slate-500">Title Width</p>
+            <p className={`text-xl font-bold ${titleOk ? "text-emerald-700" : "text-red-700"}`}>{titlePx}px</p>
+            <p className="text-xs text-slate-500">Limit: {TITLE_LIMIT}px {titleOk ? "✓ Fits" : "✕ Truncated"}</p>
+            <div className="mt-2 h-2 rounded-full bg-slate-200 overflow-hidden">
+              <div className={`h-full rounded-full transition-all ${titleOk ? "bg-emerald-500" : "bg-red-500"}`} style={{width: `${Math.min(100, (titlePx / TITLE_LIMIT) * 100)}%`}} />
+            </div>
+            <p className="mt-1 text-xs text-slate-400">{title.length} chars</p>
+          </div>
+          <div className={`rounded-xl border p-3 text-center ${descOk ? "bg-emerald-50 border-emerald-200" : "bg-red-50 border-red-200"}`}>
+            <p className="text-xs text-slate-500">Description Width</p>
+            <p className={`text-xl font-bold ${descOk ? "text-emerald-700" : "text-red-700"}`}>{descPx}px</p>
+            <p className="text-xs text-slate-500">Limit: {DESC_LIMIT}px {descOk ? "✓ Fits" : "✕ Truncated"}</p>
+            <div className="mt-2 h-2 rounded-full bg-slate-200 overflow-hidden">
+              <div className={`h-full rounded-full transition-all ${descOk ? "bg-emerald-500" : "bg-red-500"}`} style={{width: `${Math.min(100, (descPx / DESC_LIMIT) * 100)}%`}} />
+            </div>
+            <p className="mt-1 text-xs text-slate-400">{description.length} chars</p>
+          </div>
+        </div>
+      </Panel>
+
+      {/* SERP Preview */}
+      <Panel title="Google SERP Preview">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 max-w-2xl">
+          <p className="text-xs text-slate-500 mb-1">{url || "https://example.com"}</p>
+          <h3 className="text-lg font-medium text-blue-700 hover:underline cursor-pointer leading-snug" style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "600px"}}>
+            {title || "Page Title"}
+          </h3>
+          <p className="mt-1 text-sm text-slate-600 leading-relaxed" style={{display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", maxWidth: "600px"}}>
+            {description || "Meta description will appear here..."}
+          </p>
+        </div>
+        {/* Hidden measurement spans */}
+        <span ref={titleRef} className="invisible absolute whitespace-nowrap text-lg font-medium" style={{fontFamily: "arial, sans-serif"}}>{title}</span>
+        <span ref={descRef} className="invisible absolute" style={{fontFamily: "arial, sans-serif", fontSize: "14px", maxWidth: "600px", display: "inline"}}>{description}</span>
+      </Panel>
+    </div>
+  );
+}
+
+/* ── HTML Minifier Beautifier ── */
+function HtmlMinifierBeautifier() {
+  const [code, setCode] = useState("");
+  const [output, setOutput] = useState("");
+  const minify = () => {
+    setOutput(code.replace(/<!--[\s\S]*?-->/g, "").replace(/\s{2,}/g, " ").replace(/>\s+</g, "><").trim());
+  };
+  const beautify = () => {
+    let indent = 0;
+    const result = code.replace(/></g, ">\n<").split("\n").map(line => {
+      line = line.trim();
+      if (line.match(/^<\//)) indent = Math.max(0, indent - 1);
+      const indented = "  ".repeat(indent) + line;
+      if (line.match(/^<[^/!]/) && !line.match(/\/>$/) && !line.match(/^<(br|hr|img|input|meta|link)/i)) indent++;
+      return indented;
+    }).join("\n");
+    setOutput(result);
+  };
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-mono focus:border-indigo-400 focus:outline-none";
+  const origSize = new Blob([code]).size;
+  const outSize = new Blob([output]).size;
+  return (
+    <Panel title="HTML Minifier / Beautifier">
+      <label className={label}>Input HTML</label>
+      <textarea value={code} onChange={e => setCode(e.target.value)} className={`${input} h-40`} placeholder="<html>..." />
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button type="button" onClick={minify} className="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700">Minify</button>
+        <button type="button" onClick={beautify} className="rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Beautify</button>
+      </div>
+      {output && (<><label className={`${label} mt-3`}>Output ({origSize} → {outSize} bytes)</label><textarea value={output} readOnly className={`${input} h-40`} /><CopyButton value={output} /></>)}
+    </Panel>
+  );
+}
+
+/* ── JavaScript Minifier Beautifier ── */
+function JsMinifierBeautifier() {
+  const [code, setCode] = useState("");
+  const [output, setOutput] = useState("");
+  const minify = () => {
+    setOutput(code.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "").replace(/\s{2,}/g, " ").replace(/\n\s*/g, "").trim());
+  };
+  const beautify = () => {
+    let indent = 0;
+    let result = "";
+    const chars = code.replace(/\s{2,}/g, " ").trim();
+    for (let i = 0; i < chars.length; i++) {
+      const c = chars[i];
+      if (c === "{" || c === "[") { result += c + "\n" + "  ".repeat(++indent); }
+      else if (c === "}" || c === "]") { result += "\n" + "  ".repeat(--indent) + c; }
+      else if (c === ";") { result += ";\n" + "  ".repeat(indent); }
+      else { result += c; }
+    }
+    setOutput(result);
+  };
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-mono focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="JavaScript Minifier / Beautifier">
+      <label className={label}>Input JavaScript</label>
+      <textarea value={code} onChange={e => setCode(e.target.value)} className={`${input} h-40`} placeholder="function hello() {..." />
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button type="button" onClick={minify} className="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700">Minify</button>
+        <button type="button" onClick={beautify} className="rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Beautify</button>
+      </div>
+      {output && (<><label className={`${label} mt-3`}>Output</label><textarea value={output} readOnly className={`${input} h-40`} /><CopyButton value={output} /></>)}
+    </Panel>
+  );
+}
+
+/* ── Markdown Preview Editor ── */
+function MarkdownPreviewEditor() {
+  const [md, setMd] = useState("# Hello World\n\nThis is **bold** and *italic*.\n\n## Features\n- List item 1\n- List item 2\n\n```js\nconsole.log('Hello');\n```\n\n[Link](https://example.com)\n\n> A blockquote here");
+  const html = useMemo(() => {
+    return md
+      .replace(/^### (.+)/gm, "<h3>$1</h3>")
+      .replace(/^## (.+)/gm, "<h2>$1</h2>")
+      .replace(/^# (.+)/gm, "<h1>$1</h1>")
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.+?)\*/g, "<em>$1</em>")
+      .replace(/`([^`]+)`/g, "<code style='background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85em'>$1</code>")
+      .replace(/```(\w*)\n([\s\S]*?)```/g, "<pre style='background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;font-size:0.85em'><code>$2</code></pre>")
+      .replace(/^\> (.+)/gm, "<blockquote style='border-left:4px solid #6366f1;padding-left:16px;color:#64748b;margin:12px 0'>$1</blockquote>")
+      .replace(/^\- (.+)/gm, "<li>$1</li>")
+      .replace(/(<li>[\s\S]*<\/li>)/, "<ul style='padding-left:20px'>$1</ul>")
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href='$2' style='color:#6366f1;text-decoration:underline'>$1</a>")
+      .replace(/\n\n/g, "<br/><br/>")
+      .replace(/\n/g, "<br/>");
+  }, [md]);
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-mono focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="Markdown Preview Editor">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className={label}>Markdown</label>
+          <textarea value={md} onChange={e => setMd(e.target.value)} className={`${input} h-96`} />
+        </div>
+        <div>
+          <label className={label}>Preview</label>
+          <div className="h-96 overflow-auto rounded-xl border border-slate-200 bg-white p-4 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: html }} />
+        </div>
+      </div>
+      <CopyButton value={html} />
+    </Panel>
+  );
+}
+
+/* ── Color Picker Converter ── */
+function ColorPickerConverter() {
+  const [hex, setHex] = useState("#6366f1");
+  const r = parseInt(hex.slice(1, 3), 16) || 0;
+  const g = parseInt(hex.slice(3, 5), 16) || 0;
+  const b = parseInt(hex.slice(5, 7), 16) || 0;
+  const rNorm = r / 255, gNorm = g / 255, bNorm = b / 255;
+  const max = Math.max(rNorm, gNorm, bNorm), min = Math.min(rNorm, gNorm, bNorm);
+  const l = (max + min) / 2;
+  const s = max === min ? 0 : l > 0.5 ? (max - min) / (2 - max - min) : (max - min) / (max + min);
+  let h = 0;
+  if (max !== min) {
+    if (max === rNorm) h = ((gNorm - bNorm) / (max - min)) % 6;
+    else if (max === gNorm) h = (bNorm - rNorm) / (max - min) + 2;
+    else h = (rNorm - gNorm) / (max - min) + 4;
+    h = Math.round(h * 60); if (h < 0) h += 360;
+  }
+  const k = 1 - max;
+  const c = max === 0 ? 0 : (1 - rNorm / max);
+  const m = max === 0 ? 0 : (1 - gNorm / max);
+  const y = max === 0 ? 0 : (1 - bNorm / max);
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="Color Picker / Converter">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className={label}>Pick a Color</label>
+          <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="h-24 w-full rounded-xl border border-slate-200 p-1 cursor-pointer" />
+          <label className={`${label} mt-3`}>Or enter HEX</label>
+          <input value={hex} onChange={e => setHex(e.target.value)} className={input} placeholder="#6366f1" />
+        </div>
+        <div>
+          <div className="h-24 w-full rounded-xl border border-slate-200" style={{ backgroundColor: hex }} />
+          <div className="mt-3 space-y-2">
+            {[
+              { label: "HEX", value: hex.toUpperCase() },
+              { label: "RGB", value: `rgb(${r}, ${g}, ${b})` },
+              { label: "HSL", value: `hsl(${h}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)` },
+              { label: "CMYK", value: `cmyk(${Math.round(c * 100)}%, ${Math.round(m * 100)}%, ${Math.round(y * 100)}%, ${Math.round(k * 100)}%)` },
+            ].map(f => (
+              <div key={f.label} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2">
+                <span className="text-xs font-bold text-slate-500 w-12">{f.label}</span>
+                <span className="flex-1 text-sm font-mono text-slate-800">{f.value}</span>
+                <CopyButton value={f.value} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ── Diff Text Compare ── */
+function DiffTextCompare() {
+  const [left, setLeft] = useState("");
+  const [right, setRight] = useState("");
+  const diff = useMemo(() => {
+    if (!left && !right) return [];
+    const lLines = left.split("\n");
+    const rLines = right.split("\n");
+    const maxLen = Math.max(lLines.length, rLines.length);
+    const result: { left: string; right: string; type: "same" | "changed" | "added" | "removed" }[] = [];
+    for (let i = 0; i < maxLen; i++) {
+      const l = lLines[i] ?? "";
+      const r = rLines[i] ?? "";
+      if (i >= lLines.length) result.push({ left: "", right: r, type: "added" });
+      else if (i >= rLines.length) result.push({ left: l, right: "", type: "removed" });
+      else if (l === r) result.push({ left: l, right: r, type: "same" });
+      else result.push({ left: l, right: r, type: "changed" });
+    }
+    return result;
+  }, [left, right]);
+  const changes = diff.filter(d => d.type !== "same").length;
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-mono focus:border-indigo-400 focus:outline-none";
+  const colors = { same: "bg-white", changed: "bg-amber-50", added: "bg-emerald-50", removed: "bg-red-50" };
+  return (
+    <Panel title="Diff / Text Compare">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div><label className={label}>Original</label><textarea value={left} onChange={e => setLeft(e.target.value)} className={`${input} h-40`} placeholder="Paste original text..." /></div>
+        <div><label className={label}>Modified</label><textarea value={right} onChange={e => setRight(e.target.value)} className={`${input} h-40`} placeholder="Paste modified text..." /></div>
+      </div>
+      {diff.length > 0 && (
+        <div className="mt-4">
+          <p className="text-sm text-slate-600 mb-2">{changes} difference{changes !== 1 ? "s" : ""} found</p>
+          <div className="max-h-96 overflow-auto rounded-xl border border-slate-200">
+            {diff.map((d, i) => (
+              <div key={i} className={`grid grid-cols-[40px_1fr_1fr] text-xs font-mono ${colors[d.type]} border-b border-slate-100`}>
+                <span className="text-slate-400 py-1 px-2 text-right">{i + 1}</span>
+                <span className={`py-1 px-2 border-r border-slate-200 ${d.type === "removed" ? "text-red-700 line-through" : d.type === "changed" ? "text-amber-800" : ""}`}>{d.left}</span>
+                <span className={`py-1 px-2 ${d.type === "added" ? "text-emerald-700" : d.type === "changed" ? "text-emerald-800" : ""}`}>{d.right}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ── URL Encoder Decoder ── */
+function UrlEncoderDecoder() {
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
+  const encode = () => setOutput(encodeURIComponent(input));
+  const decode = () => { try { setOutput(decodeURIComponent(input)); } catch { setOutput("Invalid encoded string"); } };
+  const lab = "text-sm font-medium text-slate-700 mb-1 block";
+  const inp = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-mono focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="URL Encoder / Decoder">
+      <label className={lab}>Input</label>
+      <textarea value={input} onChange={e => setInput(e.target.value)} className={`${inp} h-24`} placeholder="Enter text or encoded URL..." />
+      <div className="mt-3 flex gap-2">
+        <button type="button" onClick={encode} className="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700">Encode</button>
+        <button type="button" onClick={decode} className="rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Decode</button>
+      </div>
+      {output && (<><label className={`${lab} mt-3`}>Output</label><textarea value={output} readOnly className={`${inp} h-24`} /><CopyButton value={output} /></>)}
+    </Panel>
+  );
+}
+
+/* ── Hash Generator ── */
+function HashGeneratorTool() {
+  const [text, setText] = useState("");
+  const [hashes, setHashes] = useState<Record<string, string>>({});
+  useEffect(() => {
+    if (!text) { setHashes({}); return; }
+    const compute = async () => {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const results: Record<string, string> = {};
+      for (const algo of ["SHA-1", "SHA-256", "SHA-512"] as const) {
+        const hash = await crypto.subtle.digest(algo, data);
+        results[algo] = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+      // MD5 — simple implementation
+      results["MD5"] = md5(text);
+      setHashes(results);
+    };
+    compute();
+  }, [text]);
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-mono focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="Hash Generator">
+      <label className={label}>Input Text</label>
+      <textarea value={text} onChange={e => setText(e.target.value)} className={`${input} h-24`} placeholder="Enter text to hash..." />
+      {Object.keys(hashes).length > 0 && (
+        <div className="mt-4 space-y-2">
+          {Object.entries(hashes).map(([algo, hash]) => (
+            <div key={algo} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2">
+              <span className="text-xs font-bold text-slate-500 w-16">{algo}</span>
+              <span className="flex-1 text-xs font-mono text-slate-800 break-all">{hash}</span>
+              <CopyButton value={hash} />
+            </div>
+          ))}
+        </div>
+      )}
+    </Panel>
+  );
+}
+// Simple MD5 implementation
+function md5(str: string): string {
+  function rotl(v: number, s: number) { return (v << s) | (v >>> (32 - s)); }
+  const k = Array.from({length: 64}, (_, i) => Math.floor(Math.abs(Math.sin(i + 1)) * 0x100000000));
+  const s = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+  const bytes = new TextEncoder().encode(str);
+  const bits = bytes.length * 8;
+  const padded = new Uint8Array(((bytes.length + 9 + 63) & ~63));
+  padded.set(bytes); padded[bytes.length] = 0x80;
+  const dv = new DataView(padded.buffer);
+  dv.setUint32(padded.length - 8, bits, true);
+  let [a0, b0, c0, d0] = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476];
+  for (let i = 0; i < padded.length; i += 64) {
+    const m = Array.from({length: 16}, (_, j) => dv.getUint32(i + j * 4, true));
+    let [a, b, c, d] = [a0, b0, c0, d0];
+    for (let j = 0; j < 64; j++) {
+      let f, g;
+      if (j < 16) { f = (b & c) | (~b & d); g = j; }
+      else if (j < 32) { f = (d & b) | (~d & c); g = (5 * j + 1) % 16; }
+      else if (j < 48) { f = b ^ c ^ d; g = (3 * j + 5) % 16; }
+      else { f = c ^ (b | ~d); g = (7 * j) % 16; }
+      const temp = d; d = c; c = b; b = (b + rotl((a + f + k[j] + m[g]) | 0, s[j])) | 0; a = temp;
+    }
+    a0 = (a0 + a) | 0; b0 = (b0 + b) | 0; c0 = (c0 + c) | 0; d0 = (d0 + d) | 0;
+  }
+  return [a0, b0, c0, d0].map(v => v.toString(16).padStart(8, "0").match(/../g)!.reverse().join("")).join("");
+}
+
+/* ── JSON to CSV Converter ── */
+function JsonToCsvConverter() {
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
+  const [mode, setMode] = useState<"json2csv" | "csv2json">("json2csv");
+  const convert = () => {
+    try {
+      if (mode === "json2csv") {
+        const data = JSON.parse(input);
+        if (!Array.isArray(data) || data.length === 0) { setOutput("Input must be a non-empty JSON array"); return; }
+        const headers = Object.keys(data[0]);
+        const csvRows = [headers.join(","), ...data.map((row: Record<string, unknown>) =>
+          headers.map(h => { const v = String(row[h] ?? ""); return v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v; }).join(",")
+        )];
+        setOutput(csvRows.join("\n"));
+      } else {
+        const lines = input.trim().split("\n");
+        if (lines.length < 2) { setOutput("CSV must have headers and at least one row"); return; }
+        const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ""));
+        const data = lines.slice(1).map(line => {
+          const vals = line.split(",").map(v => v.trim().replace(/^"|"$/g, ""));
+          const obj: Record<string, string> = {};
+          headers.forEach((h, i) => obj[h] = vals[i] || "");
+          return obj;
+        });
+        setOutput(JSON.stringify(data, null, 2));
+      }
+    } catch (e) { setOutput("Error: " + (e instanceof Error ? e.message : "Invalid input")); }
+  };
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const inp = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-mono focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="JSON ↔ CSV Converter">
+      <div className="mb-3 flex gap-2">
+        <button type="button" onClick={() => setMode("json2csv")} className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${mode === "json2csv" ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-700"}`}>JSON → CSV</button>
+        <button type="button" onClick={() => setMode("csv2json")} className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${mode === "csv2json" ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-700"}`}>CSV → JSON</button>
+      </div>
+      <label className={label}>{mode === "json2csv" ? "JSON Array" : "CSV Data"}</label>
+      <textarea value={input} onChange={e => setInput(e.target.value)} className={`${inp} h-40`} placeholder={mode === "json2csv" ? '[{"name":"John","age":30}]' : 'name,age\nJohn,30'} />
+      <button type="button" onClick={convert} className="mt-3 rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700">Convert</button>
+      {output && (<><label className={`${label} mt-3`}>Output</label><textarea value={output} readOnly className={`${inp} h-40`} /><CopyButton value={output} /></>)}
+    </Panel>
+  );
+}
+
+/* ── Case Converter ── */
+function CaseConverterTool() {
+  const [text, setText] = useState("");
+  const cases = useMemo(() => {
+    if (!text) return [];
+    const toWords = (s: string) => s.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_\-\.]+/g, " ").trim().split(/\s+/);
+    const words = toWords(text);
+    return [
+      { label: "UPPERCASE", value: text.toUpperCase() },
+      { label: "lowercase", value: text.toLowerCase() },
+      { label: "Title Case", value: words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ") },
+      { label: "Sentence case", value: text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() },
+      { label: "camelCase", value: words.map((w, i) => i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("") },
+      { label: "PascalCase", value: words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join("") },
+      { label: "snake_case", value: words.map(w => w.toLowerCase()).join("_") },
+      { label: "kebab-case", value: words.map(w => w.toLowerCase()).join("-") },
+      { label: "CONSTANT_CASE", value: words.map(w => w.toUpperCase()).join("_") },
+      { label: "dot.case", value: words.map(w => w.toLowerCase()).join(".") },
+    ];
+  }, [text]);
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="Case Converter">
+      <label className={label}>Input Text</label>
+      <textarea value={text} onChange={e => setText(e.target.value)} className={`${input} h-24`} placeholder="Type or paste text..." />
+      {cases.length > 0 && (
+        <div className="mt-4 space-y-2">
+          {cases.map(c => (
+            <div key={c.label} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2">
+              <span className="text-xs font-bold text-slate-500 w-28 shrink-0">{c.label}</span>
+              <span className="flex-1 text-sm font-mono text-slate-800 truncate">{c.value}</span>
+              <CopyButton value={c.value} />
+            </div>
+          ))}
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ── Text to Handwriting ── */
+function TextToHandwriting() {
+  const [text, setText] = useState("Hello, this is a handwriting sample!\nThe quick brown fox jumps over the lazy dog.");
+  const [color, setColor] = useState("#1a365d");
+  const [fontSize, setFontSize] = useState(22);
+  const [paper, setPaper] = useState<"lined" | "blank">("lined");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const render = useCallback(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext("2d")!;
+    canvas.width = 800; canvas.height = 1100;
+    ctx.fillStyle = "#fffef5"; ctx.fillRect(0, 0, 800, 1100);
+    if (paper === "lined") {
+      ctx.strokeStyle = "#c7d0dc"; ctx.lineWidth = 0.5;
+      for (let y = 80; y < 1060; y += 36) { ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(740, y); ctx.stroke(); }
+      ctx.strokeStyle = "#e8b4b8"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(80, 40); ctx.lineTo(80, 1060); ctx.stroke();
+    }
+    ctx.fillStyle = color; ctx.font = `${fontSize}px 'Segoe Script', 'Comic Sans MS', cursive`;
+    const lines = text.split("\n");
+    let y = paper === "lined" ? 72 : 60;
+    for (const line of lines) {
+      const words = line.split(" ");
+      let currentLine = ""; let x = paper === "lined" ? 90 : 60;
+      for (const word of words) {
+        const test = currentLine + (currentLine ? " " : "") + word;
+        if (ctx.measureText(test).width > 640) {
+          ctx.fillText(currentLine, x + (Math.random() - 0.5) * 2, y + (Math.random() - 0.5) * 2);
+          currentLine = word; y += 36;
+        } else { currentLine = test; }
+      }
+      if (currentLine) { ctx.fillText(currentLine, x + (Math.random() - 0.5) * 2, y + (Math.random() - 0.5) * 2); }
+      y += 36;
+    }
+  }, [text, color, fontSize, paper]);
+  useEffect(() => { render(); }, [render]);
+  const download = () => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const link = document.createElement("a"); link.download = "handwriting.png"; link.href = canvas.toDataURL("image/png"); link.click();
+  };
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const inp = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="Text to Handwriting">
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div><label className={label}>Ink Color</label><input type="color" value={color} onChange={e => setColor(e.target.value)} className={`${inp} h-10 p-1`} /></div>
+        <div><label className={label}>Font Size: {fontSize}px</label><input type="range" min={14} max={36} value={fontSize} onChange={e => setFontSize(parseInt(e.target.value))} className="w-full accent-indigo-600" /></div>
+        <div><label className={label}>Paper</label><select value={paper} onChange={e => setPaper(e.target.value as "lined" | "blank")} className={inp}><option value="lined">Lined</option><option value="blank">Blank</option></select></div>
+      </div>
+      <textarea value={text} onChange={e => setText(e.target.value)} className={`${inp} h-24 mt-3`} placeholder="Type your text..." />
+      <div className="mt-3 flex gap-2">
+        <button type="button" onClick={render} className="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700">Render</button>
+        <button type="button" onClick={download} className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white hover:bg-slate-700">Download PNG</button>
+      </div>
+      <canvas ref={canvasRef} className="mt-4 w-full max-h-96 rounded-xl border border-slate-200 object-contain" />
+    </Panel>
+  );
+}
+
+/* ── Fancy Text Generator ── */
+function FancyTextGenerator() {
+  const [text, setText] = useState("Hello World");
+  const styles = useMemo(() => {
+    if (!text) return [];
+    const maps: { name: string; fn: (s: string) => string }[] = [
+      { name: "𝐁𝐨𝐥𝐝", fn: s => [...s].map(c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x1D400 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x1D41A + code - 97); return c; }).join("") },
+      { name: "𝑰𝒕𝒂𝒍𝒊𝒄", fn: s => [...s].map(c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x1D434 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x1D44E + code - 97); return c; }).join("") },
+      { name: "𝕯𝖔𝖚𝖇𝖑𝖊", fn: s => [...s].map(c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x1D504 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x1D51E + code - 97); return c; }).join("") },
+      { name: "𝙼𝚘𝚗𝚘", fn: s => [...s].map(c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x1D670 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x1D68A + code - 97); return c; }).join("") },
+      { name: "Ⓒⓘⓡⓒⓛⓔ", fn: s => [...s].map(c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x24B6 + code - 65); if (code >= 97 && code <= 122) return String.fromCodePoint(0x24D0 + code - 97); return c; }).join("") },
+      { name: "🅂🅀🅄🄰🅁🄴", fn: s => [...s].map(c => { const code = c.charCodeAt(0); if (code >= 65 && code <= 90) return String.fromCodePoint(0x1F130 + code - 65); return c; }).join("") },
+      { name: "ᵗⁱⁿʸ", fn: s => { const m: Record<string, string> = {a:"ᵃ",b:"ᵇ",c:"ᶜ",d:"ᵈ",e:"ᵉ",f:"ᶠ",g:"ᵍ",h:"ʰ",i:"ⁱ",j:"ʲ",k:"ᵏ",l:"ˡ",m:"ᵐ",n:"ⁿ",o:"ᵒ",p:"ᵖ",r:"ʳ",s:"ˢ",t:"ᵗ",u:"ᵘ",v:"ᵛ",w:"ʷ",x:"ˣ",y:"ʸ",z:"ᶻ"}; return [...s.toLowerCase()].map(c => m[c] || c).join(""); }},
+      { name: "ɟlᴉd", fn: s => { const m: Record<string, string> = {a:"ɐ",b:"q",c:"ɔ",d:"p",e:"ǝ",f:"ɟ",g:"ƃ",h:"ɥ",i:"ᴉ",j:"ɾ",k:"ʞ",l:"l",m:"ɯ",n:"u",o:"o",p:"d",q:"b",r:"ɹ",s:"s",t:"ʇ",u:"n",v:"ʌ",w:"ʍ",x:"x",y:"ʎ",z:"z"}; return [...s.toLowerCase()].reverse().map(c => m[c] || c).join(""); }},
+    ];
+    return maps.map(m => ({ name: m.name, value: m.fn(text) }));
+  }, [text]);
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="Fancy Text Generator">
+      <label className={label}>Enter Text</label>
+      <input value={text} onChange={e => setText(e.target.value)} className={input} placeholder="Type something..." />
+      {styles.length > 0 && (
+        <div className="mt-4 space-y-2">
+          {styles.map(s => (
+            <div key={s.name} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <span className="flex-1 text-lg">{s.value}</span>
+              <CopyButton value={s.value} />
+            </div>
+          ))}
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ── Text Repeater ── */
+function TextRepeaterTool() {
+  const [text, setText] = useState("Hello ");
+  const [count, setCount] = useState("10");
+  const [sep, setSep] = useState("");
+  const output = useMemo(() => {
+    const n = Math.min(parseInt(count) || 0, 10000);
+    if (!text || n <= 0) return "";
+    return Array(n).fill(text).join(sep);
+  }, [text, count, sep]);
+  const label = "text-sm font-medium text-slate-700 mb-1 block";
+  const input = "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none";
+  return (
+    <Panel title="Text Repeater">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div><label className={label}>Text to Repeat</label><input value={text} onChange={e => setText(e.target.value)} className={input} /></div>
+        <div><label className={label}>Times</label><input type="number" min={1} max={10000} value={count} onChange={e => setCount(e.target.value)} className={input} /></div>
+        <div><label className={label}>Separator</label><select value={sep} onChange={e => setSep(e.target.value)} className={input}><option value="">None</option><option value=" ">Space</option><option value={"\n"}>New Line</option><option value=", ">Comma</option></select></div>
+      </div>
+      {output && (
+        <div className="mt-4">
+          <label className={label}>Output ({output.length} characters)</label>
+          <textarea value={output} readOnly className={`${input} h-40 font-mono`} />
+          <CopyButton value={output} />
+        </div>
+      )}
+    </Panel>
+  );
+}
+
 export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
   switch (slug) {
     case "json-formatter-validator":
@@ -2236,6 +2975,22 @@ export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
       return <HttpStatusCodeLookupTool />;
     case "canonical-url-checker":
       return <CanonicalChecker />;
+    case "html-minifier-beautifier":
+      return <HtmlMinifierBeautifier />;
+    case "javascript-minifier-beautifier":
+      return <JsMinifierBeautifier />;
+    case "markdown-preview-editor":
+      return <MarkdownPreviewEditor />;
+    case "color-picker-converter":
+      return <ColorPickerConverter />;
+    case "diff-text-compare":
+      return <DiffTextCompare />;
+    case "url-encoder-decoder":
+      return <UrlEncoderDecoder />;
+    case "hash-generator":
+      return <HashGeneratorTool />;
+    case "json-to-csv-converter":
+      return <JsonToCsvConverter />;
     case "open-graph-social-preview":
       return <OpenGraphPreviewTool />;
     case "keyword-density-checker":
@@ -2250,10 +3005,24 @@ export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
       return <RobotsMetaTagGeneratorTool />;
     case "keyword-cluster-generator":
       return <KeywordClusterGeneratorTool />;
+    case "faq-schema-generator-page-template":
+      return <FaqSchemaGeneratorPageTemplate />;
+    case "internal-link-suggestion-tool":
+      return <InternalLinkSuggestionTool />;
+    case "serp-snippet-pixel-checker":
+      return <SerpSnippetPixelChecker />;
     case "lorem-ipsum-generator":
       return <LoremIpsumGenerator />;
     case "text-cleaner":
       return <TextCleaner />;
+    case "case-converter":
+      return <CaseConverterTool />;
+    case "text-to-handwriting":
+      return <TextToHandwriting />;
+    case "fancy-text-generator":
+      return <FancyTextGenerator />;
+    case "text-repeater":
+      return <TextRepeaterTool />;
     /* ── Student Tools ── */
     case "percentage-calculator":
       return <PercentageCalculator />;
@@ -2275,6 +3044,18 @@ export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
       return <StudyTimePlanner />;
     case "marks-required-calculator":
       return <MarksRequiredCalculator />;
+    case "attendance-shortage-calculator":
+      return <AttendanceShortageCalculator />;
+    case "semester-gpa-predictor":
+      return <SemesterGpaPredictor />;
+    case "study-timetable-printable-generator":
+      return <StudyTimetablePrintableGenerator />;
+    case "pomodoro-timer":
+      return <PomodoroTimer />;
+    case "grade-scale-converter":
+      return <GradeScaleConverter />;
+    case "assignment-deadline-tracker":
+      return <AssignmentDeadlineTracker />;
     /* ── Creator Tools ── */
     case "instagram-hashtag-generator":
       return <InstagramHashtagGenerator />;
@@ -2306,6 +3087,14 @@ export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
       return <BestTimeToPostPlanner />;
     case "utm-link-builder-for-creators":
       return <UtmLinkBuilderForCreators />;
+    case "youtube-title-length-checker":
+      return <YouTubeTitleLengthChecker />;
+    case "youtube-shorts-aspect-ratio-tool":
+      return <YouTubeShortsAspectRatioTool />;
+    case "reel-caption-formatter":
+      return <ReelCaptionFormatter />;
+    case "hook-idea-generator-by-niche":
+      return <HookIdeaGeneratorByNiche />;
     /* ── Image Tools ── */
     case "image-to-pdf-converter":
       return <ImageToPdfConverter />;
@@ -2347,6 +3136,18 @@ export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
       return <RoundedCornersTool />;
     case "image-to-ascii-art":
       return <ImageToAsciiArt />;
+    case "image-compressor-under-100kb":
+      return <ImageCompressorUnder100kb />;
+    case "passport-photo-maker":
+      return <PassportPhotoMaker />;
+    case "svg-to-png-converter":
+      return <SvgToPngConverter />;
+    case "image-noise-grain-effect":
+      return <ImageNoiseGrainEffect />;
+    case "screenshot-mockup-generator":
+      return <ScreenshotMockupGenerator />;
+    case "image-background-remover":
+      return <ImageBackgroundRemover />;
     /* ── Utility Tools ── */
     case "emi-calculator":
       return <EmiCalculator />;
@@ -2368,6 +3169,12 @@ export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
       return <UnitConverter />;
     case "scientific-calculator":
       return <ScientificCalculator />;
+    case "tip-calculator":
+      return <TipCalculator />;
+    case "bmi-calculator":
+      return <BmiCalculator />;
+    case "electricity-bill-calculator":
+      return <ElectricityBillCalculator />;
     default:
       return <Panel title="Tool unavailable">This tool is not available.</Panel>;
   }

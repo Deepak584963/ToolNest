@@ -7,15 +7,15 @@ import { tools } from "@/lib/tools";
 
 type Category = "all" | "text" | "seo" | "dev" | "student" | "creator" | "image" | "utility";
 
-const categories: { key: Category; label: string }[] = [
-  { key: "all", label: "All Tools" },
-  { key: "dev", label: "Developer" },
-  { key: "seo", label: "SEO" },
-  { key: "text", label: "Text" },
-  { key: "student", label: "Student" },
-  { key: "creator", label: "Creator" },
-  { key: "image", label: "Image" },
-  { key: "utility", label: "Utility" },
+const categories: { key: Category; label: string; icon: string }[] = [
+  { key: "all", label: "All Tools", icon: "✨" },
+  { key: "dev", label: "Developer", icon: "🛠️" },
+  { key: "seo", label: "SEO", icon: "🔍" },
+  { key: "text", label: "Text", icon: "📝" },
+  { key: "student", label: "Student", icon: "🎓" },
+  { key: "creator", label: "Creator", icon: "🎬" },
+  { key: "image", label: "Image", icon: "🖼️" },
+  { key: "utility", label: "Utility", icon: "🧮" },
 ];
 
 const featuredDeveloperTools = [
@@ -84,35 +84,36 @@ export default function HomeToolsSection() {
     <section className="space-y-6" aria-labelledby="tools-grid-title">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-lg">⚡</div>
-          <h2 id="tools-grid-title" className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 text-lg shadow-[0_2px_8px_rgba(99,102,241,0.1)]">⚡</div>
+          <h2 id="tools-grid-title" className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
             All free online tools
           </h2>
         </div>
-        <span className="rounded-full border border-indigo-200/50 bg-indigo-50 px-3.5 py-1 text-xs font-bold text-indigo-600">
+        <span className="rounded-full border border-indigo-200/50 bg-gradient-to-r from-indigo-50 to-violet-50 px-3.5 py-1 text-xs font-bold text-indigo-600 shadow-[0_1px_4px_rgba(99,102,241,0.08)] dark:border-indigo-500/30 dark:from-indigo-950/50 dark:to-violet-950/50 dark:text-indigo-400">
           {filteredTools.length} tools
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200/60 bg-white/75 p-2.5">
+      <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200/60 bg-white/80 p-2.5 shadow-[0_1px_4px_rgba(15,23,42,0.03)] dark:border-slate-700/60 dark:bg-slate-800/60">
         {categories.map((cat) => (
           <button
             key={cat.key}
             type="button"
             onClick={() => setActiveCategory(cat.key)}
-            className={`pressable micro-lift min-h-10 rounded-full px-4 py-2 text-sm font-bold transition ${
+            className={`pressable min-h-10 rounded-full px-4 py-2 text-sm font-bold transition-all duration-200 ${
               activeCategory === cat.key
                 ? "btn-primary shadow-[0_4px_16px_rgba(99,102,241,0.3)]"
-                : "bg-white/85 text-slate-600 hover:bg-indigo-50/80 hover:text-indigo-600"
+                : "bg-white/90 text-slate-600 hover:bg-indigo-50/80 hover:text-indigo-600 hover:shadow-[0_2px_8px_rgba(99,102,241,0.06)] dark:bg-slate-800/50 dark:text-slate-300 dark:hover:bg-indigo-950/50 dark:hover:text-indigo-400"
             }`}
           >
+            <span className="mr-1.5 inline-block text-sm">{cat.icon}</span>
             {cat.label}
           </button>
         ))}
       </div>
 
       {(activeCategory === "all" || activeCategory === "dev") && (
-        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
           <div className="flex items-center gap-2">
             <span className="text-base">🛠️</span>
             <h3 className="text-sm font-bold text-slate-800">Trending developer tools</h3>

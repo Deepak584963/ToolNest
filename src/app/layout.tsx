@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdSenseScript from "@/components/AdSenseScript";
 import ConsentBanner from "@/components/ConsentBanner";
+import ThemeProvider from "@/components/ThemeProvider";
 import { siteConfig } from "@/lib/site";
 
 const geistSans = Geist({
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
   },
   other: {
     "theme-color": siteConfig.themeColor,
-    "color-scheme": "light",
+    "color-scheme": "light dark",
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
@@ -76,18 +77,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider>
         <AdSenseScript />
         <a href="#main-content" className="sr-only z-50 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
           Skip to main content
         </a>
-        <div className="min-h-screen bg-linear-to-br from-indigo-50/60 via-sky-50/40 to-violet-50/50 text-slate-900">
+        <div className="min-h-screen bg-linear-to-br from-indigo-50/60 via-sky-50/40 to-violet-50/50 text-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/80 dark:text-slate-100">
           <Header />
           <main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8 lg:py-12">{children}</main>
           <Footer />
           <ConsentBanner />
         </div>
+        </ThemeProvider>
       </body>
     </html>
   );

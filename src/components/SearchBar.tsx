@@ -85,7 +85,7 @@ export default function SearchBar() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="pressable micro-lift flex h-10 w-10 items-center justify-center gap-2 rounded-full border border-slate-200/60 bg-white/80 px-0 text-sm text-slate-400 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_4px_12px_rgba(99,102,241,0.06)] backdrop-blur-xl transition hover:border-indigo-200/60 hover:text-indigo-600 sm:h-auto sm:w-auto sm:min-w-52 sm:justify-start sm:px-3 sm:py-1.5"
+        className="pressable flex h-10 w-10 items-center justify-center gap-2 rounded-full border border-slate-200/60 bg-white/85 px-0 text-sm text-slate-400 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_4px_12px_rgba(99,102,241,0.06)] backdrop-blur-xl transition-all duration-200 hover:border-indigo-200/60 hover:text-indigo-600 hover:shadow-[0_2px_8px_rgba(99,102,241,0.1)] sm:h-auto sm:w-auto sm:min-w-56 sm:justify-start sm:px-3.5 sm:py-2"
         aria-label="Search tools"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -98,8 +98,8 @@ export default function SearchBar() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/30 px-3 pt-16 sm:px-4 sm:pt-[15vh]">
-          <div className="fade-scale-in w-full max-w-lg rounded-2xl border border-white/60 bg-white/92 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_22px_50px_rgba(15,23,42,0.16)] backdrop-blur-xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center backdrop-overlay bg-slate-900/30 px-3 pt-16 sm:px-4 sm:pt-[15vh]">
+          <div className="fade-scale-in w-full max-w-lg rounded-2xl border border-white/60 bg-white/95 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_24px_56px_rgba(15,23,42,0.18)] backdrop-blur-xl">
             <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -142,9 +142,17 @@ export default function SearchBar() {
             <div className="max-h-[65vh] overflow-y-auto p-2 sm:max-h-80">
               {results.length > 0 ? <p className="px-3 pb-2 text-[11px] text-slate-400">Use ↑ ↓ to navigate and Enter to open</p> : null}
               {query.length < 2 ? (
-                <p className="px-3 py-6 text-center text-sm text-slate-400">Type at least 2 characters to search…</p>
+                <div className="px-3 py-8 text-center">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 text-xl shadow-[0_2px_8px_rgba(99,102,241,0.1)]">🔍</div>
+                  <p className="mt-3 text-sm font-medium text-slate-500">Search 70+ free tools</p>
+                  <p className="mt-1 text-xs text-slate-400">Type at least 2 characters to search…</p>
+                </div>
               ) : results.length === 0 ? (
-                <p className="px-3 py-6 text-center text-sm text-slate-400">No tools found for &quot;{query}&quot;</p>
+                <div className="px-3 py-8 text-center">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-50 to-gray-50 text-xl">🤔</div>
+                  <p className="mt-3 text-sm font-medium text-slate-500">No tools found for &quot;{query}&quot;</p>
+                  <p className="mt-1 text-xs text-slate-400">Try a different keyword or browse categories</p>
+                </div>
               ) : (
                 <ul>
                   {results.map((tool, index) => (
