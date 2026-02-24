@@ -37,8 +37,8 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     };
   }
 
-  const title = `${tool.name} — Free Online Tool`;
-  const description = `${tool.shortDescription} Use this free ${tool.category} tool online — no sign-up, runs in your browser.`.slice(0, 160);
+  const title = `Free ${tool.name} Online — Fast & Secure`;
+  const description = `${tool.shortDescription} Use our free ${tool.category} utility online with no sign-up or data collection. Runs instantly in your browser.`.slice(0, 160);
 
   return {
     title,
