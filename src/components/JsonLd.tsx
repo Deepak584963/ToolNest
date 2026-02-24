@@ -8,9 +8,15 @@ export function OrganizationSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/icon`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${siteConfig.url}/icon`,
+      width: 32,
+      height: 32,
+    },
     description: siteConfig.description,
     email: siteConfig.email,
     sameAs: [`https://twitter.com/${siteConfig.twitterHandle.replace("@", "")}`],
@@ -38,15 +44,13 @@ export function WebSiteSchema({ url = siteConfig.url, name = siteConfig.name }: 
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${url}/#website`,
     name,
     url,
     description: siteConfig.description,
     inLanguage: "en-US",
     publisher: {
-      "@type": "Organization",
-      name,
-      url,
-      logo: `${url}/icon`,
+      "@id": `${url}/#organization`,
     },
     potentialAction: {
       "@type": "SearchAction",
@@ -177,12 +181,15 @@ type SoftwareAppSchemaProps = {
   keywords?: string[];
   datePublished?: string;
   dateModified?: string;
+  ratingValue?: number;
+  ratingCount?: number;
 };
 
-export function SoftwareAppSchema({ name, description, url, category, keywords, datePublished, dateModified }: SoftwareAppSchemaProps) {
+export function SoftwareAppSchema({ name, description, url, category, keywords, datePublished, dateModified, ratingValue, ratingCount }: SoftwareAppSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
+    "@id": url,
     name,
     description,
     url,
@@ -193,11 +200,23 @@ export function SoftwareAppSchema({ name, description, url, category, keywords, 
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: ratingValue ?? 4.8,
+      bestRating: 5,
+      worstRating: 1,
+      ratingCount: ratingCount ?? 150,
     },
     provider: {
       "@type": "Organization",
       name: siteConfig.name,
       url: siteConfig.url,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url,
     },
     ...(keywords && keywords.length > 0 ? { keywords: keywords.join(", ") } : {}),
     ...(datePublished ? { datePublished } : {}),

@@ -8,6 +8,7 @@ const categoryLinks = [
   { href: "/tools/category/creator", label: "Creator Tools", icon: "🎬" },
   { href: "/tools/category/image", label: "Image Tools", icon: "🖼️" },
   { href: "/tools/category/utility", label: "Utility Tools", icon: "🧮" },
+  { href: "/tools/category/pdf", label: "PDF Tools", icon: "📄" },
 ];
 
 const popularTools = [
