@@ -7,6 +7,10 @@ import { PercentageCalculator, CgpaToPercentageConverter, AttendanceCalculator, 
 import { InstagramHashtagGenerator, YouTubeTitleAnalyzer, YouTubeTagGenerator, CaptionGenerator, BioGenerator, ThumbnailTextPreview, YouTubeDescriptionTemplateGenerator, VideoLengthEstimator, HookGeneratorForReels, ContentIdeaGenerator, YouTubeChapterTimestampGenerator, EngagementRateCalculator, ViralContentCalendarGenerator, BestTimeToPostPlanner, UtmLinkBuilderForCreators, YouTubeTitleLengthChecker, YouTubeShortsAspectRatioTool, ReelCaptionFormatter, HookIdeaGeneratorByNiche } from "@/components/tools/CreatorTools";
 import { ImageToPdfConverter, CompressImage, ResizeImage, JpgToPngConverter, PngToJpgConverter, QrCodeGenerator, BarcodeGenerator, Base64ImageEncoder, ImageMetadataViewer, FaviconGenerator, WebpToPngConverter, PngToWebpConverter, ImageCropper, ImageRotateFlipTool, ImageWatermarkTool, ImageColorPaletteExtractor, ImageCollageMaker, ImageBlurTool, RoundedCornersTool, ImageToAsciiArt, ImageCompressorUnder100kb, PassportPhotoMaker, SvgToPngConverter, ImageNoiseGrainEffect, ScreenshotMockupGenerator, ImageBackgroundRemover } from "@/components/tools/ImageTools";
 import { EmiCalculator, LoanInterestCalculator, GstCalculator, CurrencyConverter, SipCalculator, InflationCalculator, AgeInDaysCalculator, TimeZoneConverter, UnitConverter, ScientificCalculator, TipCalculator, BmiCalculator, ElectricityBillCalculator } from "@/components/tools/UtilityTools";
+import { MergePdf, SplitPdf, PdfToTextExtractor, ProtectPdf, UnlockPdf } from "@/components/tools/PdfTools";
+import { JsonMinifier, CsvToJsonConverter, MarkdownToHtmlConverter, HtmlToMarkdownConverter, CssGradientGenerator, CssBoxShadowGenerator, BcryptHashGenerator, UrlQueryStringParser, ColorContrastChecker, HexRgbConverter } from "@/components/tools/DevTools2";
+import { HeicToJpgConverter, InstagramGridMaker, YoutubeThumbnailDownloader, RandomPasswordGenerator, BinaryTextConverter, TextToSpeechReader, TwitchEmoteResizer } from "@/components/tools/ExtraTools";
+
 
 type ToolUIWrapperProps = {
   slug: string;
@@ -3175,6 +3179,30 @@ export default function ToolUIWrapper({ slug }: ToolUIWrapperProps) {
       return <BmiCalculator />;
     case "electricity-bill-calculator":
       return <ElectricityBillCalculator />;
+    
+    case "merge-pdf": return <MergePdf />;
+    case "split-pdf": return <SplitPdf />;
+    case "pdf-to-text-extractor": return <PdfToTextExtractor />;
+    case "protect-pdf": return <ProtectPdf />;
+    case "unlock-pdf": return <UnlockPdf />;
+    case "json-minifier": return <JsonMinifier />;
+    case "csv-to-json-converter": return <CsvToJsonConverter />;
+    case "markdown-to-html-converter": return <MarkdownToHtmlConverter />;
+    case "html-to-markdown-converter": return <HtmlToMarkdownConverter />;
+    case "css-gradient-generator": return <CssGradientGenerator />;
+    case "css-box-shadow-generator": return <CssBoxShadowGenerator />;
+    case "bcrypt-hash-generator": return <BcryptHashGenerator />;
+    case "url-query-string-parser": return <UrlQueryStringParser />;
+    case "color-contrast-checker": return <ColorContrastChecker />;
+    case "hex-to-rgb-converter": return <HexRgbConverter />;
+    case "heic-to-jpg-converter": return <HeicToJpgConverter />;
+    case "instagram-grid-maker": return <InstagramGridMaker />;
+    case "youtube-thumbnail-downloader": return <YoutubeThumbnailDownloader />;
+    case "twitch-emote-resizer": return <TwitchEmoteResizer />;
+    case "random-password-generator": return <RandomPasswordGenerator />;
+    case "binary-text-converter": return <BinaryTextConverter />;
+    case "text-to-speech-reader": return <TextToSpeechReader />;
+
     default:
       return <Panel title="Tool unavailable">This tool is not available.</Panel>;
   }

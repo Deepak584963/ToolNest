@@ -8,7 +8,8 @@ export type Tool = {
     | "student"
     | "creator"
     | "image"
-    | "utility";
+    | "utility"
+    | "pdf";
   shortDescription: string;
   longDescription: string;
   keywords: string[];
@@ -1042,7 +1043,7 @@ export const tools: Tool[] = [
   {
     name: "Image to PDF Converter",
     slug: "image-to-pdf-converter",
-    category: "image",
+    category: "pdf",
     shortDescription:
       "Convert one or multiple images into a single PDF document.",
     longDescription:
@@ -1537,6 +1538,271 @@ export const tools: Tool[] = [
       "Add your appliances with their wattage and daily hours of usage, then enter your electricity rate per unit (kWh) to calculate estimated daily, monthly, and yearly electricity costs. Homeowners analyzing energy consumption, renters budgeting monthly expenses, and energy-conscious consumers identifying high-cost appliances use this calculator to understand their electricity spending and find opportunities to reduce bills.",
     keywords: ["electricity bill", "power consumption", "energy calculator", "electricity cost"],
   },
+  {
+  "name": "Merge PDF",
+  "slug": "merge-pdf",
+  "category": "pdf",
+  "shortDescription": "Combine multiple PDF documents into a single file.",
+  "longDescription": "Easily merge multiple PDF files into one. Whether you are combining reports, invoices, or scanned documents, this tool runs entirely in your browser using secure client-side processing, ensuring your sensitive files never leave your device.",
+  "keywords": [
+    "merge pdf",
+    "combine pdf",
+    "pdf joiner"
+  ]
+},
+{
+  "name": "Split PDF",
+  "slug": "split-pdf",
+  "category": "pdf",
+  "shortDescription": "Extract specific pages or split a PDF into multiple files.",
+  "longDescription": "Extract exactly the pages you need from a large PDF document. Just upload your PDF, select the page range you want to keep, and download the extracted version instantly without installing heavy software.",
+  "keywords": [
+    "split pdf",
+    "extract pdf pages",
+    "pdf separator"
+  ]
+},
+{
+  "name": "PDF to Text Extractor",
+  "slug": "pdf-to-text-extractor",
+  "category": "pdf",
+  "shortDescription": "Extract plain text from PDF documents.",
+  "longDescription": "Quickly pull readable text out of PDF files for copying into Word, emails, or text editors. This is incredibly useful for repurposing content from reports or manuals without having to manually retype it.",
+  "keywords": [
+    "pdf to text",
+    "extract text from pdf",
+    "pdf converter"
+  ]
+},
+{
+  "name": "Protect PDF",
+  "slug": "protect-pdf",
+  "category": "pdf",
+  "shortDescription": "Add password encryption to secure your PDF files.",
+  "longDescription": "Secure your sensitive PDF documents by adding strong password protection. Lock down contracts, financial records, or personal documents before sharing them via email or cloud storage.",
+  "keywords": [
+    "protect pdf",
+    "password protect pdf",
+    "encrypt pdf"
+  ]
+},
+{
+  "name": "Unlock PDF",
+  "slug": "unlock-pdf",
+  "category": "pdf",
+  "shortDescription": "Remove the password from an unlocked PDF permanently.",
+  "longDescription": "If you know the password for a protected PDF but are tired of entering it every time you open it, use this tool to permanently strip the password requirement and save an unlocked copy.",
+  "keywords": [
+    "unlock pdf",
+    "remove pdf password",
+    "decrypt pdf"
+  ]
+},
+{
+  "name": "JSON Minifier",
+  "slug": "json-minifier",
+  "category": "dev",
+  "shortDescription": "Compress JSON data to reduce file size instantly.",
+  "longDescription": "Remove unnecessary whitespace, line breaks, and indentation from JSON payloads. Minified JSON is perfect for reducing network payload sizes, speeding up API responses, and saving storage space in your databases.",
+  "keywords": [
+    "json minifier",
+    "compress json",
+    "minify json"
+  ]
+},
+{
+  "name": "CSV to JSON Converter",
+  "slug": "csv-to-json-converter",
+  "category": "dev",
+  "shortDescription": "Convert comma-separated values into JSON format.",
+  "longDescription": "Transform spreadsheet data (CSV) into structured JSON arrays instantly. Developers and data analysts use this to migrate data from Excel into web applications, NoSQL databases, or API fixtures.",
+  "keywords": [
+    "csv to json",
+    "spreadsheet to json",
+    "convert csv"
+  ]
+},
+{
+  "name": "Markdown to HTML Converter",
+  "slug": "markdown-to-html-converter",
+  "category": "dev",
+  "shortDescription": "Parse Markdown syntax into valid HTML code.",
+  "longDescription": "Write content in simple Markdown format and instantly convert it into production-ready HTML markup. Essential for bloggers, technical writers, and developers moving content into CMS platforms.",
+  "keywords": [
+    "markdown to html",
+    "md to html",
+    "markdown parser"
+  ]
+},
+{
+  "name": "HTML to Markdown Converter",
+  "slug": "html-to-markdown-converter",
+  "category": "dev",
+  "shortDescription": "Convert complex HTML markup back into clean Markdown.",
+  "longDescription": "Reverse-engineer web page content by stripping away HTML tags and converting structure (headings, lists, links, images) back into clean, readable Markdown format for easy editing.",
+  "keywords": [
+    "html to markdown",
+    "html to md",
+    "reverse markdown"
+  ]
+},
+{
+  "name": "CSS Gradient Generator",
+  "slug": "css-gradient-generator",
+  "category": "dev",
+  "shortDescription": "Create beautiful linear and radial CSS gradients.",
+  "longDescription": "Visually design stunning color gradients for web backgrounds without writing CSS by hand. Generate cross-browser compatible gradient code instantly for your next UI project.",
+  "keywords": [
+    "css gradient",
+    "gradient generator",
+    "background gradient"
+  ]
+},
+{
+  "name": "CSS Box Shadow Generator",
+  "slug": "css-box-shadow-generator",
+  "category": "dev",
+  "shortDescription": "Design custom drop shadows visually and get CSS code.",
+  "longDescription": "Fine-tune exactly how your shadows appear by adjusting X/Y offsets, blur radius, spread, and opacity. Save time and avoid CSS guesswork while creating modern, elevated user interfaces.",
+  "keywords": [
+    "box shadow",
+    "shadow generator",
+    "css drop shadow"
+  ]
+},
+{
+  "name": "Bcrypt Hash Generator",
+  "slug": "bcrypt-hash-generator",
+  "category": "dev",
+  "shortDescription": "Hash passwords or verify Bcrypt hashes securely.",
+  "longDescription": "Generate secure Bcrypt hashes for passwords instantly. Backend developers can use this to quickly create test user credentials or verify if a specific plain-text password matches a database hash.",
+  "keywords": [
+    "bcrypt generator",
+    "hash password",
+    "bcrypt checker"
+  ]
+},
+{
+  "name": "URL Query String Parser",
+  "slug": "url-query-string-parser",
+  "category": "dev",
+  "shortDescription": "Break down long URLs and analyze query parameters.",
+  "longDescription": "Paste a massive tracking URL and instantly see its protocol, domain, path, and a neatly organized table of every query parameter. Perfect for debugging marketing links, UTM tags, and API requests.",
+  "keywords": [
+    "url parser",
+    "query string",
+    "decode url"
+  ]
+},
+{
+  "name": "Color Contrast Checker",
+  "slug": "color-contrast-checker",
+  "category": "dev",
+  "shortDescription": "Verify text readability against WCAG accessibility standards.",
+  "longDescription": "Ensure your website is accessible to visually impaired users by testing foreground and background color pairings. Check if your contrast ratio passes strict WCAG AA and AAA requirements.",
+  "keywords": [
+    "color contrast",
+    "wcag checker",
+    "accessibility test"
+  ]
+},
+{
+  "name": "HEX to RGB Converter",
+  "slug": "hex-to-rgb-converter",
+  "category": "dev",
+  "shortDescription": "Translate color codes between HEX, RGB, and HSL formats.",
+  "longDescription": "Quickly convert a hex code like #FFFFFF into rgb(255, 255, 255) or hsl(0, 0%, 100%). A must-have utility for web designers coordinating brand guidelines directly into CSS stylesheets.",
+  "keywords": [
+    "hex to rgb",
+    "color converter",
+    "rgb to hex",
+    "hex to hsl"
+  ]
+},
+{
+  "name": "HEIC to JPG Converter",
+  "slug": "heic-to-jpg-converter",
+  "category": "image",
+  "shortDescription": "Convert Apple HEIC photos into standard JPG images.",
+  "longDescription": "Instantly turn iPhone '.heic' photos into universally supported '.jpg' files so you can use them on any website, PC, or Android device. Our converter runs completely inside your browser so your personal photos stay private.",
+  "keywords": [
+    "heic to jpg",
+    "convert heic",
+    "apple photo converter"
+  ]
+},
+{
+  "name": "Instagram Grid Maker",
+  "slug": "instagram-grid-maker",
+  "category": "image",
+  "shortDescription": "Split one image into a 3x3 grid for your Instagram profile.",
+  "longDescription": "Quickly chop a large photo into 9 perfectly square tiles to create an aesthetic banner on your Instagram feed. Download the tiles sequentially in high-resolution, ready for posting.",
+  "keywords": [
+    "instagram grid",
+    "split photo",
+    "9 grid maker"
+  ]
+},
+{
+  "name": "Twitch Emote Resizer",
+  "slug": "twitch-emote-resizer",
+  "category": "image",
+  "shortDescription": "Auto-resize images to Twitch emote standards (28x, 56x, 112x).",
+  "longDescription": "Prepare your custom artwork for your Twitch channel instantly. Upload an image, and we will automatically generate the required 28x28, 56x56, and 112x112 pixel sizes required by the platform.",
+  "keywords": [
+    "twitch emote",
+    "resize emote",
+    "emote maker"
+  ]
+},
+{
+  "name": "YouTube Thumbnail Downloader",
+  "slug": "youtube-thumbnail-downloader",
+  "category": "creator",
+  "shortDescription": "Download the HD thumbnail image of any YouTube video.",
+  "longDescription": "Enter any YouTube video link to instantly extract and download its cover thumbnail in the highest available resolution (often 1080p). Great for inspiration, archival, or studying top-performing thumbnails.",
+  "keywords": [
+    "youtube thumbnail",
+    "download thumbnail",
+    "get youtube cover"
+  ]
+},
+{
+  "name": "Random Password Generator",
+  "slug": "random-password-generator",
+  "category": "utility",
+  "shortDescription": "Create strong, unbreakable passwords instantly.",
+  "longDescription": "Generate cryptic, highly secure passwords with a custom mix of uppercase, lowercase, numbers, and symbols up to 64 characters long. Secure your accounts against brute-force attacks.",
+  "keywords": [
+    "password generator",
+    "strong password",
+    "random password"
+  ]
+},
+{
+  "name": "Binary Text Converter",
+  "slug": "binary-text-converter",
+  "category": "text",
+  "shortDescription": "Translate text into binary code or decode binary strings.",
+  "longDescription": "Communicate in zeros and ones! Convert plain English sentences into binary code, or paste a block of binary digits to decode the hidden message. Fun for computer science students and codebreakers.",
+  "keywords": [
+    "binary translator",
+    "text to binary",
+    "binary to text"
+  ]
+},
+{
+  "name": "Text to Speech Reader",
+  "slug": "text-to-speech-reader",
+  "category": "text",
+  "shortDescription": "Read text out loud using native browser voices.",
+  "longDescription": "Paste an article, email, or essay, and listen to it read out loud. Features adjustable speed and pitch, utilizing your browser's native Web Speech API for fast, private text dictation.",
+  "keywords": [
+    "text to speech",
+    "tts reader",
+    "read text out loud"
+  ]
+},
 ];
 
 const toolProfiles: Record<string, ToolProfile> = {
@@ -5873,6 +6139,292 @@ const toolProfiles: Record<string, ToolProfile> = {
     faqs: [{ question: "Where do I find my appliance wattage?", answer: "Check the label on the appliance, the user manual, or search the model number online." }, { question: "What is the average electricity rate?", answer: "Rates vary by region. Check your last electricity bill for your per-unit rate." }],
     related: ["emi-calculator", "gst-calculator", "sip-calculator"],
   },
+  "merge-pdf": {
+    purpose: "Combine multiple PDF documents into a single file.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "split-pdf": {
+    purpose: "Extract specific pages or split a PDF into multiple files.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "pdf-to-text-extractor": {
+    purpose: "Extract plain text from PDF documents.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "protect-pdf": {
+    purpose: "Add password encryption to secure your PDF files.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "unlock-pdf": {
+    purpose: "Remove the password from an unlocked PDF permanently.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "json-minifier": {
+    purpose: "Compress JSON data to reduce file size instantly.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "csv-to-json-converter": {
+    purpose: "Convert comma-separated values into JSON format.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "markdown-to-html-converter": {
+    purpose: "Parse Markdown syntax into valid HTML code.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "html-to-markdown-converter": {
+    purpose: "Convert complex HTML markup back into clean Markdown.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "css-gradient-generator": {
+    purpose: "Create beautiful linear and radial CSS gradients.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "css-box-shadow-generator": {
+    purpose: "Design custom drop shadows visually and get CSS code.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "bcrypt-hash-generator": {
+    purpose: "Hash passwords or verify Bcrypt hashes securely.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "url-query-string-parser": {
+    purpose: "Break down long URLs and analyze query parameters.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "color-contrast-checker": {
+    purpose: "Verify text readability against WCAG accessibility standards.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "hex-to-rgb-converter": {
+    purpose: "Translate color codes between HEX, RGB, and HSL formats.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "heic-to-jpg-converter": {
+    purpose: "Convert Apple HEIC photos into standard JPG images.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "instagram-grid-maker": {
+    purpose: "Split one image into a 3x3 grid for your Instagram profile.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "twitch-emote-resizer": {
+    purpose: "Auto-resize images to Twitch emote standards (28x, 56x, 112x).",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "youtube-thumbnail-downloader": {
+    purpose: "Download the HD thumbnail image of any YouTube video.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "random-password-generator": {
+    purpose: "Create strong, unbreakable passwords instantly.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "binary-text-converter": {
+    purpose: "Translate text into binary code or decode binary strings.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
+  "text-to-speech-reader": {
+    purpose: "Read text out loud using native browser voices.",
+    inputs: "Standard appropriate input.",
+    outputs: "Standard appropriate output.",
+    bestFor: "quick online usage and simple workflows.",
+    workflow: ["Input your data.", "Adjust settings if necessary.", "Get the final result immediately."],
+    examples: ["When you need to perform this task quickly."],
+    mistakes: ["Not validating the input before converting."],
+    faqs: [
+      { question: "Is this tool free to use?", answer: "Yes, this tool is 100% free and works entirely in your browser." }
+    ],
+    related: []
+  },
 };
 
 export function getToolBySlug(slug: string): Tool | undefined {
@@ -5966,10 +6518,15 @@ export function getToolSearchIntents(slug: string, limit = 12): string[] {
       `${tool.name.toLowerCase()} in browser`,
       `${tool.name.toLowerCase()} for web assets`,
     ],
-    utility: [
+        utility: [
       `${tool.name.toLowerCase()} daily calculator`,
       `${tool.name.toLowerCase()} free online`,
       `${tool.name.toLowerCase()} instant results`,
+    ],
+    pdf: [
+      `${tool.name.toLowerCase()} free online`,
+      `${tool.name.toLowerCase()} secure results`,
+      `${tool.name.toLowerCase()} in browser`,
     ],
   };
 

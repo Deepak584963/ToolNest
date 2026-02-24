@@ -12,6 +12,7 @@ const categoryColors: Record<Tool["category"], string> = {
   creator: "bg-pink-50 text-pink-700 border-pink-100 dark:bg-pink-950/50 dark:text-pink-400 dark:border-pink-800/50",
   image: "bg-orange-50 text-orange-700 border-orange-100 dark:bg-orange-950/50 dark:text-orange-400 dark:border-orange-800/50",
   utility: "bg-teal-50 text-teal-700 border-teal-100 dark:bg-teal-950/50 dark:text-teal-400 dark:border-teal-800/50",
+  pdf: "bg-red-50 text-red-700 border-red-100 dark:bg-red-950/50 dark:text-red-400 dark:border-red-800/50",
 };
 
 const categoryAccents: Record<Tool["category"], string> = {
@@ -22,6 +23,7 @@ const categoryAccents: Record<Tool["category"], string> = {
   creator: "from-pink-500 to-rose-500",
   image: "from-orange-500 to-amber-500",
   utility: "from-teal-500 to-cyan-500",
+  pdf: "from-red-500 to-rose-500",
 };
 
 const categoryIcons: Record<Tool["category"], string> = {
@@ -32,6 +34,7 @@ const categoryIcons: Record<Tool["category"], string> = {
   creator: "🎬",
   image: "🖼️",
   utility: "🧮",
+  pdf: "📄",
 };
 
 type ToolCardProps = {

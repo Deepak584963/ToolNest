@@ -84,6 +84,16 @@ export const categoryMeta: CategoryMeta[] = [
     color: "teal",
     keywords: ["emi calculator", "gst calculator", "sip calculator", "currency converter", "unit converter", "financial calculator", "free online calculator"],
   },
+  {
+    slug: "pdf",
+    name: "PDF",
+    title: "Free Online PDF Tools — Merge, Split, Extract Text & Protect",
+    description: "Merge, split, extract text, protect, and unlock PDF files — completely free and secure browser-based tools.",
+    longDescription: "Process your PDF files quickly and securely without uploading them to any server. Merge multiple PDFs into a single file, extract specific pages, convert PDF content to plain text, and secure your documents with passwords. Everything happens entirely in your browser, ensuring maximum privacy for sensitive documents.",
+    icon: "📄",
+    color: "red",
+    keywords: ["pdf tools", "merge pdf", "split pdf", "pdf to text", "protect pdf", "unlock pdf", "free online pdf tools"],
+  },
 ];
 
 export function getCategoryMeta(slug: string): CategoryMeta | undefined {

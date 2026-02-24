@@ -5,7 +5,7 @@ import Link from "next/link";
 import ToolCard from "@/components/ToolCard";
 import { tools } from "@/lib/tools";
 
-type Category = "all" | "text" | "seo" | "dev" | "student" | "creator" | "image" | "utility";
+type Category = "all" | "text" | "seo" | "dev" | "student" | "creator" | "image" | "utility" | "pdf";
 
 const categories: { key: Category; label: string; icon: string }[] = [
   { key: "all", label: "All Tools", icon: "✨" },
@@ -16,6 +16,7 @@ const categories: { key: Category; label: string; icon: string }[] = [
   { key: "creator", label: "Creator", icon: "🎬" },
   { key: "image", label: "Image", icon: "🖼️" },
   { key: "utility", label: "Utility", icon: "🧮" },
+  { key: "pdf", label: "PDF", icon: "📄" },
 ];
 
 const featuredDeveloperTools = [
@@ -52,7 +53,6 @@ const featuredUtilityTools = [
 
 const featuredImageTools = [
   { slug: "compress-image", label: "Compress Image" },
-  { slug: "image-to-pdf-converter", label: "Image to PDF" },
   { slug: "qr-code-generator", label: "QR Code Generator" },
   { slug: "image-cropper", label: "Image Cropper" },
   { slug: "favicon-generator", label: "Favicon Generator" },
@@ -70,6 +70,15 @@ const featuredStudentTools = [
   { slug: "attendance-calculator", label: "Attendance Tracker" },
   { slug: "gpa-calculator", label: "GPA Calculator" },
   { slug: "exam-countdown-timer", label: "Exam Countdown" },
+];
+
+const featuredPdfTools = [
+  { slug: "image-to-pdf-converter", label: "Image to PDF" },
+  { slug: "merge-pdf", label: "Merge PDF" },
+  { slug: "split-pdf", label: "Split PDF" },
+  { slug: "pdf-to-text-extractor", label: "PDF to Text" },
+  { slug: "protect-pdf", label: "Protect PDF" },
+  { slug: "unlock-pdf", label: "Unlock PDF" },
 ];
 
 export default function HomeToolsSection() {
@@ -116,9 +125,9 @@ export default function HomeToolsSection() {
         <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
           <div className="flex items-center gap-2">
             <span className="text-base">🛠️</span>
-            <h3 className="text-sm font-bold text-slate-800">Trending developer tools</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Trending developer tools</h3>
           </div>
-          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm dark:text-slate-400">
             High-intent utilities for API debugging, regex testing, authentication inspection, and SQL formatting.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -126,7 +135,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100 sm:py-1.5 dark:border-blue-900/50 dark:bg-blue-900/20 dark:text-blue-300 dark:hover:bg-blue-900/40"
               >
                 {tool.label}
               </Link>
@@ -136,12 +145,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "creator") && (
-        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
           <div className="flex items-center gap-2">
             <span className="text-base">🎬</span>
-            <h3 className="text-sm font-bold text-slate-800">Trending creator tools</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Trending creator tools</h3>
           </div>
-          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm dark:text-slate-400">
             High-intent tools for YouTube growth, engagement analytics, content planning, and campaign tracking.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -149,7 +158,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full border border-pink-100 bg-pink-50/80 px-3.5 py-2 text-xs font-bold text-pink-700 transition hover:bg-pink-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-pink-100 bg-pink-50/80 px-3.5 py-2 text-xs font-bold text-pink-700 transition hover:bg-pink-100 sm:py-1.5 dark:border-pink-900/50 dark:bg-pink-900/20 dark:text-pink-300 dark:hover:bg-pink-900/40"
               >
                 {tool.label}
               </Link>
@@ -159,12 +168,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "seo") && (
-        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
           <div className="flex items-center gap-2">
             <span className="text-base">🔍</span>
-            <h3 className="text-sm font-bold text-slate-800">Trending SEO tools</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Trending SEO tools</h3>
           </div>
-          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm dark:text-slate-400">
             High-intent technical SEO tools for schema markup, international targeting, redirect migrations, robots directives, and topic clustering.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -172,7 +181,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full border border-emerald-100 bg-emerald-50/80 px-3.5 py-2 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-emerald-100 bg-emerald-50/80 px-3.5 py-2 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100 sm:py-1.5 dark:border-emerald-900/50 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/40"
               >
                 {tool.label}
               </Link>
@@ -182,12 +191,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "utility") && (
-        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
           <div className="flex items-center gap-2">
             <span className="text-base">🧮</span>
-            <h3 className="text-sm font-bold text-slate-800">Trending utility tools</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Trending utility tools</h3>
           </div>
-          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm dark:text-slate-400">
             High-demand finance and daily calculation tools for loans, investments, conversions, and advanced math workflows.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -195,7 +204,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full border border-cyan-100 bg-cyan-50/80 px-3.5 py-2 text-xs font-bold text-cyan-700 transition hover:bg-cyan-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-cyan-100 bg-cyan-50/80 px-3.5 py-2 text-xs font-bold text-cyan-700 transition hover:bg-cyan-100 sm:py-1.5 dark:border-cyan-900/50 dark:bg-cyan-900/20 dark:text-cyan-300 dark:hover:bg-cyan-900/40"
               >
                 {tool.label}
               </Link>
@@ -205,12 +214,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "image") && (
-        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
           <div className="flex items-center gap-2">
             <span className="text-base">🖼️</span>
-            <h3 className="text-sm font-bold text-slate-800">Trending image tools</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Trending image tools</h3>
           </div>
-          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm dark:text-slate-400">
             Most-used visual utilities for compression, conversion, asset prep, and social-ready image workflows.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -218,7 +227,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full border border-orange-100 bg-orange-50/80 px-3.5 py-2 text-xs font-bold text-orange-700 transition hover:bg-orange-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-orange-100 bg-orange-50/80 px-3.5 py-2 text-xs font-bold text-orange-700 transition hover:bg-orange-100 sm:py-1.5 dark:border-orange-900/50 dark:bg-orange-900/20 dark:text-orange-300 dark:hover:bg-orange-900/40"
               >
                 {tool.label}
               </Link>
@@ -228,12 +237,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "text") && (
-        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
           <div className="flex items-center gap-2">
             <span className="text-base">📝</span>
-            <h3 className="text-sm font-bold text-slate-800">Trending text tools</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Trending text tools</h3>
           </div>
-          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm dark:text-slate-400">
             Essential writing utilities for word counting, placeholder text generation, and content cleanup.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -241,7 +250,7 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full border border-amber-100 bg-amber-50/80 px-3.5 py-2 text-xs font-bold text-amber-700 transition hover:bg-amber-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-amber-100 bg-amber-50/80 px-3.5 py-2 text-xs font-bold text-amber-700 transition hover:bg-amber-100 sm:py-1.5 dark:border-amber-900/50 dark:bg-amber-900/20 dark:text-amber-300 dark:hover:bg-amber-900/40"
               >
                 {tool.label}
               </Link>
@@ -251,12 +260,12 @@ export default function HomeToolsSection() {
       )}
 
       {(activeCategory === "all" || activeCategory === "student") && (
-        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6">
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
           <div className="flex items-center gap-2">
             <span className="text-base">🎓</span>
-            <h3 className="text-sm font-bold text-slate-800">Trending student tools</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Trending student tools</h3>
           </div>
-          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm dark:text-slate-400">
             Must-have academic utilities for grade tracking, attendance monitoring, exam planning, and GPA calculations.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -264,7 +273,30 @@ export default function HomeToolsSection() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="pressable micro-lift rounded-full border border-violet-100 bg-violet-50/80 px-3.5 py-2 text-xs font-bold text-violet-700 transition hover:bg-violet-100 sm:py-1.5"
+                className="pressable micro-lift rounded-full border border-violet-100 bg-violet-50/80 px-3.5 py-2 text-xs font-bold text-violet-700 transition hover:bg-violet-100 sm:py-1.5 dark:border-violet-900/50 dark:bg-violet-900/20 dark:text-violet-300 dark:hover:bg-violet-900/40"
+              >
+                {tool.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(activeCategory === "all" || activeCategory === "pdf") && (
+        <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_20px_rgba(99,102,241,0.05)] sm:p-6 dark:border-slate-700/60 dark:bg-slate-800/60">
+          <div className="flex items-center gap-2">
+            <span className="text-base">📄</span>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Trending PDF tools</h3>
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 sm:text-sm dark:text-slate-400">
+            Secure client-side PDF utilities to split, merge, lock, and unlock your documents completely in your browser.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {featuredPdfTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="pressable micro-lift rounded-full border border-red-100 bg-red-50/80 px-3.5 py-2 text-xs font-bold text-red-700 transition hover:bg-red-100 sm:py-1.5 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/40"
               >
                 {tool.label}
               </Link>

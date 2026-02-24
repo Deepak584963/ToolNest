@@ -85,7 +85,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   ];
   const featuredImageTools = [
     { slug: "compress-image", name: "Compress Image", description: "Reduce image file size while preserving visual quality for faster page loads." },
-    { slug: "image-to-pdf-converter", name: "Image to PDF Converter", description: "Convert one or more images into shareable PDF documents in your browser." },
+    { slug: "qr-code-generator", name: "QR Code Generator", description: "Generate scannable QR codes for links, text, and contact info." },
     { slug: "image-cropper", name: "Image Cropper", description: "Crop photos to exact dimensions for social posts, banners, and thumbnails." },
     { slug: "favicon-generator", name: "Favicon Generator", description: "Create favicon sizes for modern browsers and platform icon requirements." },
     { slug: "image-color-palette-extractor", name: "Image Color Palette Extractor", description: "Extract dominant colors from images for branding and design consistency." },
@@ -101,6 +101,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     { slug: "attendance-calculator", name: "Attendance Calculator", description: "Track attendance percentage and find how many classes you can skip safely." },
     { slug: "gpa-calculator", name: "GPA Calculator", description: "Calculate semester and cumulative GPA with custom credit hours and grading scales." },
     { slug: "exam-countdown-timer", name: "Exam Countdown Timer", description: "Set target exam dates and see a live countdown in days, hours, and minutes." },
+  ];
+  const featuredPdfTools = [
+    { slug: "image-to-pdf-converter", name: "Image to PDF Converter", description: "Convert one or multiple images into a shareable PDF document in your browser." },
+    { slug: "merge-pdf", name: "Merge PDF", description: "Combine multiple PDF documents into a single file." },
+    { slug: "split-pdf", name: "Split PDF", description: "Separate one page or a whole set for easy conversion into independent PDF files." },
+    { slug: "pdf-to-text-extractor", name: "PDF to Text Extractor", description: "Extract text from PDF documents instantly in your browser." },
+    { slug: "protect-pdf", name: "Protect PDF", description: "Encrypt your PDF with a password to prevent unauthorized access." },
   ];
 
   // Generate FAQ items for this category
@@ -345,6 +352,31 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <div className="gradient-divider mt-4" />
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {featuredStudentTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="card-hover-glow pressable group rounded-2xl border border-slate-200/60 bg-white/88 p-4 transition-all duration-200 hover:border-indigo-200/50 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)] dark:border-slate-700/60 dark:bg-slate-900/80 dark:hover:border-indigo-500/30"
+              >
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition dark:text-slate-200 dark:group-hover:text-indigo-400">{tool.name}</h3>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm dark:text-slate-400">{tool.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {meta.slug === "pdf" && (
+        <section className="reveal-up reveal-delay-2 rounded-3xl border border-white/50 bg-white/82 p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_12px_32px_rgba(99,102,241,0.07)] sm:p-8 dark:border-slate-700/60 dark:bg-slate-800/40 dark:shadow-none">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-50 to-rose-50 text-lg shadow-[0_2px_8px_rgba(220,38,38,0.1)]">📄</div>
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">Top PDF tools</h2>
+          </div>
+          <p className="mt-2 text-sm leading-7 text-slate-500 sm:text-base dark:text-slate-400">
+            Explore high-demand secure client-side PDF utilities to split, merge, lock, and unlock your documents completely in your browser.
+          </p>
+          <div className="gradient-divider mt-4" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {featuredPdfTools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
